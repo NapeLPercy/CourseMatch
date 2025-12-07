@@ -1,0 +1,236 @@
+
+   :root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --text-dark: #1e293b;
+  --shadow: rgba(30, 58, 138, 0.1);
+}
+
+.navbar {
+  background-color: var(--primary-blue);
+  box-shadow: 0 2px 4px var(--shadow);
+  padding: 0;
+  position: relative;
+}
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  text-decoration: none;
+  padding: 1rem 0;
+}
+
+/* Hamburger Toggle - Hidden on Desktop */
+.navbar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toggle-bar {
+  width: 24px;
+  height: 2px;
+  background-color: var(--white);
+  transition: all 0.3s;
+}
+
+.navbar-toggle.active .toggle-bar:nth-child(1) {
+  transform: rotate(45deg) translateY(6px);
+}
+
+.navbar-toggle.active .toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggle.active .toggle-bar:nth-child(3) {
+  transform: rotate(-45deg) translateY(-6px);
+}
+
+/* Base Nav Styles */
+.navbar-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  display: block;
+  padding: 1rem 1.25rem;
+  color: var(--white);
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+  font-family: inherit;
+}
+
+.nav-link:hover {
+  background-color: var(--medium-blue);
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.arrow {
+  font-size: 0.65rem;
+  transition: transform 0.2s;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+.logout-btn {
+  background-color: transparent;
+  color: var(--white);
+}
+
+.logout-btn:hover {
+  background-color: var(--medium-blue);
+}
+
+/* Desktop Nav - Visible on Desktop */
+.desktop-nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.desktop-nav .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--white);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 0.5rem 0;
+  margin: 0;
+  min-width: 140px;
+  display: none;
+}
+
+.desktop-nav .dropdown-menu.show {
+  display: block;
+}
+
+.desktop-nav .dropdown-item {
+  display: block;
+  padding: 0.6rem 1rem;
+  color: var(--text-dark);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.desktop-nav .dropdown-item:hover {
+  background-color: var(--pale-blue);
+}
+
+/* Mobile Nav - Hidden on Desktop */
+.mobile-nav {
+  display: none;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 1rem;
+  }
+
+  /* Hide Desktop Nav */
+  .desktop-nav {
+    display: none;
+  }
+
+  /* Show Mobile Toggle */
+  .navbar-toggle {
+    display: flex;
+  }
+
+  /* Show Mobile Nav */
+  .mobile-nav {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--primary-blue);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    box-shadow: 0 4px 8px var(--shadow);
+  }
+
+  .mobile-nav.active {
+    max-height: 500px;
+  }
+
+  .mobile-nav .nav-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .mobile-nav .nav-link {
+    padding: 1rem 1.5rem;
+  }
+
+  .mobile-nav .dropdown-menu {
+    position: static;
+    box-shadow: none;
+    background-color: var(--medium-blue);
+    border-radius: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    display: block;
+  }
+
+  .mobile-nav .dropdown-menu.show {
+    max-height: 200px;
+  }
+
+  .mobile-nav .dropdown-item {
+    display: block;
+    color: var(--white);
+    padding: 0.8rem 2rem;
+    text-decoration: none;
+  }
+
+  .mobile-nav .dropdown-item:hover {
+    background-color: var(--light-blue);
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-brand {
+    font-size: 1.3rem;
+  }
+}

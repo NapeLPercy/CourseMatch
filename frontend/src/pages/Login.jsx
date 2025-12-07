@@ -1,9 +1,15 @@
+//src/components/Login.js
 import React, { useState } from "react";
 import axios from "axios";
-import AuthCard from "./AuthCard";
+import AuthCard from "../components/layout/AuthCard";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-export default function Register() {
+export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const { login } = useAuth();
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -11,23 +17,40 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Register data:", form);
+    console.log("Login data:", form);
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "http://localhost:5000/api/auth/login",
         form
       );
       console.log("Server response:", response.data);
-      alert("Registration successful!");
+
+      const user = response.data.user;
+      const student = user.student;
+
+      sessionStorage.setItem("student", JSON.stringify(student));
+      if(student){
+        sessionStorage.setItem("submittedSubjects",true);
+      }else{
+        sessionStorage.setItem("submittedSubjects",false);
+      }
+     // sessionStorage.setItem("user", JSON.stringify(user));
+
+      console.log("logging user here", user, student);
+    
+      alert("Login successful!");
+      login(user);
+      navigate("/my-dashboard");
+      //redirect or
     } catch (err) {
-      console.error("Registration error:", err.response?.data || err.message);
-      alert(err.response?.data?.error || "Registration failed");
+      console.error("Login error:", err.response?.data || err.message);
+      alert(err.response?.data?.error || "Login failed");
     }
   };
 
   return (
-    <AuthCard title="Create Account">
+    <AuthCard title="Login to CourseMatch">
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Email</label>
@@ -54,10 +77,13 @@ export default function Register() {
           />
         </div>
         <button type="submit" className="btn btn-primary w-100">
-          Create Account
+          Login
         </button>
         <p className="text-center mt-3">
-          Already have an account? <a href="/login">Login</a>
+          <a href="/forgot-password">Forgot password?</a>
+        </p>
+        <p className="text-center mt-3">
+          Don’t have an account? <a href="/register">Create One</a>
         </p>
       </form>
     </AuthCard>

@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "../../styles/AddSubjects.css";
 
-export default function AddSubjects({userId}) {
+export default function AddSubjects() {
   // Initial subjects list (can come from props or API)
   const subjectsList = [
     "Mathematics",
-    "English",
+    "Mathematical Literacy",
+    "English HL",
+    "English FAL",
+    "Life Orientation",
     "Physical Science",
     "Life Science",
     "Accounting",
@@ -15,8 +19,6 @@ export default function AddSubjects({userId}) {
     "Geography",
   ];
 
-
-  
   // State for the subjects and marks
   const [subjects, setSubjects] = useState([
     { name: "", mark: "" }, // start with one empty field
@@ -67,31 +69,36 @@ export default function AddSubjects({userId}) {
     console.log("Subjects to save:", subjects);
 
     // TODO: Send subjects to backend via axios/fetch
+    const userId = JSON.parse(sessionStorage.getItem("user"))?.id;
     try {
-      const response = await axios.post('http://localhost:5000/api/subjects/addSubjects', {
-        userId,
-        subjects,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/subjects/addSubjects",
+        {
+          userId,
+          subjects,
+        }
+      );
 
-      console.log('Server response:', response.data);
-      alert('Subjects submitted successfully!');
-      setSubjects([{ name: '', mark: '' }]); // reset
-
+      console.log("Server response:", response.data);
+      alert("Subjects submitted successfully!");
+      setSubjects([{ name: "", mark: "" }]); // reset
     } catch (err) {
-      console.error('Subjects submission error:', err.response?.data || err.message);
-      alert(err.response?.data?.error || 'Subjects submission failed');
+      console.error(
+        "Subjects submission error:",
+        err.response?.data || err.message
+      );
+      alert(err.response?.data?.error || "Subjects submission failed");
     }
   };
 
- const handleDelete = (index) => {
-  console.log("Deleting subject at index:", index);
+  const handleDelete = (index) => {
+    console.log("Deleting subject at index:", index);
 
-  const newSubjects = subjects.filter((_, i) => i !== index);
+    const newSubjects = subjects.filter((_, i) => i !== index);
 
-  console.log("After deleting subject:", newSubjects);
-  setSubjects(newSubjects);
-};
-
+    console.log("After deleting subject:", newSubjects);
+    setSubjects(newSubjects);
+  };
 
   return (
     <div className="container mt-4">
@@ -142,13 +149,13 @@ export default function AddSubjects({userId}) {
                 required
               />
             </div>
-            {(deleteBtn && subjects.length>1) && (
+            {deleteBtn && subjects.length > 1 && (
               <div className="col-md-2 text-end">
                 <i
                   className="fas fa-trash-alt text-danger"
                   style={{ cursor: "pointer", fontSize: "18px" }}
                   title="Delete"
-                  onClick={()=>handleDelete(index)} // optional
+                  onClick={() => handleDelete(index)} // optional
                 ></i>
               </div>
             )}

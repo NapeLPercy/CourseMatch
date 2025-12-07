@@ -1,0 +1,119 @@
+/* About Page Styles */
+:root {
+      --primary-blue: #1e3a8a;
+      --medium-blue: #2563eb;
+      --light-blue: #3b82f6;
+      --pale-blue: #dbeafe;
+      --white: #ffffff;
+      --off-white: #f8fafc;
+      --text-dark: #1e293b;
+      --text-gray: #475569;
+      --shadow: rgba(30, 58, 138, 0.1);
+    }
+     * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    .about-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .about-header {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(135deg, var(--primary-blue), var(--medium-blue));
+      border-radius: 12px;
+      color: var(--white);
+      margin-bottom: 3rem;
+    }
+
+    .about-title {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .about-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .about-content {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .about-section {
+      margin-bottom: 2rem;
+    }
+
+    .about-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-section-title {
+      color: var(--primary-blue);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .about-text {
+      color: var(--text-gray);
+      margin-bottom: 1rem;
+      line-height: 1.8;
+    }
+
+    .about-list {
+      list-style-position: inside;
+      color: var(--text-gray);
+      margin-left: 1rem;
+    }
+
+    .about-list li {
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-section {
+      text-align: center;
+      padding: 2rem;
+      background-color: var(--pale-blue);
+      border-radius: 8px;
+    }
+
+    .contact-title {
+      font-size: 1.8rem;
+      color: var(--primary-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-text {
+      color: var(--text-gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-button {
+      background-color: var(--primary-blue);
+      color: var(--white);
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .contact-button:hover {
+      background-color: var(--medium-blue);
+    }

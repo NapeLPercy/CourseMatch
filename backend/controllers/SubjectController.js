@@ -1,43 +1,39 @@
-const MatrixEndorsement = require("../services/MatrixEndorsement") ;
-
-const db = require("../config/db"); // import your MySQL connection
 const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
 
-// ✅ Register a new student and their subjects
+const StudentModel = require("../models/Student");
+const SubjectModel = require("../models/Subject");
+const SubjectSanitizer = require("../services/SubjectSanitizer");
+const MatrixEndorsement = require("../services/MatrixEndorsement");
+
+//Add subjects (async/await version)
 exports.addSubjects = async (req, res) => {
-  const { subjects, userId } = req.body;
-  const studentId = uuidv4();
+  try {
+    const { subjects, userId } = req.body;
+    const studentId = uuidv4();
 
-  const endorsement = new MatrixEndorsement(subjects).getStudentEndorsement() ;
-console.log("Student endorsement is",endorsement);
-
-return;
-
-  console.log("In the server",subjects, userId);
-  if (!subjects) {
-    return res.status(400).json({ message: "Missing required fields" });
-  }
-
-  // 1️⃣ Insert into student table
-  const studentQuery = `
-    INSERT INTO student (student_id, endorsement, user_id)
-    VALUES (?, ?, ?)
-  `;
-
-  db.query(studentQuery, [studentId, endorsement, userId], (err) => {
-    if (err) {
-      console.error("Error inserting student:", err);
-      return res.status(500).json({ message: "Error inserting student",success:false });
+    if (!subjects || !userId) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+      });
     }
 
-    // 2️⃣ Insert subjects
-    const subjectQuery = `
-      INSERT INTO subject (subject_id, name, mark, student_id)
-      VALUES ?
-    `;
+    console.log("Subjects before clean ===", subjects);
 
+    const sanitizedSubjects = new SubjectSanitizer(subjects).sanitize();
+
+    console.log("Subjects after clean ===", sanitizedSubjects);
+
+    let endorsement = new MatrixEndorsement(sanitizedSubjects).determine();
+    console.log("Student endorsement is:", endorsement);
+  
+    
+    //Insert student
+    await StudentModel.createStudent(studentId, endorsement, userId);
+
+    //Prepare subject values
     const subjectValues = subjects.map((s) => [
       uuidv4(),
       s.name,
@@ -45,30 +41,38 @@ return;
       studentId,
     ]);
 
-    db.query(subjectQuery, [subjectValues], (err2) => {
-      if (err2) {
-        console.error("Error inserting subjects:", err2);
-        return res.status(500).json({ message: "Error inserting subjects",success:false });
-      }
+    //Insert all subjects
+    await SubjectModel.insertSubjects(subjectValues);
 
-      res
-        .status(201)
-        .json({ message: "Subjects added successfully",success:true });
+    return res.status(201).json({
+      success: true,
+      message: "Subjects added successfully",
     });
-  });
+  } catch (error) {
+    console.error("Add subjects error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while adding subjects",
+    });
+  }
 };
 
-// ✅ Get all subjects for a specific student
+// =======================================
+// ✅ Get subjects for a student (async)
+// =======================================
 exports.getSubjects = async (req, res) => {
-  const { studentId } = req.params;
+  console.log("About to get the data ");
+  try {
+    const { studentId } = req.params;
 
-  const query = "SELECT * FROM subject WHERE student_id = ?";
-  db.query(query, [studentId], (err, results) => {
-    if (err) {
-      console.error("Error fetching subjects:", err);
-      return res.status(500).json({ message: "Error fetching subjects" });
-    }
+    const subjects = await SubjectModel.getSubjectsByStudentId(studentId);
 
-    res.status(200).json(results);
-  });
+    console.log("Subjects", subjects);
+    return res.status(200).json(subjects);
+  } catch (error) {
+    console.error("Get subjects error:", error);
+    return res.status(500).json({
+      message: "Error fetching subjects",
+    });
+  }
 };

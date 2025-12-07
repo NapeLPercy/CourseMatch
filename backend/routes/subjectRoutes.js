@@ -6,7 +6,7 @@ const subjectController = require('../controllers/SubjectController');
 router.post('/addSubjects', subjectController.addSubjects);
 
 // Get all subjects for a student
-router.get('/:studentId/subjects', subjectController.getSubjects);
+router.get('/:studentId', subjectController.getSubjects);
 
 
 module.exports = router;

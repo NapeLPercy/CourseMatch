@@ -1,60 +1,19 @@
-class Student {
-  constructor(name, surname, APS, endorsement, subjects = []) {
-    this.name = name;
-    this.surname = surname;
-    this.APS = APS;
-    this.endorsement = endorsement;
-    this.subjects = subjects; // array of Subject
-    this.studentId = null;
-  }
+// models/Student.js
+const db = require("../config/db");
 
-  getName() {
-    return this.name;
-  }
+module.exports = {
+  createStudent: async (studentId, endorsement, userId) => {
+    const sql = `
+      INSERT INTO student (student_id, endorsement, user_id)
+      VALUES (?, ?, ?)
+    `;
 
-  setName(name) {
-    this.name = name;
+    return new Promise((resolve, reject) => {
+      db.query(sql, [studentId, endorsement, userId], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
   }
+};
 
-  getSurname() {
-    return this.surname;
-  }
-
-  setSurname(surname) {
-    this.surname = surname;
-  }
-
-  getAPS() {
-    return this.APS;
-  }
-
-  setAPS(APS) {
-    this.APS = APS;
-  }
-
-  getEndorsement() {
-    return this.endorsement;
-  }
-
-  setEndorsement(endorsement) {
-    this.endorsement = endorsement;
-  }
-
-  getSubjects() {
-    return this.subjects;
-  }
-
-  setSubjects(subjects) {
-    this.subjects = subjects;
-  }
-
-  getStudentId() {
-    return this.studentId;
-  }
-
-  setStudentId(studentId) {
-    this.studentId = studentId;
-  }
-}
-
-module.exports = Student;

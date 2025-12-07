@@ -1,40 +1,48 @@
 import "./App.css";
-import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import Login from "./components/Login";
-import Account from "./components/Account";
-import ForgotPassword from "./components/Password";
-import Nav from "./components/Nav";
-import Home from "./components/Home";
-import About from "./components/About";
-import AddSubjects from "./components/AddSubject";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import { UserProvider } from "./context/AuthContext";
+
+import Login from "./pages/Login";
+import Account from "./pages/Account";
+import Home from "./pages/Home";
+import About from "./pages/About";
+
+import Nav from "./components/layout/Nav";
+
+import AddSubjects from "./components/forms/AddSubject";
+import UserProfileForm from "./components/forms/UserProfileForm";
+
+//subjects
+import ViewSubjectsPage from "./components/data-display/ViewSubjectsPage";
+import Dashboard from "./components/data-display/Dashboard";
+import Footer from "./components/layout/Footer";
 function App() {
-  const [user, setUser] = useState(null);
-
   return (
-    <Router>
-      <Nav user={user} setUser={setUser} />
-      <div className="container mt-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route path="/register" element={<Account />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route
-            path="/add-subjects"
-            element={<AddSubjects {...(user ? { userId: user.id } : {})} />}
-          />
-        </Routes>
-      </div>
-    </Router>
+    <UserProvider>
+      <Router>
+        <Nav />
+        <div className="container mt-4">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Account />} />
+
+            <Route path="/add-subjects" element={<AddSubjects />} />
+            <Route path="/add-profile" element={<UserProfileForm />} />
+            <Route path="/my-subjects" element={<ViewSubjectsPage />} />
+            <Route path="/my-dashboard" element={<Dashboard/>} />
+
+          </Routes>
+        </div>
+        <Footer/>
+      </Router>
+    </UserProvider>
   );
 }
 
 export default App;
+

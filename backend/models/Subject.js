@@ -1,42 +1,31 @@
-class Subject {
-  constructor(name, mark) {
-    this.name = name;
-    this.mark = mark;
-    this.studentId = null;
-    this.subjectId = null;
-  }
+// models/Subject.js
+const db = require("../config/db");
 
-  getName() {
-    return this.name;
-  }
+module.exports = {
+  insertSubjects: async (subjectValues) => {
+    const sql = `
+      INSERT INTO subject (subject_id, name, mark, student_id)
+      VALUES ?
+    `;
 
-  setName(name) {
-    this.name = name;
-  }
+    return new Promise((resolve, reject) => {
+      db.query(sql, [subjectValues], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
 
-  getMark() {
-    return this.mark;
-  }
+  getSubjectsByStudentId: async (studentId) => {
+    console.log("In the mode, get student subject by id",studentId);
+    const sql = "SELECT * FROM subject WHERE student_id = ?";
 
-  setMark(mark) {
-    this.mark = mark;
+    return new Promise((resolve, reject) => {
+      db.query(sql, [studentId], (err, result) => {
+        if (err) return reject(err);
+        console.log("In the mode, get student subject by id",result);
+        resolve(result);
+      });
+    });
   }
-
-  getStudentId() {
-    return this.studentId;
-  }
-
-  setStudentId(studentId) {
-    this.studentId = studentId;
-  }
-
-  getSubjectId() {
-    return this.subjectId;
-  }
-
-  setSubjectId(subjectId) {
-    this.subjectId = subjectId;
-  }
-}
-
-module.exports = Subject;
+};
