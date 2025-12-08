@@ -20,16 +20,12 @@ exports.addSubjects = async (req, res) => {
       });
     }
 
-    console.log("Subjects before clean ===", subjects);
+    console.log("These are student subjectrs",subjects);
 
     const sanitizedSubjects = new SubjectSanitizer(subjects).sanitize();
 
-    console.log("Subjects after clean ===", sanitizedSubjects);
-
     let endorsement = new MatrixEndorsement(sanitizedSubjects).determine();
-    console.log("Student endorsement is:", endorsement);
-  
-    
+
     //Insert student
     await StudentModel.createStudent(studentId, endorsement, userId);
 
@@ -38,15 +34,21 @@ exports.addSubjects = async (req, res) => {
       uuidv4(),
       s.name,
       s.mark,
+      s.endorsementSubject,
       studentId,
     ]);
 
     //Insert all subjects
     await SubjectModel.insertSubjects(subjectValues);
 
+    console.log("Abut to return data");
+    console.log("Abut to return data aps subjects", sanitizedSubjects);
+    console.log("Abut to return data all subjects", subjects);
+
     return res.status(201).json({
       success: true,
       message: "Subjects added successfully",
+      endorsementSubjects: sanitizedSubjects,
     });
   } catch (error) {
     console.error("Add subjects error:", error);

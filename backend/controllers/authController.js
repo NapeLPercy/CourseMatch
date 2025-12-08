@@ -12,7 +12,7 @@ exports.register = async (req, res) => {
 
   console.log("abut to create an account");
   try {
-    // 1️⃣ Check if email already exists in account table
+    // Check if email already exists in account table
     db.query(
       "SELECT id FROM account WHERE email = ?",
       [email],
@@ -21,10 +21,10 @@ exports.register = async (req, res) => {
         if (results.length > 0)
           return res.status(400).json({ error: "Email already registered" });
 
-        // 2️⃣ Hash password
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // 3️⃣ Insert into user table first
+        // Insert into user table first
         const userId = uuidv4();
         const sqlUser = "INSERT INTO user (id) VALUES (?)";
         db.query(sqlUser, [userId], (err, result) => {
@@ -79,7 +79,7 @@ exports.login = async (req, res) => {
           { expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
-        // 4️⃣ Fetch student info linked to this account
+        // Fetch student info linked to this account
         const studentSql = "SELECT student_id AS studentId, endorsement FROM student WHERE user_id = ?";
         db.query(studentSql, [account.id], (err, studentResults) => {
           if (err) return res.status(500).json({ error: err.message });
@@ -87,7 +87,7 @@ exports.login = async (req, res) => {
           // If student record found, include it
           const studentData = studentResults.length > 0 ? studentResults[0] : null;
 
-          // 5️⃣ Construct final response object
+          // Construct final response object
           const userData = {
             id: account.id,
             email: account.email,

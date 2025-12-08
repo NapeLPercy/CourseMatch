@@ -4,6 +4,7 @@ const db = require('./config/db');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const subjectsRoutes = require('./routes/subjectRoutes');
+const uniRoutes = require('./routes/uniRoutes');
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/subjects', subjectsRoutes);
+app.use('/api/university', uniRoutes);
 
 //app.use('/auth', require('./routes/auth'));
 //app.use('/student', require('./routes/student'));

@@ -33,13 +33,19 @@ class SubjectSanitizer {
       .slice(0, 3); // pick best 3
 
     // Final sanitized list of exactly 7 subjects
-    return [
+    const apsSubjects = [
       homeLanguage,
       firstAdditional,
       mathOrLit,
       lifeOrientation,
       ...topElectives,
     ];
+
+    apsSubjects.forEach(subject=>{
+       subject.aps_subject = 1;
+    });
+
+    return apsSubjects;
   }
 }
 

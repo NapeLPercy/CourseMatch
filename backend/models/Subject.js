@@ -4,7 +4,7 @@ const db = require("../config/db");
 module.exports = {
   insertSubjects: async (subjectValues) => {
     const sql = `
-      INSERT INTO subject (subject_id, name, mark, student_id)
+      INSERT INTO subject (subject_id, name, mark,endorsement_subject, student_id)
       VALUES ?
     `;
 
