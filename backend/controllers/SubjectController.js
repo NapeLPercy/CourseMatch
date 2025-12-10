@@ -70,11 +70,18 @@ exports.getSubjects = async (req, res) => {
     const subjects = await SubjectModel.getSubjectsByStudentId(studentId);
 
     console.log("Subjects", subjects);
-    return res.status(200).json(subjects);
+    return res.status(200).json({
+      subjects:subjects,
+      success:true,
+      message:"Subjects successfuly fecthed!",
+    });
+
+
   } catch (error) {
     console.error("Get subjects error:", error);
     return res.status(500).json({
       message: "Error fetching subjects",
+      success:false,
     });
   }
 };

@@ -117,9 +117,9 @@ class MatricEndorsement {
     if (passedSubjects < 6) return "Failure - Less than 6 subjects passed";
 
     // Check in order of most stringent to least stringent
-    if (this.isBachelor()) return "Bachelor's Degree";
+    if (this.isBachelor()) return "Bachelor";
     if (this.isDiploma()) return "Diploma";
-    if (this.isHigherCertificate()) return "Higher Certificate";
+    if (this.isHigherCertificate()) return "Certificate";
 
     return "NSC Pass (No Higher Education Access)";
   }

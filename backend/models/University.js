@@ -40,7 +40,7 @@ module.exports = {
               qualification_code: row.Code,
               qualification_name: row.Name,
               minimum_duration: row.Minimum_Duration,
-              minimum_required: row.Minimum_APS,
+              minimum_aps: row.Minimum_APS,
               minimum_endorsement: row.Minimum_Endorsement,
               faculty_id: row.Faculty_Id,
               prereqs: [],
@@ -49,7 +49,7 @@ module.exports = {
 
           if (row.prereq_subject) {
             courseMap[code].prereqs.push({
-              subject: row.prereq_subject,
+              subject_name: row.prereq_subject,
               min_mark: row.prereq_min_mark,
             });
           }
