@@ -23,7 +23,6 @@ exports.addSubjects = async (req, res) => {
     console.log("These are student subjects",subjects);
 
     const sanitizedSubjects = new SubjectSanitizer(subjects).sanitize();
-
     let endorsement = new MatrixEndorsement(sanitizedSubjects).determine();
 
     //Insert student
@@ -69,7 +68,6 @@ exports.getSubjects = async (req, res) => {
 
     const subjects = await SubjectModel.getSubjectsByStudentId(studentId);
 
-    console.log("Subjects", subjects);
     return res.status(200).json({
       subjects:subjects,
       success:true,
@@ -85,3 +83,39 @@ exports.getSubjects = async (req, res) => {
     });
   }
 };
+
+
+exports.updateMark = async (req, res) => {
+  try {
+    const { subjectId } = req.params;    
+    const { Mark } = req.body;            
+
+    console.log(subjectId, Mark);
+    if (Mark === undefined || Mark === null) {
+      return res.status(400).json({ message: "Mark is required" });
+    }
+
+    // optional: validate mark is a number 0-100
+    const markNum = Number(Mark);
+    if (!Number.isFinite(markNum) || markNum < 0 || markNum > 100) {
+      return res.status(400).json({ message: "Mark must be 0-100" });
+    }
+
+    const updated = await SubjectModel.updateMark(subjectId, markNum);
+
+    console.log(updated,"HERE WE ARE");
+    
+    return res.status(200).json({
+      message: "Mark updated",
+      success: true,
+    });
+
+  } catch (err) {
+    console.error(err);
+     return res.status(500).json({
+      message: "Server error: ",
+      success:false
+    });
+  }
+};
+
