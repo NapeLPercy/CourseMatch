@@ -1,85 +1,133 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {Library, User} from "lucide-react";
 import "../../styles/Recommendations.css";
 
 function Recommendations({ qualifiedCourses }) {
+  /* ------------------------------------------------ */
+  // State
+  /* ------------------------------------------------ */
   const [loading, setLoading] = useState(true);
   const [recommendedCourses, setRecommendedCourses] = useState([]);
-  const [sortOrder, setSortOrder] = useState("desc"); // default sort by highest score
+  const [sortOrder, setSortOrder] = useState("desc");
+
   const navigate = useNavigate();
 
+  /* ------------------------------------------------ */
+  // Load cached AI recommendations from session
+  /* ------------------------------------------------ */
   useEffect(() => {
-    // simulate 3s fetch delay
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       const stored = sessionStorage.getItem("ai-recommendations");
       const parsed = stored ? JSON.parse(stored) : [];
       setRecommendedCourses(parsed);
       setLoading(false);
     }, 1500);
+
+    return () => clearTimeout(timer); // cleanup on unmount
   }, []);
 
-  const sortedCourses = [...recommendedCourses].sort((a, b) => {
-    return sortOrder === "asc" ? a.fit_score - b.fit_score : b.fit_score - a.fit_score;
-  });
+  /* ------------------------------------------------ */
+  // Derived: sorted list
+  /* ------------------------------------------------ */
+  const sortedCourses = [...recommendedCourses].sort((a, b) =>
+    sortOrder === "asc" ? a.fit_score - b.fit_score : b.fit_score - a.fit_score
+  );
 
-  const renderRecommendations = () => (
-    <div>
-      <div style={{ marginBottom: "1rem" }}>
-        <label>Sort by Fit Score: </label>
-        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-          <option value="desc">Highest First</option>
-          <option value="asc">Lowest First</option>
-        </select>
+  /* ------------------------------------------------ */
+  // Reusable renderers
+  /* ------------------------------------------------ */
+
+  /** Animated loading indicator – mirrors parent pattern */
+  const renderLoading = () => (
+    <p className="rec-loading">
+      <span className="dot" />
+      <span className="dot" />
+      <span className="dot" />
+      Displaying AI recommended courses …
+    </p>
+  );
+
+  /** Empty state with contextual CTA */
+  const renderEmptyState = () => {
+    const noQualified = qualifiedCourses.length === 0;
+
+    return (
+      <div className="rec-empty">
+        <div className="rec-empty__icon">{noQualified ? <Library color="#1e3a8a" size={54}/> : <User color="#1e3a8a" size={54}/>}</div>
+        <p className="rec-empty__text">
+          {noQualified
+            ? "You need to complete your qualified courses first so we can generate recommendations for you."
+            : "Enter your personalized profile data to get courses suitable for you."}
+        </p>
+        <button
+          className="rec-empty__btn"
+          onClick={() =>
+            navigate(noQualified ? "/qualified-courses" : "/add-profile")
+          }
+        >
+          {noQualified ? "Go to Qualified Courses →" : "Go to Profile →"}
+        </button>
       </div>
-      <ul>
-        {sortedCourses.map((course) => (
-          <li key={course.qualification_code}>
-            <strong>{course.qualification_name}</strong> ({course.qualification_code})  
-            <br />
-            Fit Score: {course.fit_score}  
-            <br />
-            Reason: {course.reason}
-          </li>
-        ))}
+    );
+  };
+
+  /** Sort controls bar */
+  const renderControls = () => (
+    <div className="rec-controls">
+      <span className="rec-controls__label">Sort by Fit Score</span>
+      <select
+        className="rec-controls__select"
+        value={sortOrder}
+        onChange={(e) => setSortOrder(e.target.value)}
+      >
+        <option value="desc">Highest First</option>
+        <option value="asc">Lowest First</option>
+      </select>
+    </div>
+  );
+
+  /** Single recommendation card */
+  const renderCard = (course) => (
+    <li className="rec-card" key={course.qualification_code}>
+      {/* fit score badge – sits to the left */}
+      <div className="rec-card__score-badge">
+        <span className="rec-card__score-badge__value">
+          {course.fit_score}
+        </span>
+        <span className="rec-card__score-badge__label">fit</span>
+      </div>
+
+      {/* name + code */}
+      <div className="rec-card__header">
+        <h3 className="rec-card__title">{course.qualification_name}</h3>
+        <span className="rec-card__code">{course.qualification_code}</span>
+      </div>
+
+      {/* AI reasoning */}
+      <p className="rec-card__reason">
+        <strong>Why this course?</strong> {course.reason}
+      </p>
+    </li>
+  );
+
+  /** Full sorted list */
+  const renderRecommendations = () => (
+    <>
+      {renderControls()}
+      <ul className="rec-list">
+        {sortedCourses.map((course) => renderCard(course))}
       </ul>
-    </div>
+    </>
   );
 
-  if (loading) {
-    return <p>displaying ai recommended courses...</p>;
-  }
+  /* ------------------------------------------------ */
+  // Main render logic
+  /* ------------------------------------------------ */
+  if (loading) return renderLoading();
+  if (recommendedCourses.length === 0) return renderEmptyState();
 
-  if (recommendedCourses.length === 0) {
-    if (qualifiedCourses.length === 0) {
-      return (
-        <div>
-          <p>
-            You need to complete your qualified courses first so we can generate
-            recommendations for you.
-          </p>
-          <button onClick={() => navigate("/qualified-courses")}>
-            Go to Qualified Courses
-          </button>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <p>
-            Enter your personalized profile data to get courses suitable for you.
-          </p>
-          <button onClick={() => navigate("/add-profile")}>Go to Profile</button>
-        </div>
-      );
-    }
-  }
-
-  return (
-    <div>
-      <h3>AI Recommended Courses</h3>
-      {renderRecommendations()}
-    </div>
-  );
+  return <div>{renderRecommendations()}</div>;
 }
 
 export default Recommendations;

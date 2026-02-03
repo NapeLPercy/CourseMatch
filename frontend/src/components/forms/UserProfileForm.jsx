@@ -72,9 +72,10 @@ export default function StudentProfileForm() {
 
   const handleSubmitProfile = async (profile, courses) => {
     setLoading(true);
+    const API_BASE = process.env.REACT_APP_API_BASE;
     try {
       const res = await fetch(
-        "http://localhost:5000/api/match-courses/advanced-matching",
+        `${API_BASE}/api/match-courses/advanced-matching`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -3,57 +3,67 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import TutAPS from "../../Utils/TUT/TutAPS";
 import CourseManager from "../../Utils/CourseManager";
-
-//context
+import { Library } from "lucide-react";
+// context
 import { CourseContext } from "../../context/CourseContext";
 import { useSubjects } from "../../context/SubjectContext";
 
+// child components
 import Recommendations from "./Recommendations";
 
+// styles
+import "../../styles/UniversityCourses.css";
+
 export default function UniversityCourses() {
+  /* ------------------------------------------------ */
+  // Route param
+  /* ------------------------------------------------ */
   let { courseSlug } = useParams();
   courseSlug = courseSlug.toUpperCase();
   sessionStorage.setItem("visited-uni", JSON.stringify(courseSlug));
 
-  //context
-  const { qualifications, updateQualifications, clearQualifications } =
-    useContext(CourseContext);
+  /* ------------------------------------------------ */
+  // Context
+  /* ------------------------------------------------ */
+  const { qualifications, updateQualifications } = useContext(CourseContext);
+  const { getSubjects } = useSubjects();
 
-  const { getSubjects, addSubjects } = useSubjects();
-
+  /* ------------------------------------------------ */
+  // State
+  /* ------------------------------------------------ */
   const [courses, setCourses] = useState(qualifications);
   const [qualifiedCourses, setQualifiedCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [activeTab, setActiveTab] = useState(() => {
-    const aiTabEnabled = sessionStorage.getItem("ai-tab");
     try {
-      return JSON.parse(aiTabEnabled) === true ? "recommendations" : "full";
+      return JSON.parse(sessionStorage.getItem("ai-tab")) === true
+        ? "recommendations"
+        : "full";
     } catch {
       return "full";
     }
   });
 
-  // 'full' or 'qualified'
-
   const [computingQualified, setComputingQualified] = useState(false);
   const [computingRecommendations, setComputingRecommendations] = useState(
-    () => {
-      return activeTab === "recommendations" ? true : false;
-    }
+    () => activeTab === "recommendations",
   );
 
+  /* ------------------------------------------------ */
+  // Fetch courses on mount / slug change
+  /* ------------------------------------------------ */
   useEffect(() => {
     const fetchCourses = async () => {
+      const API_BASE = process.env.REACT_APP_API_BASE;
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:5000/api/university/${courseSlug}`
+          `${API_BASE}/api/university/${courseSlug}`,
         );
 
         if (response.data.success) {
-          console.log("This is the reply", response.data.courses);
           setCourses(response.data.courses);
           updateQualifications(response.data.courses);
         } else {
@@ -65,59 +75,63 @@ export default function UniversityCourses() {
         setLoading(false);
       }
     };
+
     fetchCourses();
   }, [courseSlug]);
 
+  /* ------------------------------------------------ */
+  // Compute qualified courses
+  /* ------------------------------------------------ */
   const computeQualifiedCourses = () => {
     setComputingQualified(true);
-    // 1 compute the aps for the specific university using the slug
 
     const apsCalc = new TutAPS(getSubjects());
     const studentAPS = apsCalc.computeAPS();
 
-    console.log("THIS IS THE APS",studentAPS);
-    
     const studentEndorsement = JSON.parse(
-      sessionStorage.getItem("student")
-    ).endorsement;
+      sessionStorage.getItem("student"),
+    )?.endorsement;
 
     const courseManager = new CourseManager();
 
-    //qualified by aps courses
     const qualifiedByAps = courseManager.filterCoursesByAps(
       courses,
-      studentAPS
+      studentAPS,
     );
 
-    //qualified by endorsement courses
+    console.log("BY APS",qualifiedByAps);
+
     const qualifiedByEndorsement = courseManager.filterCoursesByEndorsement(
       qualifiedByAps,
-      studentEndorsement
+      studentEndorsement,
     );
 
-    console.log(
-      "This is the courses after endorsement",
-      qualifiedByEndorsement
-    );
-    //qualified by pre-requiste subjects(names & marks)
-    const qualifiedCourse =
-      qualifiedByEndorsement; /*courseManager.filterCoursesByPrerequisites(
-      getSubjects(),
-      qualifiedByEndorsement
-    );*/
+    console.log("BY ENDORSEMENT",qualifiedByEndorsement);
 
-    console.log("This is the courses after prerequiste", qualifiedCourse);
+    // prerequisite filter – uncomment when ready:
+    const qualifiedCourseByPrerequisite =
+      courseManager.filterCoursesByPrerequisites(
+        getSubjects(),
+        qualifiedByEndorsement,
+      );
+
+    const qualifiedCourse = qualifiedByEndorsement;
+
+    console.log("BY PRE-REQUISITE",qualifiedCourseByPrerequisite);
+
     setTimeout(() => {
       setQualifiedCourses(qualifiedCourse);
       setComputingQualified(false);
-
       sessionStorage.setItem(
         "qualified-courses",
-        JSON.stringify(qualifiedCourse)
+        JSON.stringify(qualifiedCourse),
       );
     }, 500);
   };
 
+  /* ------------------------------------------------ */
+  // Auto-compute when switching to "qualified" tab
+  /* ------------------------------------------------ */
   useEffect(() => {
     if (
       activeTab === "qualified" &&
@@ -128,146 +142,141 @@ export default function UniversityCourses() {
     }
   }, [activeTab, courses]);
 
+  /* ------------------------------------------------ */
+  // Reusable renderers
+  /* ------------------------------------------------ */
+
+  /** Animated loading indicator */
+  const renderLoading = (message) => (
+    <p className="uni-status">
+      <span className="dot" />
+      <span className="dot" />
+      <span className="dot" />
+      {message}
+    </p>
+  );
+
+  /** Single course card */
+  const renderCourseCard = (course, index) => (
+    <li className="uni-course-card" key={index}>
+      <h3 className="uni-course-card__title">{course.qualification_name}</h3>
+
+      <div className="uni-course-card__meta">
+        <span className="uni-course-card__meta-item">
+          <strong>Code:</strong> {course.qualification_code}
+        </span>
+        <span className="uni-course-card__meta-item">
+          <strong>Duration:</strong> {course.minimum_duration} yrs
+        </span>
+        <span className="uni-course-card__meta-item">
+          <strong>Min APS:</strong> {course.minimum_aps}
+        </span>
+      </div>
+
+      {course.prereqs && course.prereqs.length > 0 && (
+        <div className="uni-course-card__prereqs">
+          <p className="uni-course-card__prereqs-label">Prerequisites</p>
+          <ul className="uni-course-card__prereqs-list">
+            {course.prereqs.map((prereq, idx) => (
+              <li className="uni-course-card__prereq-tag" key={idx}>
+                {prereq.subject_name}
+                <span className="prereq-mark">{prereq.min_mark}%</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </li>
+  );
+
+  /** Full course list or empty state */
   const renderCourseList = (courseList, emptyMessage) => {
     if (courseList.length === 0) {
-      return <p>{emptyMessage}</p>;
+      return (
+        <div className="uni-empty-state">
+          <div className="uni-empty-icon">
+            <Library color="#1e3a8a" size={54} />
+          </div>
+          <p>{emptyMessage}</p>
+        </div>
+      );
     }
 
     return (
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {courseList.map((course, index) => (
-          <li
-            key={index}
-            style={{
-              padding: "15px",
-              margin: "10px 0",
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <h3 style={{ margin: "0 0 10px 0", color: "#333" }}>
-              {course.qualification_name}
-            </h3>
-            <p style={{ margin: "5px 0", fontSize: "14px", color: "#666" }}>
-              <strong>Code:</strong> {course.qualification_code}
-            </p>
-            <p style={{ margin: "5px 0", fontSize: "14px", color: "#666" }}>
-              <strong>Duration:</strong> {course.minimum_duration} years
-            </p>
-            <p style={{ margin: "5px 0", fontSize: "14px", color: "#666" }}>
-              <strong>Minimum APS:</strong> {course.minimum_aps}
-            </p>
-            {course.prereqs && course.prereqs.length > 0 && (
-              <div style={{ marginTop: "10px" }}>
-                <strong style={{ fontSize: "14px", color: "#333" }}>
-                  Prerequisites:
-                </strong>
-                <ul style={{ marginTop: "5px", paddingLeft: "20px" }}>
-                  {course.prereqs.map((prereq, idx) => (
-                    <li key={idx} style={{ fontSize: "13px", color: "#555" }}>
-                      {prereq.subject_name}: {prereq.min_mark}% minimum
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </li>
-        ))}
+      <ul className="uni-course-list">
+        {courseList.map((course, index) => renderCourseCard(course, index))}
       </ul>
     );
   };
 
+  /* ------------------------------------------------ */
+  // Tab definitions – keeps the tab bar DRY
+  /* ------------------------------------------------ */
+  const tabs = [
+    { id: "full", label: "Full Courses" },
+    { id: "qualified", label: "Qualified Courses" },
+    { id: "recommendations", label: "AI Recommendations" },
+  ];
+
+  /* ------------------------------------------------ */
+  // Render
+  /* ------------------------------------------------ */
   return (
-    <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
-      <h1>Viewing Courses: {courseSlug}</h1>
+    <div className="uni-courses-wrapper">
+      {/* Header */}
+      <header className="uni-courses-header">
+        <h1>University Courses</h1>
+        <span className="uni-slug-badge">{courseSlug}</span>
+      </header>
 
       {/* Tab Navigation */}
-      <div style={{ marginTop: "20px", borderBottom: "2px solid #ddd" }}>
-        <button
-          onClick={() => setActiveTab("full")}
-          style={{
-            padding: "10px 20px",
-            marginRight: "5px",
-            border: "none",
-            borderBottom: activeTab === "full" ? "3px solid #007bff" : "none",
-            backgroundColor: activeTab === "full" ? "#f0f8ff" : "transparent",
-            cursor: "pointer",
-            fontWeight: activeTab === "full" ? "bold" : "normal",
-            fontSize: "16px",
-          }}
-        >
-          Full Courses
-        </button>
+      <nav className="uni-tab-bar" role="tablist">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            className={`uni-tab-btn${activeTab === tab.id ? " active" : ""}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </nav>
 
-        <button
-          onClick={() => setActiveTab("qualified")}
-          style={{
-            padding: "10px 20px",
-            marginRight: "5px",
-            border: "none",
-            borderBottom:
-              activeTab === "qualified" ? "3px solid #007bff" : "none",
-            backgroundColor:
-              activeTab === "qualified" ? "#f0f8ff" : "transparent",
-            cursor: "pointer",
-            fontWeight: activeTab === "qualified" ? "bold" : "normal",
-            fontSize: "16px",
-          }}
-        >
-          Qualified Courses
-        </button>
+      {/* Content */}
+      <div className="uni-content-area" role="tabpanel">
+        {/* ─── Loading ─── */}
+        {loading && renderLoading("Loading courses …")}
 
-        <button
-          onClick={() => setActiveTab("recommendations")}
-          style={{
-            padding: "10px 20px",
-            border: "none",
-            borderBottom:
-              activeTab === "recommendations" ? "3px solid #007bff" : "none",
-            backgroundColor:
-              activeTab === "recommendations" ? "#f0f8ff" : "transparent",
-            cursor: "pointer",
-            fontWeight: activeTab === "recommendations" ? "bold" : "normal",
-            fontSize: "16px",
-          }}
-        >
-          AI Recommendations
-        </button>
-      </div>
+        {/* ─── Error ─── */}
+        {error && <p className="uni-status error">{error}</p>}
 
-      {/* Content Area */}
-      <div style={{ marginTop: "20px" }}>
-        {loading && <p>Loading courses...</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-
+        {/* ─── Tabs ─── */}
         {!loading && !error && (
           <>
             {activeTab === "full" &&
-              renderCourseList(courses, "No courses to view yet!")}
+              renderCourseList(
+                courses,
+                "No courses available for this university yet.",
+              )}
 
-            {activeTab === "qualified" && (
-              <>
-                {computingQualified ? (
-                  <p>Computing qualified courses...</p>
-                ) : (
-                  renderCourseList(
+            {activeTab === "qualified" &&
+              (computingQualified
+                ? renderLoading("Computing qualified courses …")
+                : renderCourseList(
                     qualifiedCourses,
-                    "No courses match your qualifications yet. Complete your profile to see qualified courses."
-                  )
-                )}
-              </>
-            )}
+                    "No courses match your qualifications under this institution",
+                  ))}
 
-            {activeTab === "recommendations" && (
-              <>
-                {computingRecommendations ? (
-                  <p>Displaying AI recommended courses...</p>
-                ) : (
+            {activeTab === "recommendations" &&
+              (computingRecommendations ? (
+                renderLoading("Preparing AI recommendations …")
+              ) : (
+                <div className="uni-recommendations-wrapper">
                   <Recommendations qualifiedCourses={qualifiedCourses} />
-                )}
-              </>
-            )}
+                </div>
+              ))}
           </>
         )}
       </div>

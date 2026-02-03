@@ -1,16 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import "../../styles/AddSubjects.css";
+import {
+  Plus,
+  Trash2,
+  Send,
+  X,
+  AlertCircle,
+  CheckCircle2,
+  Search,
+  ChevronDown,
+  BookOpen,
+  Sparkles,
+} from "lucide-react";
 import { useSubjects } from "../../context/SubjectContext";
+import "../../styles/AddSubjects.css";
 
-export default function AddSubjects() {
-  const { addSubjects} = useSubjects();
-
-  // Initial subjects list (can come from props or API)
-const subjectsList = [
+/* ─── Subject master list ───────────────────────────────────── */
+const SUBJECTS_LIST = [
   "Accounting",
   "Afrikaans FAL",
-   "Afrikaans HL",
+  "Afrikaans HL",
   "Agricultural Management Practices",
   "Agricultural Sciences",
   "Agricultural Technology",
@@ -49,177 +58,398 @@ const subjectsList = [
   "Venda HL",
   "Visual Arts",
   "Xhosa HL",
-  "iSiZulu HL"
+  "iSiZulu HL",
 ];
 
+/* ─── Validation ────────────────────────────────────────────── */
+function validate(subjects) {
+  const errors = [];
+  const names = subjects.map((s) => s.name).filter(Boolean);
 
-  // State for the subjects and marks
-  const [subjects, setSubjects] = useState([
-    { name: "", mark: "" }, // start with one empty field
-  ]);
+  // 1. Minimum 7
+  if (subjects.length < 7) {
+    errors.push("You must add at least 7 subjects.");
+  }
 
-  const [errorText, setErrorText] = useState(null);
-  const [deleteBtn, setDeleteBtn] = useState(false);
-
-  // Add a new empty subject field
-  const addSubjectField = () => {
-    if (subjects.length > 0) {
-      setDeleteBtn(true);
+  // 2. Every chosen subject must have a mark 0-100
+  subjects.forEach((s, i) => {
+    if (s.name && (s.mark === "" || s.mark === undefined)) {
+      errors.push(`"${s.name}" is missing a mark.`);
+    } else if (s.name && (Number(s.mark) < 0 || Number(s.mark) > 100)) {
+      errors.push(`"${s.name}" mark must be between 0 and 100.`);
     }
+  });
 
-    //15 max
-    if (subjects.length >= 15) {
-      setErrorText("You have added the maximum number of subjects");
-      return;
+  // 3. Every row must have a subject chosen
+  subjects.forEach((s, i) => {
+    if (!s.name) {
+      errors.push(`Row ${i + 1} has no subject selected.`);
     }
+  });
 
-    setSubjects([...subjects, { name: "", mark: "" }]);
-  };
-
-  // Handle change for a specific field
-  const handleChange = (index, field, value) => {
-    const newSubjects = [...subjects];
-    newSubjects[index][field] = value;
-    setSubjects(newSubjects);
-  };
-
-  // Handle submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    //checks num of subjects
-    if (subjects.length < 7) {
-      setErrorText("You have to submit a minimum of 7 subjects");
-      return;
-    }
-
-    //validate each subject mark
-    subjects.forEach((subject) => {
-      if (subject.mark < 0 || subject.mark > 100) {
-        setErrorText("Subject must have marks between 0 and 100");
-        return;
+  // 4. No duplicate subjects
+  const seen = new Set();
+  subjects.forEach((s) => {
+    if (s.name) {
+      if (seen.has(s.name)) {
+        errors.push(`"${s.name}" is selected more than once.`);
       }
-    });
-    console.log("Subjects to save:", subjects);
-
-    subjects.forEach((subject) => {
-      subject.endorsementSubject = 0;
-    });
-    console.log("Subjects before adding", subjects);
-
-    // TODO: Send subjects to backend via axios/fetch
-    const userId = JSON.parse(sessionStorage.getItem("user"))?.id;
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/subjects/addSubjects",
-        {
-          userId,
-          subjects,
-        }
-      );
-
-      console.log("Server response:", response.data);
-      alert("Subjects submitted successfully!");
-
-      addSubjects(subjects); //add all subjects to sessionData
-      setSubjects([{ name: "", mark: "" }]); // reset
-    } catch (err) {
-      console.error(
-        "Subjects submission error:",
-        err.response?.data || err.message
-      );
-      alert(err.response?.data?.error || "Subjects submission failed");
+      seen.add(s.name);
     }
-  };
+  });
 
-  const handleDelete = (index) => {
-    console.log("Deleting subject at index:", index);
+  // 5. Mathematics OR Mathematical Literacy required
+  const hasMath =
+    names.includes("Mathematics") || names.includes("Mathematical Literacy");
+  if (!hasMath) {
+    errors.push("You must include Mathematics or Mathematical Literacy.");
+  }
 
-    const newSubjects = subjects.filter((_, i) => i !== index);
+  // 6. Life Orientation required
+  if (!names.includes("Life Orientation")) {
+    errors.push("You must include Life Orientation.");
+  }
 
-    console.log("After deleting subject:", newSubjects);
-    setSubjects(newSubjects);
-  };
+  // 7. At least one FAL subject
+  const hasFAL = names.some((n) => n.endsWith("FAL"));
+  if (!hasFAL) {
+    errors.push("You must include at least one FAL subject (e.g. English FAL).");
+  }
+
+  // 8. At least one HL subject
+  const hasHL = names.some((n) => n.endsWith("HL"));
+  if (!hasHL) {
+    errors.push("You must include at least one HL subject (e.g. English HL).");
+  }
+
+  return errors;
+}
+
+/* ─── Mark tier helper ──────────────────────────────────────── */
+function markTier(val) {
+  const n = Number(val);
+  if (isNaN(n) || val === "") return null;
+  if (n >= 80) return "excellent";
+  if (n >= 70) return "good";
+  if (n >= 60) return "average";
+  return "low";
+}
+
+/* ─── Searchable select (one instance per row) ─────────────── */
+function SubjectSelect({ value, onChange, takenNames }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const wrap = useRef(null);
+  const searchInput = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (wrap.current && !wrap.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  useEffect(() => {
+    if (open && searchInput.current) searchInput.current.focus();
+  }, [open]);
+
+  // Filter: match query AND exclude already-taken names (allow current value through)
+  const filtered = SUBJECTS_LIST.filter(
+    (s) =>
+      s.toLowerCase().includes(query.toLowerCase()) &&
+      (!takenNames.has(s) || s === value)
+  );
 
   return (
-    <div className="container mt-4">
-      <h3>Add Subjects</h3>
-      <form onSubmit={handleSubmit}>
-        {errorText && (
-          <p
-            id="add-subject-error"
-            style={{
-              color: "#d93025",
-              backgroundColor: "#ffe6e6",
-              border: "1px solid #f5c2c2",
-              padding: "8px 12px",
-              borderRadius: "6px",
-              fontSize: "14px",
-              fontWeight: "500",
-              display: "inline-block",
-              marginTop: "6px",
-            }}
-          >
-            {errorText}
-          </p>
-        )}
-        {subjects.map((subject, index) => (
-          <div className="row mb-2 align-items-center" key={index}>
-            <div className="col-md-6"  style={{marginBottom:"10"}}>
-              <select
-                className="form-select"
-                value={subject.name}
-                onChange={(e) => handleChange(index, "name", e.target.value)}
-                required
-               
-              >
-                <option value="">Select Subject</option>
-                {subjectsList.map((s, i) => (
-                  <option key={i} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="col-md-4">
-              <input
-                type="number"
-                className="form-control"
-                placeholder="Enter Mark"
-                value={subject.mark}
-                onChange={(e) => handleChange(index, "mark", e.target.value)}
-                required
-              />
-            </div>
-            {deleteBtn && subjects.length > 1 && (
-              <div className="col-md-2 text-end">
-                <i
-                  className="fas fa-trash-alt text-danger"
-                  style={{ cursor: "pointer", fontSize: "18px" }}
-                  title="Delete"
-                  onClick={() => handleDelete(index)} // optional
-                ></i>
-              </div>
-            )}
+    <div ref={wrap} className="as__select">
+      {/* Trigger */}
+      <button
+        type="button"
+        className={`as__select-trigger ${open ? "as__select-trigger--open" : ""} ${!value ? "as__select-trigger--empty" : ""}`}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <BookOpen size={15} strokeWidth={2} className="as__select-icon" />
+        <span className={`as__select-val ${!value ? "as__select-val--ph" : ""}`}>
+          {value || "Select a subject…"}
+        </span>
+        <ChevronDown size={14} strokeWidth={2.2} className={`as__select-chevron ${open ? "as__select-chevron--open" : ""}`} />
+      </button>
 
-            <div className="col-md-2">
-              {index === subjects.length - 1 && (
-                <button
-                  type="button"
-                  className="btn btn-outline-primary"
-                  onClick={addSubjectField}
+      {/* Panel */}
+      {open && (
+        <div className="as__select-panel">
+          <div className="as__select-search">
+            <Search size={14} strokeWidth={2} className="as__select-search-icon" />
+            <input
+              ref={searchInput}
+              type="text"
+              className="as__select-search-input"
+              placeholder="Type to filter…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
+          <ul className="as__select-list">
+            {filtered.length > 0 ? (
+              filtered.map((s) => (
+                <li
+                  key={s}
+                  className={`as__select-option ${s === value ? "as__select-option--active" : ""}`}
+                  onClick={() => { onChange(s); setOpen(false); setQuery(""); }}
                 >
-                  Add Another
+                  {s}
+                </li>
+              ))
+            ) : (
+              <li className="as__select-empty">No match for "{query}"</li>
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Progress ring (visual 0–15 counter) ───────────────────── */
+function ProgressBar({ current, max }) {
+  const pct = Math.min((current / max) * 100, 100);
+  const minReached = current >= 7;
+
+  return (
+    <div className="as__progress">
+      <div className="as__progress-track">
+        <div
+          className={`as__progress-fill ${minReached ? "as__progress-fill--ok" : ""}`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <span className="as__progress-label">
+        {current} <span className="as__progress-sep">/</span> {max}
+        {minReached && <CheckCircle2 size={13} strokeWidth={2.2} className="as__progress-check" />}
+      </span>
+    </div>
+  );
+}
+
+/* ─── Success screen ────────────────────────────────────────── */
+function SuccessScreen({ onReset }) {
+  return (
+    <div className="as__success">
+      <div className="as__success-icon">
+        <CheckCircle2 size={48} strokeWidth={1.4} />
+      </div>
+      <h3 className="as__success-title">Subjects saved!</h3>
+      <p className="as__success-text">
+        Your subjects have been submitted successfully. You can now view your matched courses.
+      </p>
+      <button className="as__success-btn" type="button" onClick={onReset}>
+        <Plus size={15} strokeWidth={2.2} /> Add more subjects
+      </button>
+    </div>
+  );
+}
+
+/* ─── Main ──────────────────────────────────────────────────── */
+export default function AddSubjects() {
+  const { addSubjects } = useSubjects();
+
+  const [subjects, setSubjects] = useState([{ name: "", mark: "" }]);
+  const [errors, setErrors] = useState([]);          // array of strings
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);     // API in-flight
+
+  const MAX = 15;
+  const MIN = 7;
+
+  /* Build a set of already-chosen names for duplicate prevention */
+  const takenNames = new Set(subjects.map((s) => s.name).filter(Boolean));
+
+  /* Add row */
+  const addRow = () => {
+    if (subjects.length >= MAX) return;
+    setSubjects((prev) => [...prev, { name: "", mark: "" }]);
+  };
+
+  /* Delete row */
+  const deleteRow = (i) => {
+    setSubjects((prev) => prev.filter((_, idx) => idx !== i));
+  };
+
+  /* Field change */
+  const change = (i, field, val) => {
+    setSubjects((prev) => {
+      const copy = [...prev];
+      copy[i] = { ...copy[i], [field]: val };
+      return copy;
+    });
+    // Clear errors as user edits
+    if (errors.length) setErrors([]);
+  };
+
+  /* Submit */
+  const handleSubmit = async () => {
+    const errs = validate(subjects);
+    if (errs.length) { setErrors(errs); return; }
+
+    setLoading(true);
+    setErrors([]);
+
+    const payload = subjects.map((s) => ({
+      ...s,
+      endorsementSubject: 0,
+    }));
+
+    const userId = JSON.parse(sessionStorage.getItem("user"))?.id;
+    const API_BASE = process.env.REACT_APP_API_BASE;
+
+    try {
+      const res = await axios.post(`${API_BASE}/api/subjects/addSubjects`, {
+        userId,
+        subjects: payload,
+      });
+
+      if (res.data) {
+        addSubjects(payload);
+        setSubmitted(true);
+      }
+    } catch (err) {
+      setErrors([err.response?.data?.error || "Submission failed. Try again."]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* Reset after success */
+  const reset = () => {
+    setSubjects([{ name: "", mark: "" }]);
+    setErrors([]);
+    setSubmitted(false);
+  };
+
+  /* ── Success state ── */
+  if (submitted) return <SuccessScreen onReset={reset} />;
+
+  /* ── Form ── */
+  return (
+    <div className="as">
+      {/* Header */}
+      <div className="as__header">
+        <div className="as__header-left">
+          <div className="as__icon-wrap">
+            <BookOpen size={22} strokeWidth={1.6} />
+          </div>
+          <span className="as__eyebrow">Step 1</span>
+          <h1 className="as__title">Add Your Subjects</h1>
+          <p className="as__subtitle">
+            Enter your matric subjects and marks. You need between 7 and 15 subjects.
+          </p>
+        </div>
+
+        {/* Requirements checklist */}
+        <div className="as__requirements">
+          <span className="as__req-title">Requirements</span>
+          {[
+            { label: "7–15 subjects", met: subjects.length >= MIN && subjects.length <= MAX },
+            { label: "Maths or Maths Literacy", met: subjects.some((s) => s.name === "Mathematics" || s.name === "Mathematical Literacy") },
+            { label: "Life Orientation", met: subjects.some((s) => s.name === "Life Orientation") },
+            { label: "At least one FAL", met: subjects.some((s) => s.name.endsWith("FAL")) },
+            { label: "At least one HL", met: subjects.some((s) => s.name.endsWith("HL")) },
+          ].map((r) => (
+            <div key={r.label} className={`as__req ${r.met ? "as__req--met" : ""}`}>
+              <CheckCircle2 size={13} strokeWidth={2.2} className="as__req-icon" />
+              {r.label}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Progress */}
+      <ProgressBar current={subjects.length} max={MAX} />
+
+      {/* Error pills */}
+      {errors.length > 0 && (
+        <div className="as__errors">
+          <div className="as__errors-header">
+            <AlertCircle size={15} strokeWidth={2} className="as__errors-icon" />
+            <span>Please fix the following</span>
+            <button type="button" className="as__errors-dismiss" onClick={() => setErrors([])}>
+              <X size={13} strokeWidth={2.2} />
+            </button>
+          </div>
+          <ul className="as__errors-list">
+            {errors.map((e, i) => (
+              <li key={i} className="as__error-item">
+                <X size={11} strokeWidth={2.5} className="as__error-bullet" /> {e}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Subject rows */}
+      <div className="as__rows">
+        {subjects.map((s, i) => {
+          const tier = markTier(s.mark);
+          return (
+            <div key={i} className="as__row" style={{ animationDelay: `${i * 0.04}s` }}>
+              {/* Row number */}
+              <span className="as__row-num">{i + 1}</span>
+
+              {/* Select */}
+              <SubjectSelect
+                value={s.name}
+                onChange={(val) => change(i, "name", val)}
+                takenNames={takenNames}
+              />
+
+              {/* Mark input + badge */}
+              <div className="as__mark-wrap">
+                <input
+                  type="number"
+                  className="as__mark-input"
+                  placeholder="Mark"
+                  min="0"
+                  max="100"
+                  value={s.mark}
+                  onChange={(e) => change(i, "mark", e.target.value)}
+                />
+                {tier && <span className={`as__mark-badge as__mark-badge--${tier}`}>{tier}</span>}
+              </div>
+
+              {/* Delete (only if more than 1 row) */}
+              {subjects.length > 1 && (
+                <button type="button" className="as__delete" onClick={() => deleteRow(i)} aria-label={`Remove row ${i + 1}`}>
+                  <Trash2 size={15} strokeWidth={2} />
                 </button>
               )}
             </div>
-          </div>
-        ))}
+          );
+        })}
+      </div>
 
-        <button type="submit" className="btn btn-success mt-3" style={{marginTop: "10"}}>
-          Add Subjects
+      {/* Row actions */}
+      <div className="as__actions">
+        {subjects.length < MAX && (
+          <button type="button" className="as__add-btn" onClick={addRow}>
+            <Plus size={15} strokeWidth={2.2} /> Add Another
+          </button>
+        )}
+
+        <button
+          type="button"
+          className="as__submit-btn"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? (
+            <span className="as__submit-spinner" />
+          ) : (
+            <Send size={16} strokeWidth={2.2} />
+          )}
+          {loading ? "Saving…" : "Submit Subjects"}
         </button>
-      </form>
+      </div>
     </div>
   );
 }
