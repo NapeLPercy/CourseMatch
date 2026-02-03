@@ -1,0 +1,180 @@
+/* ============================================================
+   LOGIN FORM — CourseMatch
+   ============================================================ */
+
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Field wrapper ──────────────────────────────────────────── */
+.login__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.login__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  letter-spacing: 0.02em;
+}
+
+.login__label-icon {
+  color: var(--text-gray);
+}
+
+/* ── Input ──────────────────────────────────────────────────── */
+.login__input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--off-white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.login__input::placeholder {
+  color: var(--text-gray);
+  opacity: 0.5;
+}
+
+.login__input:focus {
+  border-color: var(--light-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* ── Password wrapper (input + toggle) ──────────────────────── */
+.login__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login__input-wrap .login__input {
+  padding-right: 42px; /* space for toggle button */
+}
+
+.login__toggle {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-gray);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.login__toggle:hover {
+  background: rgba(30, 58, 138, 0.06);
+  color: var(--medium-blue);
+}
+
+/* ── Forgot password link ───────────────────────────────────── */
+.login__forgot {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.78rem;
+  color: var(--medium-blue);
+  text-decoration: none;
+  align-self: flex-end;
+  margin-top: -8px; /* pull up closer to password field */
+  transition: color 0.2s ease;
+}
+
+.login__forgot:hover {
+  color: var(--light-blue);
+  text-decoration: underline;
+}
+
+/* ── Submit button ──────────────────────────────────────────── */
+.login__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  border: none;
+  border-radius: 10px;
+  padding: 13px 28px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--white);
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.32);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, opacity 0.2s ease;
+  margin-top: 8px;
+}
+
+.login__submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(37, 99, 235, 0.42);
+}
+
+.login__submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Spinner inside submit */
+.login__spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--white);
+  border-radius: 50%;
+  animation: spin 0.55s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Footer (register link) ─────────────────────────────────── */
+.login__footer {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-gray);
+  text-align: center;
+  margin: 8px 0 0;
+}
+
+.login__footer-link {
+  color: var(--medium-blue);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login__footer-link:hover {
+  color: var(--light-blue);
+  text-decoration: underline;
+}

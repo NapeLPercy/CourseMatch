@@ -1,0 +1,236 @@
+/* ============================================================
+   NOT FOUND (404) — CourseMatch
+   ============================================================ */
+
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FULL-SCREEN SHELL
+   ══════════════════════════════════════════════════════════════ */
+.nf {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: var(--primary-blue);
+  overflow: hidden;
+}
+
+/* Gradient mesh */
+.nf__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 65% 55% at 30% 45%, rgba(37, 99, 235, 0.32) 0%, transparent 68%),
+    radial-gradient(ellipse 55% 65% at 70% 35%, rgba(59, 130, 246, 0.2) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Decorative circles */
+.nf__geo {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(219, 234, 254, 0.08);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nf__geo--1 {
+  width: 480px;
+  height: 480px;
+  top: -180px;
+  right: -160px;
+  animation: geoFloat 20s ease-in-out infinite;
+}
+
+.nf__geo--2 {
+  width: 340px;
+  height: 340px;
+  bottom: -110px;
+  left: -90px;
+  border-color: rgba(219, 234, 254, 0.06);
+  animation: geoFloat 16s ease-in-out infinite reverse;
+}
+
+@keyframes geoFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-24px) rotate(3deg); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CONTENT
+   ══════════════════════════════════════════════════════════════ */
+.nf__content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  max-width: 520px;
+  width: 100%;
+  animation: contentFade 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes contentFade {
+  0%   { opacity: 0; transform: translateY(20px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Icon ─────────────────────────────────────────────────── */
+.nf__icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(219, 234, 254, 0.08);
+  border: 1.5px solid rgba(219, 234, 254, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pale-blue);
+  margin-bottom: 8px;
+  animation: iconPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+@keyframes iconPop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ── 404 Code ─────────────────────────────────────────────── */
+.nf__code {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(4rem, 12vw, 7rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--white);
+  margin: 0;
+  letter-spacing: -0.03em;
+  opacity: 0.15;
+}
+
+/* ── Title ────────────────────────────────────────────────── */
+.nf__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--white);
+  margin: 0;
+}
+
+/* ── Body text ────────────────────────────────────────────── */
+.nf__text {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(219, 234, 254, 0.7);
+  margin: 0 0 20px;
+  max-width: 400px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ACTION BUTTONS
+   ══════════════════════════════════════════════════════════════ */
+.nf__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.nf__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.22s ease, box-shadow 0.25s ease, background 0.22s ease, border-color 0.22s ease;
+  white-space: nowrap;
+}
+
+/* Primary (Go Home) */
+.nf__btn--primary {
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  color: var(--white);
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.35);
+}
+
+.nf__btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(37, 99, 235, 0.45);
+}
+
+.nf__btn--primary:active {
+  transform: translateY(0);
+}
+
+/* Ghost (Go Back) */
+.nf__btn--ghost {
+  background: transparent;
+  color: var(--pale-blue);
+  border: 1px solid rgba(219, 234, 254, 0.22);
+}
+
+.nf__btn--ghost:hover {
+  background: rgba(219, 234, 254, 0.08);
+  border-color: rgba(219, 234, 254, 0.42);
+  transform: translateY(-2px);
+}
+
+.nf__btn--ghost:active {
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 500px) {
+  .nf {
+    padding: 32px 16px;
+  }
+
+  .nf__icon {
+    width: 96px;
+    height: 96px;
+  }
+
+  .nf__icon svg {
+    width: 56px;
+    height: 56px;
+  }
+
+  .nf__code {
+    font-size: 4.5rem;
+  }
+
+  .nf__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .nf__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

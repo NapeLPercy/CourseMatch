@@ -1,32 +1,146 @@
-  /* Footer */
-    
-  :root {
-      --primary-blue: #1e3a8a;
-      --medium-blue: #2563eb;
-      --light-blue: #3b82f6;
-      --pale-blue: #dbeafe;
-      --white: #ffffff;
-      --off-white: #f8fafc;
-      --text-dark: #1e293b;
-      --text-gray: #475569;
-      --shadow: rgba(30, 58, 138, 0.1);
-    }
-     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+/* ============================================================
+   FOOTER — CourseMatch
+   Continues the dark primary-blue shell from Contact.
+   ============================================================ */
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-      color: var(--text-dark);
-      line-height: 1.6;
-    }
-    
-  .footer {
-      background-color: var(--primary-blue);
-      color: var(--white);
-      text-align: center;
-      padding: 2rem;
-      margin-top: 3rem;
-    }
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+}
+
+/* ── Shell ────────────────────────────────────────────────── */
+.footer {
+  background: #152d6e; /* one shade deeper than primary so it reads as a clear endpoint */
+  border-top: 1px solid rgba(219, 234, 254, 0.08);
+  padding: 36px 24px;
+}
+
+.footer__inner {
+  max-width: 1060px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* ── Brand (left) ─────────────────────────────────────────── */
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer__logo {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.footer__logo-accent {
+  color: var(--light-blue);
+}
+
+.footer__tagline {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.72rem;
+  color: rgba(219, 234, 254, 0.35);
+  letter-spacing: 0.02em;
+}
+
+/* ── Links (centre) ───────────────────────────────────────── */
+.footer__links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer__link {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(219, 234, 254, 0.5);
+  text-decoration: none;
+  padding: 4px 0;
+  position: relative;
+  transition: color 0.25s ease;
+}
+
+.footer__link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--light-blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footer__link:hover {
+  color: var(--pale-blue);
+}
+
+.footer__link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Bullet divider between links */
+.footer__divider {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(219, 234, 254, 0.2);
+}
+
+/* ── Credit (right) ───────────────────────────────────────── */
+.footer__credit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.footer__copy {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.72rem;
+  color: rgba(219, 234, 254, 0.3);
+}
+
+.footer__created {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.7rem;
+  color: rgba(219, 234, 254, 0.25);
+}
+
+.footer__creator {
+  color: rgba(219, 234, 254, 0.45);
+  font-weight: 500;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 580px) {
+  .footer__inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 18px;
+  }
+
+  .footer__brand {
+    align-items: center;
+  }
+
+  .footer__credit {
+    align-items: center;
+  }
+}

@@ -1,3 +1,272 @@
- .container{
-    height: 80vh;
- }
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+}
+
+/* ===================================================
+   ViewSubjects.css
+   Consistent with UniversityCourses.css &
+   Recommendations.css
+   =================================================== */
+
+/* ---- Page Shell --------------------------------- */
+.vs-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 90px 24px 60px 32px !important;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* ---- Header -------------------------------------- */
+.vs-header {
+  margin-bottom: 28px;
+}
+
+.vs-header__title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  letter-spacing: -0.02em;
+}
+
+.vs-header__count {
+  display: inline-block;
+  margin-top: 6px;
+  background: var(--pale-blue);
+  color: var(--primary-blue);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* ---- Loading ------------------------------------- */
+.vs-loading {
+  font-size: 0.92rem;
+  color: var(--text-gray);
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vs-loading .dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: var(--medium-blue);
+  border-radius: 50%;
+  animation: vs-pulse 1.2s infinite ease-in-out;
+}
+
+.vs-loading .dot:nth-child(2) { animation-delay: 0.2s; }
+.vs-loading .dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes vs-pulse {
+  0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+  40%           { opacity: 1;   transform: scale(1);   }
+}
+
+/* ---- Empty State --------------------------------- */
+.vs-empty {
+  text-align: center;
+  padding: 56px 20px;
+  color: var(--text-gray);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.vs-empty__icon {
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  opacity: 0.45;
+}
+
+/* ---- Subject List -------------------------------- */
+.vs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ---- Single Subject Card ------------------------- */
+.vs-card {
+  background: var(--white);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.vs-card:hover {
+  border-color: var(--light-blue);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.1);
+}
+
+/* ---- Mark Badge (left) --------------------------- */
+.vs-card__mark {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 2px solid transparent;
+}
+
+/* colour bands by performance */
+.vs-card__mark--high {
+  background: #dcfce7;
+  border-color: #22c55e;
+}
+
+.vs-card__mark--mid {
+  background: var(--pale-blue);
+  border-color: var(--light-blue);
+}
+
+.vs-card__mark--low {
+  background: #fef3c7;
+  border-color: #f59e0b;
+}
+
+.vs-card__mark--fail {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+
+.vs-card__mark__value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.vs-card__mark--high .vs-card__mark__value { color: #15803d; }
+.vs-card__mark--mid  .vs-card__mark__value { color: var(--primary-blue); }
+.vs-card__mark--low  .vs-card__mark__value { color: #b45309; }
+.vs-card__mark--fail .vs-card__mark__value { color: #dc2626; }
+
+.vs-card__mark__label {
+  font-size: 0.52rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+.vs-card__mark--high .vs-card__mark__label { color: #16a34a; }
+.vs-card__mark--mid  .vs-card__mark__label { color: var(--medium-blue); }
+.vs-card__mark--low  .vs-card__mark__label { color: #d97706; }
+.vs-card__mark--fail .vs-card__mark__label { color: #dc2626; }
+
+/* ---- Name (middle, grows) ------------------------ */
+.vs-card__name {
+  flex: 1;
+  min-width: 0; /* lets text truncate on small screens */
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Edit Button (right) ------------------------- */
+.vs-card__edit-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--medium-blue);
+  cursor: pointer;
+  transition: background-color 0.2s ease,
+              border-color 0.2s ease,
+              color 0.2s ease,
+              transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.vs-card__edit-btn:hover {
+  background: var(--pale-blue);
+  border-color: var(--light-blue);
+  color: var(--primary-blue);
+}
+
+.vs-card__edit-btn:active {
+  transform: scale(0.95);
+}
+
+/* pencil icon inside button */
+.vs-card__edit-btn__icon {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+/* ===================================================
+   Responsive – Mobile  (≤ 600 px)
+   =================================================== */
+@media (max-width: 600px) {
+  .vs-wrapper {
+    padding: 20px 14px 48px;
+  }
+
+  .vs-header__title {
+    font-size: 1.35rem;
+  }
+
+  .vs-card {
+    padding: 14px 14px;
+    border-radius: 10px;
+    gap: 12px;
+  }
+
+  .vs-card__mark {
+    width: 46px;
+    height: 46px;
+  }
+
+  .vs-card__mark__value {
+    font-size: 0.88rem;
+  }
+
+  .vs-card__name {
+    font-size: 0.88rem;
+  }
+
+  .vs-card__edit-btn {
+    padding: 5px 8px;
+    font-size: 0; /* hide label text, keep icon */
+  }
+
+  .vs-card__edit-btn__icon {
+    width: 14px;
+    height: 14px;
+  }
+}

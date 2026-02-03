@@ -1,0 +1,286 @@
+/* ===================================================
+   EditMarkModal.css
+   Same variables, BEM (emd = edit-mark-dialog),
+   and 600px breakpoint as the rest of the app
+   =================================================== */
+
+/* ---- Backdrop ------------------------------------ */
+.emd-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;       /* sheet anchors to bottom on mobile */
+  justify-content: center;
+  animation: emd-fade-in 0.2s ease;
+}
+
+@keyframes emd-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---- Modal Sheet --------------------------------- */
+.emd-sheet {
+  background: var(--white);
+  border-radius: 16px 16px 0 0;   /* flat bottom on mobile */
+  width: 100%;
+  max-width: 440px;
+  padding: 28px 24px 32px;
+  animation: emd-slide-up 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+@keyframes emd-slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ---- Close button (top-right) -------------------- */
+.emd-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-gray);
+  font-size: 1.3rem;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.emd-close:hover {
+  color: var(--text-dark);
+  background-color: #f1f5f9;
+}
+
+/* ---- Header (subject name) ----------------------- */
+.emd-header {
+  margin-bottom: 22px;
+  padding-right: 24px; /* avoid overlapping close btn */
+}
+
+.emd-header__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-gray);
+  margin-bottom: 4px;
+}
+
+.emd-header__title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Current mark display ------------------------ */
+.emd-current {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.emd-current__badge {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 9px;
+  background: var(--pale-blue);
+  border: 2px solid var(--light-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+}
+
+.emd-current__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.emd-current__meta-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-gray);
+}
+
+.emd-current__meta-value {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+/* ---- Input group --------------------------------- */
+.emd-field {
+  margin-bottom: 8px;
+}
+
+.emd-field__label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+
+.emd-field__input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--white);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.emd-field__input:focus {
+  border-color: var(--medium-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* invalid state */
+.emd-field__input--invalid {
+  border-color: #ef4444;
+}
+
+.emd-field__input--invalid:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+/* ---- Validation message -------------------------- */
+.emd-field__error {
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin-top: 5px;
+  min-height: 1rem; /* reserve space so layout doesn't jump */
+}
+
+/* ---- Action buttons ------------------------------ */
+.emd-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.emd-actions__btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 11px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s ease,
+              color 0.2s ease,
+              transform 0.15s ease,
+              opacity 0.2s ease;
+}
+
+/* Cancel */
+.emd-actions__btn--cancel {
+  background: #f1f5f9;
+  color: var(--text-gray);
+}
+
+.emd-actions__btn--cancel:hover {
+  background: #e2e8f0;
+  color: var(--text-dark);
+}
+
+/* Save */
+.emd-actions__btn--save {
+  background: var(--medium-blue);
+  color: var(--white);
+}
+
+.emd-actions__btn--save:hover {
+  background: var(--primary-blue);
+}
+
+/* disabled save while saving or invalid */
+.emd-actions__btn--save:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* press feedback */
+.emd-actions__btn:not(:disabled):active {
+  transform: scale(0.96);
+}
+
+/* ---- Saving indicator (inside save btn) ---------- */
+.emd-actions__btn--saving {
+  gap: 8px;
+}
+
+.emd-actions__btn--saving .dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: var(--white);
+  border-radius: 50%;
+  animation: emd-dot 1.2s infinite ease-in-out;
+}
+
+.emd-actions__btn--saving .dot:nth-child(2) { animation-delay: 0.2s; }
+.emd-actions__btn--saving .dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes emd-dot {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.7); }
+  40%           { opacity: 1;   transform: scale(1);   }
+}
+
+/* ===================================================
+   Desktop – center the sheet instead of bottom-sheet
+   =================================================== */
+@media (min-width: 601px) {
+  .emd-overlay {
+    align-items: center;  /* vertically center on desktop */
+  }
+
+  .emd-sheet {
+    border-radius: 16px; /* full round on desktop */
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+  }
+}
+
+/* ===================================================
+   Mobile adjustments  (≤ 600 px)
+   =================================================== */
+@media (max-width: 600px) {
+  .emd-sheet {
+    padding: 22px 18px 40px; /* extra bottom for thumb reach */
+  }
+
+  .emd-header__title {
+    font-size: 1.05rem;
+  }
+}

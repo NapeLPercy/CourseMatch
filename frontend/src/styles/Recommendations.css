@@ -1,62 +1,281 @@
-/* Recommendations.css */
+/* ===================================================
+   Recommendations.css
+   Visually consistent with UniversityCourses.css
+   Uses the same :root variables & card patterns
+   =================================================== */
 
-.recommendations-container {
-  padding: 1rem;
-  background-color: red;
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
 }
 
-.recommendations-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+/* ---- Controls row (sort bar) --------------------- */
+.rec-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
-.course-card {
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.course-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.course-title {
-  font-size: 1.1rem;
+.rec-controls__label {
+  font-size: 0.82rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #333;
+  color: var(--text-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.course-code {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 0.5rem;
-}
-
-.course-score {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #0077cc;
-  margin-bottom: 0.5rem;
-}
-
-.course-reason {
+.rec-controls__select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--white);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 7px 34px 7px 12px;
   font-size: 0.85rem;
-  line-height: 1.4;
-  color: #444;
+  font-weight: 500;
+  color: var(--text-dark);
+  cursor: pointer;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  /* custom chevron via background-image */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23475569'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
 }
 
-/* Responsive tweaks */
+.rec-controls__select:focus {
+  border-color: var(--medium-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* ---- Course list --------------------------------- */
+.rec-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ---- Single recommendation card ------------------ */
+.rec-card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 22px 20px 68px; /* left padding makes room for the score badge */
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.rec-card:hover {
+  border-color: var(--light-blue);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.1);
+}
+
+/* ---- Fit-score badge (positioned left) ----------- */
+.rec-card__score-badge {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--pale-blue);
+  border: 2px solid var(--light-blue);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.rec-card__score-badge__value {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+}
+
+.rec-card__score-badge__label {
+  font-size: 0.52rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--medium-blue);
+  margin-top: 1px;
+}
+
+/* ---- Card header (name + code) ------------------- */
+.rec-card__header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.rec-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  letter-spacing: -0.01em;
+}
+
+.rec-card__code {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-gray);
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* ---- AI reason text ------------------------------ */
+.rec-card__reason {
+  font-size: 0.85rem;
+  color: var(--text-gray);
+  line-height: 1.55;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.rec-card__reason strong {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* ---- Empty / CTA states -------------------------- */
+.rec-empty {
+  text-align: center;
+  padding: 56px 20px;
+  color: var(--text-gray);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.rec-empty__icon {
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  opacity: 0.45;
+}
+
+.rec-empty__text {
+  max-width: 380px;
+  margin: 0 auto 20px;
+}
+
+.rec-empty__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--medium-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.rec-empty__btn:hover {
+  background: var(--primary-blue);
+  transform: translateY(-1px);
+}
+
+.rec-empty__btn:active {
+  transform: translateY(0);
+}
+
+/* ---- Loading state (reuses parent's pulse dots) -- */
+.rec-loading {
+  font-size: 0.92rem;
+  color: var(--text-gray);
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rec-loading .dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: var(--medium-blue);
+  border-radius: 50%;
+  animation: rec-pulse 1.2s infinite ease-in-out;
+}
+
+.rec-loading .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.rec-loading .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes rec-pulse {
+  0%,
+  80%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===================================================
+   Responsive – Mobile  (≤ 600 px)
+   =================================================== */
 @media (max-width: 600px) {
-  .course-card {
-    padding: 0.8rem;
+  .rec-card {
+    padding: 16px 16px 16px 58px;
+    border-radius: 10px;
   }
 
-  .course-title {
-    font-size: 1rem;
+  .rec-card__score-badge {
+    left: 12px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .rec-card__score-badge__value {
+    font-size: 0.82rem;
+  }
+
+  .rec-card__title {
+    font-size: 0.97rem;
+  }
+
+  .rec-card__reason {
+    font-size: 0.8rem;
+  }
+
+  .rec-controls {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

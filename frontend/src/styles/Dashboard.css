@@ -1,3 +1,600 @@
-.dashboard-container{
-    height: 80vh;
+/* ============================================================
+   DASHBOARD — CourseMatch
+   Light surface. Palette-continuous with the rest of the site.
+   ============================================================ */
+
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+  --shadow: rgba(30, 58, 138, 0.1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PAGE SHELL
+   ══════════════════════════════════════════════════════════════ */
+.dash {
+  min-height: 100vh;
+  background: var(--off-white);
+  padding: 100px 24px 60px; /* top clears the fixed nav */
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════════════════════ */
+.dash__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dash__header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dash__greeting {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.dash__name {
+  color: var(--medium-blue);
+}
+
+/* Endorsement tag */
+.dash__endorsement {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.12));
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-dark);
+  width: fit-content;
+}
+
+.dash__endorsement strong {
+  color: var(--medium-blue);
+  font-weight: 600;
+}
+
+.dash__endorsement-icon {
+  color: var(--medium-blue);
+}
+
+/* Top-right add button */
+.dash__add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  border: none;
+  border-radius: 10px;
+  padding: 11px 22px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--white);
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.25s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dash__add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(37, 99, 235, 0.4);
+}
+
+.dash__add-btn:active {
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STAT CARDS
+   ══════════════════════════════════════════════════════════════ */
+.dash__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.dash__card {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 18px;
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.dash__card:hover {
+  box-shadow: 0 8px 30px var(--shadow);
+  transform: translateY(-3px);
+}
+
+/* Icon circles */
+.dash__card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dash__card-icon--blue {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--medium-blue);
+}
+
+.dash__card-icon--green {
+  background: rgba(34, 197, 94, 0.08);
+  color: #16a34a;
+}
+
+.dash__card-icon--purple {
+  background: rgba(139, 92, 246, 0.08);
+  color: #7c3aed;
+}
+
+.dash__card-value {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1;
+}
+
+.dash__card-label {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--text-gray);
+  letter-spacing: 0.02em;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SUBJECT TABLE
+   ══════════════════════════════════════════════════════════════ */
+.dash__table-wrap {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+/* Desktop header row */
+.dash__table-header {
+  display: grid;
+  grid-template-columns: 1fr 90px 110px 100px;
+  align-items: center;
+  padding: 14px 22px;
+  background: var(--off-white);
+  border-bottom: 1px solid var(--pale-blue);
+}
+
+.dash__th {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-gray);
+}
+
+/* Data rows */
+.dash__row {
+  display: grid;
+  grid-template-columns: 1fr 90px 110px 100px;
+  align-items: center;
+  padding: 16px 22px;
+  border-bottom: 1px solid rgba(219, 234, 254, 0.6);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: rowIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: background 0.2s ease;
+}
+
+.dash__row:last-child {
+  border-bottom: none;
+}
+
+.dash__row:hover {
+  background: rgba(219, 234, 254, 0.25);
+}
+
+@keyframes rowIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cell: name */
+.dash__cell--name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dash__row-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: rgba(37, 99, 235, 0.07);
+  color: var(--medium-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dash__subject-name {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+/* Mark badges */
+.dash__badge {
+  display: inline-block;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.dash__badge--excellent {
+  background: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+}
+
+.dash__badge--good {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--medium-blue);
+}
+
+.dash__badge--average {
+  background: rgba(234, 179, 8, 0.1);
+  color: #a16207;
+}
+
+.dash__badge--low {
+  background: rgba(248, 113, 113, 0.1);
+  color: #dc2626;
+}
+
+/* Endorsement pill */
+.dash__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.76rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.dash__pill--yes {
+  background: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+}
+
+.dash__pill--no {
+  color: var(--text-gray);
+  opacity: 0.5;
+}
+
+/* Edit button */
+.dash__edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--pale-blue);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.77rem;
+  font-weight: 500;
+  color: var(--text-gray);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+.dash__edit:hover {
+  background: rgba(37, 99, 235, 0.06);
+  border-color: var(--light-blue);
+  color: var(--medium-blue);
+}
+
+.dash__edit-arrow {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.dash__edit:hover .dash__edit-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EMPTY STATE
+   ══════════════════════════════════════════════════════════════ */
+.dash__empty {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 18px;
+  padding: 72px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.dash__empty-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  background: rgba(37, 99, 235, 0.07);
+  color: var(--medium-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.dash__empty-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.dash__empty-text {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-gray);
+  line-height: 1.6;
+  max-width: 340px;
+  margin: 0;
+}
+
+.dash__empty-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  border: none;
+  border-radius: 10px;
+  padding: 11px 24px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--white);
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.25s ease;
+}
+
+.dash__empty-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(37, 99, 235, 0.4);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SKELETON LOADER
+   ══════════════════════════════════════════════════════════════ */
+.dash__skel {
+  background: linear-gradient(
+    90deg,
+    var(--pale-blue) 0%,
+    rgba(219, 234, 254, 0.5) 50%,
+    var(--pale-blue) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 10px;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.dash__skel--title  { height: 32px; width: 260px; border-radius: 8px; }
+.dash__skel--sub    { height: 18px; width: 180px; border-radius: 6px; margin-top: 4px; }
+.dash__skel--icon   { width: 48px; height: 48px; border-radius: 14px; }
+.dash__skel--val    { height: 28px; width: 60px; border-radius: 6px; }
+.dash__skel--label  { height: 14px; width: 100px; border-radius: 4px; }
+
+.dash__card--skel {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 18px;
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dash__skel--row {
+  height: 54px;
+  width: 100%;
+  border-radius: 0;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Tablets ── */
+@media (max-width: 720px) {
+  .dash__stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .dash__card {
+    padding: 18px 16px;
+  }
+
+  .dash__card-value {
+    font-size: 1.5rem;
+  }
+
+  /* Simplify table: hide endorsement column header, keep data */
+  .dash__table-header {
+    grid-template-columns: 1fr 70px 80px 80px;
+    padding: 12px 16px;
+  }
+
+  .dash__row {
+    grid-template-columns: 1fr 70px 80px 80px;
+    padding: 14px 16px;
+  }
+}
+
+/* ── Mobile: cards ── */
+@media (max-width: 600px) {
+  .dash {
+    padding-top: 88px;
+    gap: 20px;
+  }
+
+  .dash__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Stats: single row of 3, compact */
+  .dash__stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .dash__card {
+    padding: 16px 12px;
+    gap: 8px;
+  }
+
+  .dash__card-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+
+  .dash__card-value {
+    font-size: 1.3rem;
+  }
+
+  .dash__card-label {
+    font-size: 0.68rem;
+  }
+
+  /* Hide desktop table header entirely */
+  .dash__table-header {
+    display: none;
+  }
+
+  /* Each row becomes a card */
+  .dash__row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 18px;
+    border-radius: 14px;
+    border: 1px solid var(--pale-blue);
+    margin: 6px 10px;
+    background: var(--white);
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .dash__table-wrap {
+    border-radius: 0;
+    border: none;
+    background: transparent;
+    padding: 4px 0;
+  }
+
+  /* Top row inside card: name + mark side by side */
+  .dash__cell--name {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .dash__cell--mark {
+    /* positioned by flexbox order */
+  }
+
+  /* Bottom row: endorsement + edit */
+  .dash__cell--endo,
+  .dash__cell--action {
+    display: inline-flex;
+  }
+
+  /* Wrap endo + action in a virtual row via flex-wrap on parent */
+  .dash__row {
+    flex-wrap: wrap;
+  }
+
+  .dash__cell--name {
+    order: 1;
+    flex: 0 0 100%;
+  }
+
+  .dash__cell--mark {
+    order: 2;
+  }
+
+  .dash__cell--endo {
+    order: 3;
+    flex: 1;
+  }
+
+  .dash__cell--action {
+    order: 4;
+  }
+
+  /* Skeleton rows stack as cards too */
+  .dash__skel--row {
+    height: 110px;
+    margin: 6px 10px;
+    border-radius: 14px;
+  }
 }

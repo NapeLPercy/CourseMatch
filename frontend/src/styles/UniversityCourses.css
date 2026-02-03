@@ -1,0 +1,307 @@
+/* ===================================================
+   UniversityCourses.css
+   Responsive layout – desktop & mobile
+   Uses the project's existing :root variables
+   =================================================== */
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+}
+/* ---- Page Shell --------------------------------- */
+.uni-courses-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 90px 24px 60px 32px !important;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+.uni-courses-header {
+  margin-bottom: 8px;
+}
+
+.uni-courses-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.uni-courses-header .uni-slug-badge {
+  display: inline-block;
+  margin-top: 6px;
+  background: var(--pale-blue);
+  color: var(--primary-blue);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* ---- Tab Bar ------------------------------------- */
+.uni-tab-bar {
+  display: flex;
+  gap: 4px;
+  margin-top: 24px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.uni-tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.uni-tab-btn {
+  position: relative;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-gray);
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+  border-radius: 6px 6px 0 0;
+  white-space: nowrap;
+  outline: none;
+}
+
+.uni-tab-btn:hover {
+  color: var(--medium-blue);
+  background-color: var(--pale-blue);
+}
+
+.uni-tab-btn.active {
+  color: var(--primary-blue);
+  font-weight: 700;
+  background-color: var(--pale-blue);
+}
+
+/* active bottom border – rendered as a pseudo-element so it
+   sits right on the parent border-bottom line */
+.uni-tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--medium-blue);
+  border-radius: 2px 2px 0 0;
+}
+
+/* ---- Content Area -------------------------------- */
+.uni-content-area {
+  margin-top: 28px;
+}
+
+/* ---- Status Messages ----------------------------- */
+.uni-status {
+  font-size: 0.92rem;
+  color: var(--text-gray);
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.uni-status.error {
+  color: #dc2626;
+}
+
+/* simple pulse for loading dots */
+.uni-status .dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: var(--medium-blue);
+  border-radius: 50%;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+.uni-status .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.uni-status .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes pulse {
+  0%,
+  80%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ---- Course List --------------------------------- */
+.uni-course-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ---- Single Course Card -------------------------- */
+.uni-course-card {
+  background: var(--white);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 22px;
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.uni-course-card:hover {
+  border-color: var(--light-blue);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.1);
+}
+
+/* card title */
+.uni-course-card__title {
+  margin: 0 0 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  letter-spacing: -0.01em;
+}
+
+/* meta row – code | duration | aps on one line (desktop) */
+.uni-course-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+}
+
+.uni-course-card__meta-item {
+  font-size: 0.82rem;
+  color: var(--text-gray);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.uni-course-card__meta-item strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+/* prereqs section */
+.uni-course-card__prereqs {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.uni-course-card__prereqs-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-gray);
+  margin-bottom: 8px;
+}
+
+.uni-course-card__prereqs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.uni-course-card__prereq-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--pale-blue);
+  color: var(--primary-blue);
+  font-size: 0.77rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.uni-course-card__prereq-tag .prereq-mark {
+  font-weight: 700;
+  color: var(--medium-blue);
+}
+
+/* ---- Empty State --------------------------------- */
+.uni-empty-state {
+  text-align: center;
+  padding: 56px 20px;
+  color: var(--text-gray);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.uni-empty-state .uni-empty-icon {
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  opacity: 0.45;
+}
+
+/* ---- Recommendations Wrapper (black-box child) -- */
+.uni-recommendations-wrapper {
+  margin-top: 4px;
+}
+
+/* ===================================================
+   Responsive – Mobile  (≤ 600 px)
+   =================================================== */
+@media (max-width: 600px) {
+  .uni-courses-wrapper {
+    padding: 20px 14px 48px;
+  }
+
+  .uni-courses-header h1 {
+    font-size: 1.35rem;
+  }
+
+  .uni-tab-btn {
+    padding: 9px 13px;
+    font-size: 0.82rem;
+  }
+
+  .uni-course-card {
+    padding: 16px 16px;
+    border-radius: 10px;
+  }
+
+  .uni-course-card__title {
+    font-size: 0.97rem;
+  }
+
+  .uni-course-card__meta {
+    gap: 8px 16px;
+  }
+
+  .uni-course-card__meta-item {
+    font-size: 0.78rem;
+  }
+}
