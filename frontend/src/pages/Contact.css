@@ -1,0 +1,599 @@
+/* ============================================================
+   CONTACT FORM — CourseMatch
+   Dark shell blends with Hero & HowItWorks CTA palette.
+   ============================================================ */
+
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+  --shadow: rgba(30, 58, 138, 0.1);
+  --error: #f87171;
+  --error-bg: rgba(248, 113, 113, 0.1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION SHELL
+   ══════════════════════════════════════════════════════════════ */
+.contact {
+  position: relative;
+  background: var(--off-white);
+  padding: 120px 24px 130px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact--mounted {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ambient glow */
+.contact__glow {
+  position: absolute;
+  width: 720px;
+  height: 720px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, transparent 65%);
+  pointer-events: none;
+  animation: contactGlow 6s ease-in-out infinite alternate;
+}
+
+@keyframes contactGlow {
+  0%   { transform: translate(-50%, -50%) scale(1); }
+  100% { transform: translate(-50%, -50%) scale(1.14); }
+}
+
+/* Decorative geometry circles */
+.contact__geo {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(219, 234, 254, 0.06);
+  pointer-events: none;
+}
+
+.contact__geo--1 {
+  width: 440px;
+  height: 440px;
+  top: -160px;
+  right: -140px;
+  animation: geoFloat 20s ease-in-out infinite;
+}
+
+.contact__geo--2 {
+  width: 260px;
+  height: 260px;
+  bottom: -80px;
+  left: -90px;
+  border-color: rgba(219, 234, 254, 0.04);
+  animation: geoFloat 16s ease-in-out infinite reverse;
+}
+
+@keyframes geoFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-22px) rotate(3deg); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LAYOUT
+   ══════════════════════════════════════════════════════════════ */
+.contact__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════════════════════ */
+.contact__icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(219, 234, 254, 0.08);
+  border: 1px solid rgba(219, 234, 254, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-blue);
+  margin-bottom: 20px;
+}
+
+.contact__eyebrow {
+  display: block;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--primary-blue);
+  margin-bottom: 14px;
+}
+
+.contact__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--primary-blue);
+  margin: 0 0 16px;
+}
+
+.contact__title-accent {
+  color: var(--primary-blue);
+  font-style: italic;
+}
+
+.contact__subtitle {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--primary-blue);
+  margin: 0;
+  max-width: 440px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FORM GRID
+   ══════════════════════════════════════════════════════════════ */
+.contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Two-column row */
+.cf__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FIELD WRAPPER + ERROR
+   ══════════════════════════════════════════════════════════════ */
+.cf__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+/* Error message */
+.cf__error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.76rem;
+  color: var(--error);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  min-height: 18px;
+}
+
+.cf__field--error .cf__error {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cf__error-icon {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+/* Required star */
+.cf__required {
+  color: var(--error);
+  margin-left: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LABELS
+   ══════════════════════════════════════════════════════════════ */
+.cf__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  letter-spacing: 0.03em;
+}
+
+.cf__label-icon {
+  color: var(--primary-blue);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INPUTS
+   ══════════════════════════════════════════════════════════════ */
+.cf__input {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solidvar(--primary-blue);
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.25s ease,
+              background 0.25s ease,
+              box-shadow 0.25s ease;
+}
+
+.cf__input::placeholder {
+  color: rgba(219, 234, 254, 0.3);
+}
+
+/* Focus */
+.cf__input:focus {
+  border-color: var(--light-blue);
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+/* Error state on input */
+.cf__field--error .cf__input {
+  border-color: var(--error);
+}
+
+.cf__field--error .cf__input:focus {
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2);
+}
+
+/* Textarea */
+.cf__input--textarea {
+  resize: none;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+/* Shake animation */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  40%      { transform: translateX(6px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(4px); }
+}
+
+.cf__input--shake {
+  animation: shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+/* Shake wrapper for the select */
+.cf__shake-wrap {
+  /* neutral */
+}
+
+.cf__shake-wrap--shake {
+  animation: shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   UNIVERSITY SELECT (custom dropdown)
+   ══════════════════════════════════════════════════════════════ */
+.cf__select-wrap {
+  position: relative;
+}
+
+/* Trigger */
+.cf__select-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--primary-blue);
+  border-radius: 12px;
+  padding: 13px 16px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.25s ease,
+              background 0.25s ease,
+              box-shadow 0.25s ease;
+}
+
+.cf__select-trigger:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.cf__select-trigger--open {
+  border-color: var(--light-blue);
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.cf__select-trigger--error {
+  border-color: var(--error);
+}
+
+.cf__select-trigger--error.cf__select-trigger--open {
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2);
+}
+
+.cf__select-icon {
+  color: var(--primary-blue);
+  flex-shrink: 0;
+}
+
+.cf__select-value {
+  flex: 1;
+  text-align: left;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cf__select-value--placeholder {
+  color: var(--text-dark);
+}
+
+.cf__select-chevron {
+  color: var(--primary-blue);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.cf__select-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* Panel */
+.cf__select-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #1e2d4d;
+  border: 1px solid rgba(219, 234, 254, 0.16);
+  border-top: none;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  animation: panelDrop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+@keyframes panelDrop {
+  0%   { opacity: 0; transform: translateY(-8px) scaleY(0.95); }
+  100% { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+/* Search row inside panel */
+.cf__select-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(219, 234, 254, 0.1);
+}
+
+.cf__select-search-icon {
+  color: rgba(219, 234, 254, 0.35);
+  flex-shrink: 0;
+}
+
+.cf__select-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.82rem;
+  color: var(--white);
+}
+
+.cf__select-search-input::placeholder {
+  color: rgba(219, 234, 254, 0.3);
+}
+
+/* Options list */
+.cf__select-list {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(219, 234, 254, 0.2) transparent;
+}
+
+.cf__select-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.cf__select-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cf__select-list::-webkit-scrollbar-thumb {
+  background: rgba(219, 234, 254, 0.2);
+  border-radius: 3px;
+}
+
+.cf__select-option {
+  padding: 10px 16px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.83rem;
+  color: rgba(219, 234, 254, 0.75);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cf__select-option:hover {
+  background: rgba(37, 99, 235, 0.18);
+  color: var(--white);
+}
+
+.cf__select-option--active {
+  background: rgba(37, 99, 235, 0.22);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.cf__select-empty {
+  padding: 16px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: rgba(219, 234, 254, 0.35);
+  text-align: center;
+  font-style: italic;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SUBMIT BUTTON
+   ══════════════════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 12px;
+  padding: 15px 32px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.22s ease, box-shadow 0.25s ease;
+  margin-top: 4px;
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  color: var(--white);
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.38);
+  width: 100%;
+}
+
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 36px rgba(37, 99, 235, 0.48);
+}
+
+.btn--primary:active {
+  transform: translateY(0);
+}
+
+.btn--primary svg {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn--primary:hover svg {
+  transform: translateX(3px);
+}
+
+/* Ghost (used in success state) */
+.btn--ghost {
+  background: var(--primary-blue);
+  color: var(--white);
+  border: 1px solid var(--primary-blue);
+  margin-top: 8px;
+}
+
+.btn--ghost:hover {
+  background: rgba(219, 234, 254, 0.08);
+  border-color: rgba(219, 234, 254, 0.42);
+  transform: translateY(-2px);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SUCCESS STATE
+   ══════════════════════════════════════════════════════════════ */
+.contact__success {
+  position: relative;
+  z-index: 2;
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: successFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes successFade {
+  0%   { opacity: 0; transform: translateY(16px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.contact__success-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1.5px solid rgba(74, 222, 128, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4ade80;
+  margin-bottom: 28px;
+  animation: iconPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+@keyframes iconPop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.contact__success-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 12px;
+}
+
+.contact__success-text {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-dark);
+  margin: 0 0 28px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 580px) {
+  .contact {
+    padding: 80px 20px 90px;
+  }
+
+  .cf__row {
+    grid-template-columns: 1fr;
+  }
+
+  .contact__title {
+    font-size: 2rem;
+  }
+}

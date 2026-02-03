@@ -1,9 +1,20 @@
 
-import "./Home.css";
+//import "./Home.css";
+import Hero from "./Hero";
+import HowItWorks from "./HowItWorks";
+import Contact from "./Contact";
 // Home Component
 export default function Home() {
   return (
-    <div className="home-container">
+    <>
+    <Hero/>
+    <HowItWorks/>
+    <Contact/>
+    </>
+  );
+}
+
+/*<div className="home-container">
       <header className="hero-section">
         <h1 className="hero-title">Course Match</h1>
         <p className="hero-subtitle">Find Your Perfect University Course</p>
@@ -49,6 +60,4 @@ export default function Home() {
         </p>
         <button className="cta-button">Get Started</button>
       </section>
-    </div>
-  );
-}
+    </div> */

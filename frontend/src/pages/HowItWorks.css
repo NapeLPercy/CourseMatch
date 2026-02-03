@@ -1,0 +1,382 @@
+/* ============================================================
+   HOW IT WORKS — CourseMatch
+   Continuous palette with Hero.css. Editorial-luxury tone.
+   ============================================================ */
+
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+  --shadow: rgba(30, 58, 138, 0.1);
+}
+
+/* ── Page shell ───────────────────────────────────────────── */
+.hiw {
+  position: relative;
+  background: var(--off-white);
+  padding: 50px 24px 0;
+  overflow: hidden;
+}
+
+/* ── Ambient geometry ─────────────────────────────────────── */
+.hiw__geo {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hiw__geo--1 {
+  width: 600px;
+  height: 600px;
+  top: -200px;
+  right: -200px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%);
+}
+
+.hiw__geo--2 {
+  width: 400px;
+  height: 400px;
+  bottom: 200px;
+  left: -160px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+}
+
+/* ── Section header ───────────────────────────────────────── */
+.hiw__header {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+  margin: 0 auto 100px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hiw__header--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Eyebrow with side lines */
+.hiw__eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--medium-blue);
+  margin-bottom: 24px;
+}
+
+.hiw__eyebrow-line {
+  width: 36px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--medium-blue));
+}
+
+.hiw__eyebrow-line:last-child {
+  background: linear-gradient(270deg, transparent, var(--medium-blue));
+}
+
+/* Headline */
+.hiw__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-dark);
+  margin: 0 0 20px;
+}
+
+.hiw__title-accent {
+  color: var(--medium-blue);
+  font-style: italic;
+  position: relative;
+  display: inline-block;
+}
+
+.hiw__title-accent::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--medium-blue), var(--light-blue));
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
+}
+
+.hiw__header--visible .hiw__title-accent::after {
+  transform: scaleX(1);
+}
+
+/* Subtitle */
+.hiw__subtitle {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-gray);
+  max-width: 480px;
+  margin: 0 auto 32px;
+}
+
+/* Scroll cue chevron */
+.hiw__scroll-cue {
+  color: var(--medium-blue);
+  opacity: 0.4;
+  animation: chevronBounce 2.2s ease-in-out infinite;
+}
+
+@keyframes chevronBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50%      { transform: translateY(6px); opacity: 0.7; }
+}
+
+/* ── Steps container ──────────────────────────────────────── */
+.hiw__steps {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+
+}
+
+/* ── Individual step ──────────────────────────────────────── */
+.step {
+  position: relative;
+  flex: 1 1 280px;
+  max-width: 340px;
+  border: 2px solid var(--primary-blue);
+  padding: 10px;
+  border-radius: 12px;
+  opacity: 0;
+  transform: translateY(40px) scale(0.96);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--delay, 0s);
+  margin-bottom:15px;
+}
+
+.step--visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Connector between cards (desktop only) */
+.step__connector {
+  display: none;
+  position: absolute;
+  top: 52px;
+  right: -32px;
+  z-index: 3;
+  align-items: center;
+  gap: 0;
+}
+
+@media (min-width: 860px) {
+  .hiw__steps {
+    flex-wrap: nowrap;
+  }
+  .step__connector {
+    display: flex;
+  }
+}
+
+.step__connector-line {
+  display: block;
+  width: 28px;
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--pale-blue), var(--medium-blue));
+  border-radius: 1px;
+}
+
+.step__connector-arrow {
+  color: var(--medium-blue);
+  flex-shrink: 0;
+  margin-left: -4px;
+}
+
+/* Icon ring + glow */
+.step__icon-wrap {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 28px;
+}
+
+.step__icon-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.step--visible .step__icon-glow {
+  opacity: 1;
+  animation: glowPulse 3.5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50%      { transform: scale(1.12); opacity: 0.35; }
+}
+
+.step__icon-ring {
+  position: relative;
+  z-index: 1;
+  width: 76px;
+  height: 76px;
+  border-radius: 20px;
+  background: var(--white);
+  border: 1.5px solid var(--pale-blue);
+  box-shadow: 0 6px 28px var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.step:hover .step__icon-ring {
+  border-color: var(--light-blue);
+  box-shadow: 0 8px 36px rgba(37, 99, 235, 0.2);
+}
+
+.step__icon {
+  color: var(--medium-blue);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.step:hover .step__icon {
+  transform: scale(1.1) rotate(4deg);
+}
+
+/* Step number badge */
+.step__number {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  color: var(--white);
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35);
+}
+
+/* Card body */
+.step__body {
+  position: relative;
+  z-index: 1;
+}
+
+.step__label {
+  display: inline-block;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--medium-blue);
+  margin-bottom: 10px;
+}
+
+.step__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-dark);
+  margin: 0 0 12px;
+}
+
+.step__desc {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-gray);
+  margin: 0 0 20px;
+}
+
+/* Feature tags */
+.step__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.step__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--off-white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 20px;
+  padding: 4px 10px 4px 8px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-gray);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.step:hover .step__tag {
+  background: rgba(219, 234, 254, 0.5);
+  border-color: rgba(37, 99, 235, 0.25);
+}
+
+.step__tag-icon {
+  color: var(--light-blue);
+  flex-shrink: 0;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .hiw {
+    padding-top: 40px;
+  }
+
+  .hiw__header {
+    margin-bottom: 64px;
+  }
+
+  .hiw__steps {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .step {
+    max-width: 100%;
+  }
+
+ 
+}

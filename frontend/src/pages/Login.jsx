@@ -1,14 +1,28 @@
-//src/components/Login.js
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  LogIn,
+  CheckCircle2,
+  X,
+  AlertCircle,
+} from "lucide-react";
 import AuthCard from "../components/layout/AuthCard";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import ".././styles/Login.css";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
-  const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,70 +31,132 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login data:", form);
+    setLoading(true);
+
+    const API_BASE = process.env.REACT_APP_API_BASE;
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        form
-      );
-      console.log("Server response:", response.data);
-
+      const response = await axios.post(`${API_BASE}/api/auth/login`, form);
       const user = response.data.user;
       const student = user.student;
 
-      
-      if(student){
+      if (student) {
         sessionStorage.setItem("student", JSON.stringify(student));
       }
 
-      console.log("logging user here", user, student);
-    
-      alert("Login successful!");
+      setSuccess("Login successful!");
       login(user);
-      navigate("/my-dashboard");
-      //redirect or
+
+      setTimeout(() => {
+        navigate("/my-dashboard");
+        setSuccess(null);
+      }, 3000);
+      
     } catch (err) {
       console.error("Login error:", err.response?.data || err.message);
-      alert(err.response?.data?.error || "Login failed");
+      setError(err.response?.data?.error || "Login failed: " + err.message);
+      setTimeout(() => {
+        setError(null);
+      }, 3000);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <AuthCard title="Login to CourseMatch">
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Email</label>
+    <AuthCard title="Welcome Back">
+      {error && (
+        <div className="rp__error">
+          <div className="rp__error-header">
+            <AlertCircle size={15} strokeWidth={2} className="rp__error-icon" />
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
+
+      {success && (
+        <div className="rp__success">
+          <div className="rp__success-icon">
+            <CheckCircle2 size={48} strokeWidth={1.4} />
+          </div>
+          <p className="rp__success-text">{success}</p>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="login-form">
+        {/* Email */}
+        <div className="login__field">
+          <label htmlFor="login-email" className="login__label">
+            <Mail size={13} strokeWidth={2} className="login__label-icon" />
+            Email
+          </label>
           <input
+            id="login-email"
             type="email"
-            className="form-control"
             name="email"
+            className="login__input"
+            placeholder="you@email.com"
             value={form.email}
             onChange={handleChange}
-            placeholder="Enter your email"
             required
+            autoComplete="email"
           />
         </div>
-        <div className="mb-3">
-          <label className="form-label">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            required
-          />
+
+        {/* Password */}
+        <div className="login__field">
+          <label htmlFor="login-password" className="login__label">
+            <Lock size={13} strokeWidth={2} className="login__label-icon" />
+            Password
+          </label>
+          <div className="login__input-wrap">
+            <input
+              id="login-password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              className="login__input"
+              placeholder="••••••••"
+              value={form.password}
+              onChange={handleChange}
+              required
+              autoComplete="current-password"
+            />
+            <button
+              type="button"
+              className="login__toggle"
+              onClick={() => setShowPassword((s) => !s)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeOff size={16} strokeWidth={2} />
+              ) : (
+                <Eye size={16} strokeWidth={2} />
+              )}
+            </button>
+          </div>
         </div>
-        <button type="submit" className="btn btn-primary w-100">
-          Login
+
+        {/* Forgot password link */}
+        <Link to="/forgot-password" className="login__forgot">
+          Forgot password?
+        </Link>
+
+        {/* Submit */}
+        <button type="submit" className="login__submit" disabled={loading}>
+          {loading ? (
+            <span className="login__spinner" />
+          ) : (
+            <LogIn size={16} strokeWidth={2.2} />
+          )}
+          {loading ? "Signing in…" : "Sign In"}
         </button>
-        <p className="text-center mt-3">
-          <a href="/forgot-password">Forgot password?</a>
-        </p>
-        <p className="text-center mt-3">
-          Don’t have an account? <a href="/register">Create One</a>
+
+        {/* Register link */}
+        <p className="login__footer">
+          Don't have an account?{" "}
+          <Link to="/register" className="login__footer-link">
+            Create one
+          </Link>
         </p>
       </form>
     </AuthCard>
