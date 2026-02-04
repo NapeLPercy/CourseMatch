@@ -42,10 +42,13 @@ export default function ViewSubjectsPage() {
 
   const fetchSubjects = async () => {
     const API_BASE = process.env.REACT_APP_API_BASE;
+    const token = JSON.parse(sessionStorage.getItem("token"));
     try {
       setLoading(true);
-      const res = await axios.get(`${API_BASE}/api/subjects/${studentId}`);
-      console.log(res, "we here");
+      const res = await axios.get(`${API_BASE}/api/subjects/${studentId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       setSubjects(res.data.subjects);
     } catch (err) {
       setError(err.message || "Something went wrong");
@@ -54,14 +57,15 @@ export default function ViewSubjectsPage() {
     }
   };
 
-  //handle save
-
+  //handle save subject mark after update
   const handleSave = async ({ Subject_Id, Mark }) => {
     const API_BASE = process.env.REACT_APP_API_BASE;
+    const token = JSON.parse(sessionStorage.getItem("token"));
     try {
       const response = await axios.put(
         `${API_BASE}/api/subjects/${Subject_Id}`,
         { Mark },
+        {headers: {Authorization: `Bearer ${token}`}}
       );
 
       let data = response.data;

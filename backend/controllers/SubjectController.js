@@ -7,10 +7,12 @@ const SubjectModel = require("../models/Subject");
 const SubjectSanitizer = require("../services/SubjectSanitizer");
 const MatrixEndorsement = require("../services/MatrixEndorsement");
 
-//Add subjects (async/await version)
+//Add subjects
 exports.addSubjects = async (req, res) => {
   try {
-    const { subjects, userId } = req.body;
+   
+    const { subjects} = req.body;
+    const userId = req.userId;
     const studentId = uuidv4();
 
     if (!subjects || !userId) {
@@ -20,9 +22,10 @@ exports.addSubjects = async (req, res) => {
       });
     }
 
-    console.log("These are student subjects",subjects);
-
+    //clean subjects 
     const sanitizedSubjects = new SubjectSanitizer(subjects).sanitize();
+    
+    //compute matric endorsement
     let endorsement = new MatrixEndorsement(sanitizedSubjects).determine();
 
     //Insert student
@@ -40,10 +43,6 @@ exports.addSubjects = async (req, res) => {
     //Insert all subjects
     await SubjectModel.insertSubjects(subjectValues);
 
-    console.log("Abut to return data");
-    console.log("Abut to return data aps subjects", sanitizedSubjects);
-    console.log("Abut to return data all subjects", subjects);
-
     return res.status(201).json({
       success: true,
       message: "Subjects added successfully",
@@ -58,20 +57,20 @@ exports.addSubjects = async (req, res) => {
   }
 };
 
-// =======================================
-// Get subjects for a student (async)
-// =======================================
+
+// Get subjects for a student
 exports.getSubjects = async (req, res) => {
-  console.log("About to get the data ");
   try {
     const { studentId } = req.params;
+    const userId = req.userId;
 
-    const subjects = await SubjectModel.getSubjectsByStudentId(studentId);
+    //delegate to subject model
+    const subjects = await SubjectModel.getSubjectsByStudentIdForUser(studentId, userId);
 
     return res.status(200).json({
       subjects:subjects,
       success:true,
-      message:"Subjects successfuly fecthed!",
+      message:"Subjects successfuly fetched!",
     });
 
 

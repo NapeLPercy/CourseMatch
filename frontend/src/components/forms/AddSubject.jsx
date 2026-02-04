@@ -113,7 +113,9 @@ function validate(subjects) {
   // 7. At least one FAL subject
   const hasFAL = names.some((n) => n.endsWith("FAL"));
   if (!hasFAL) {
-    errors.push("You must include at least one FAL subject (e.g. English FAL).");
+    errors.push(
+      "You must include at least one FAL subject (e.g. English FAL).",
+    );
   }
 
   // 8. At least one HL subject
@@ -158,7 +160,7 @@ function SubjectSelect({ value, onChange, takenNames }) {
   const filtered = SUBJECTS_LIST.filter(
     (s) =>
       s.toLowerCase().includes(query.toLowerCase()) &&
-      (!takenNames.has(s) || s === value)
+      (!takenNames.has(s) || s === value),
   );
 
   return (
@@ -170,17 +172,27 @@ function SubjectSelect({ value, onChange, takenNames }) {
         onClick={() => setOpen((o) => !o)}
       >
         <BookOpen size={15} strokeWidth={2} className="as__select-icon" />
-        <span className={`as__select-val ${!value ? "as__select-val--ph" : ""}`}>
+        <span
+          className={`as__select-val ${!value ? "as__select-val--ph" : ""}`}
+        >
           {value || "Select a subject…"}
         </span>
-        <ChevronDown size={14} strokeWidth={2.2} className={`as__select-chevron ${open ? "as__select-chevron--open" : ""}`} />
+        <ChevronDown
+          size={14}
+          strokeWidth={2.2}
+          className={`as__select-chevron ${open ? "as__select-chevron--open" : ""}`}
+        />
       </button>
 
       {/* Panel */}
       {open && (
         <div className="as__select-panel">
           <div className="as__select-search">
-            <Search size={14} strokeWidth={2} className="as__select-search-icon" />
+            <Search
+              size={14}
+              strokeWidth={2}
+              className="as__select-search-icon"
+            />
             <input
               ref={searchInput}
               type="text"
@@ -196,7 +208,11 @@ function SubjectSelect({ value, onChange, takenNames }) {
                 <li
                   key={s}
                   className={`as__select-option ${s === value ? "as__select-option--active" : ""}`}
-                  onClick={() => { onChange(s); setOpen(false); setQuery(""); }}
+                  onClick={() => {
+                    onChange(s);
+                    setOpen(false);
+                    setQuery("");
+                  }}
                 >
                   {s}
                 </li>
@@ -226,7 +242,13 @@ function ProgressBar({ current, max }) {
       </div>
       <span className="as__progress-label">
         {current} <span className="as__progress-sep">/</span> {max}
-        {minReached && <CheckCircle2 size={13} strokeWidth={2.2} className="as__progress-check" />}
+        {minReached && (
+          <CheckCircle2
+            size={13}
+            strokeWidth={2.2}
+            className="as__progress-check"
+          />
+        )}
       </span>
     </div>
   );
@@ -241,7 +263,8 @@ function SuccessScreen({ onReset }) {
       </div>
       <h3 className="as__success-title">Subjects saved!</h3>
       <p className="as__success-text">
-        Your subjects have been submitted successfully. You can now view your matched courses.
+        Your subjects have been submitted successfully. You can now view your
+        matched courses.
       </p>
       <button className="as__success-btn" type="button" onClick={onReset}>
         <Plus size={15} strokeWidth={2.2} /> Add more subjects
@@ -255,9 +278,9 @@ export default function AddSubjects() {
   const { addSubjects } = useSubjects();
 
   const [subjects, setSubjects] = useState([{ name: "", mark: "" }]);
-  const [errors, setErrors] = useState([]);          // array of strings
+  const [errors, setErrors] = useState([]); // array of strings
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);     // API in-flight
+  const [loading, setLoading] = useState(false); // API in-flight
 
   const MAX = 15;
   const MIN = 7;
@@ -287,10 +310,13 @@ export default function AddSubjects() {
     if (errors.length) setErrors([]);
   };
 
-  /* Submit */
+  /* Submit subjects */
   const handleSubmit = async () => {
     const errs = validate(subjects);
-    if (errs.length) { setErrors(errs); return; }
+    if (errs.length) {
+      setErrors(errs);
+      return;
+    }
 
     setLoading(true);
     setErrors([]);
@@ -300,21 +326,31 @@ export default function AddSubjects() {
       endorsementSubject: 0,
     }));
 
-    const userId = JSON.parse(sessionStorage.getItem("user"))?.id;
+    //const userId = JSON.parse(sessionStorage.getItem("user"))?.id;
     const API_BASE = process.env.REACT_APP_API_BASE;
-
+    const token = JSON.parse(sessionStorage.getItem("token"));
     try {
-      const res = await axios.post(`${API_BASE}/api/subjects/addSubjects`, {
-        userId,
-        subjects: payload,
-      });
+      const res = await axios.post(
+        `${API_BASE}/api/subjects/addSubjects`,
+        { subjects: payload }, // Data object as the second argument
+        {
+          // Config object as the third argument
+          headers: {
+            Authorization: `Bearer ${token}`, // Correct "Authorization" header name
+          },
+        },
+      );
 
       if (res.data) {
         addSubjects(payload);
         setSubmitted(true);
       }
     } catch (err) {
-      setErrors([err.response?.data?.error || "Submission failed. Try again."]);
+      setErrors([
+        
+          err.response?.data?.error ||
+          "Submission failed. Try again.",
+      ]);
     } finally {
       setLoading(false);
     }
@@ -342,7 +378,8 @@ export default function AddSubjects() {
           <span className="as__eyebrow">Step 1</span>
           <h1 className="as__title">Add Your Subjects</h1>
           <p className="as__subtitle">
-            Enter your matric subjects and marks. You need between 7 and 15 subjects.
+            Enter your matric subjects and marks. You need between 7 and 15
+            subjects.
           </p>
         </div>
 
@@ -350,14 +387,40 @@ export default function AddSubjects() {
         <div className="as__requirements">
           <span className="as__req-title">Requirements</span>
           {[
-            { label: "7–15 subjects", met: subjects.length >= MIN && subjects.length <= MAX },
-            { label: "Maths or Maths Literacy", met: subjects.some((s) => s.name === "Mathematics" || s.name === "Mathematical Literacy") },
-            { label: "Life Orientation", met: subjects.some((s) => s.name === "Life Orientation") },
-            { label: "At least one FAL", met: subjects.some((s) => s.name.endsWith("FAL")) },
-            { label: "At least one HL", met: subjects.some((s) => s.name.endsWith("HL")) },
+            {
+              label: "7–15 subjects",
+              met: subjects.length >= MIN && subjects.length <= MAX,
+            },
+            {
+              label: "Maths or Maths Literacy",
+              met: subjects.some(
+                (s) =>
+                  s.name === "Mathematics" ||
+                  s.name === "Mathematical Literacy",
+              ),
+            },
+            {
+              label: "Life Orientation",
+              met: subjects.some((s) => s.name === "Life Orientation"),
+            },
+            {
+              label: "At least one FAL",
+              met: subjects.some((s) => s.name.endsWith("FAL")),
+            },
+            {
+              label: "At least one HL",
+              met: subjects.some((s) => s.name.endsWith("HL")),
+            },
           ].map((r) => (
-            <div key={r.label} className={`as__req ${r.met ? "as__req--met" : ""}`}>
-              <CheckCircle2 size={13} strokeWidth={2.2} className="as__req-icon" />
+            <div
+              key={r.label}
+              className={`as__req ${r.met ? "as__req--met" : ""}`}
+            >
+              <CheckCircle2
+                size={13}
+                strokeWidth={2.2}
+                className="as__req-icon"
+              />
               {r.label}
             </div>
           ))}
@@ -371,16 +434,25 @@ export default function AddSubjects() {
       {errors.length > 0 && (
         <div className="as__errors">
           <div className="as__errors-header">
-            <AlertCircle size={15} strokeWidth={2} className="as__errors-icon" />
+            <AlertCircle
+              size={15}
+              strokeWidth={2}
+              className="as__errors-icon"
+            />
             <span>Please fix the following</span>
-            <button type="button" className="as__errors-dismiss" onClick={() => setErrors([])}>
+            <button
+              type="button"
+              className="as__errors-dismiss"
+              onClick={() => setErrors([])}
+            >
               <X size={13} strokeWidth={2.2} />
             </button>
           </div>
           <ul className="as__errors-list">
             {errors.map((e, i) => (
               <li key={i} className="as__error-item">
-                <X size={11} strokeWidth={2.5} className="as__error-bullet" /> {e}
+                <X size={11} strokeWidth={2.5} className="as__error-bullet" />{" "}
+                {e}
               </li>
             ))}
           </ul>
@@ -392,7 +464,11 @@ export default function AddSubjects() {
         {subjects.map((s, i) => {
           const tier = markTier(s.mark);
           return (
-            <div key={i} className="as__row" style={{ animationDelay: `${i * 0.04}s` }}>
+            <div
+              key={i}
+              className="as__row"
+              style={{ animationDelay: `${i * 0.04}s` }}
+            >
               {/* Row number */}
               <span className="as__row-num">{i + 1}</span>
 
@@ -414,12 +490,21 @@ export default function AddSubjects() {
                   value={s.mark}
                   onChange={(e) => change(i, "mark", e.target.value)}
                 />
-                {tier && <span className={`as__mark-badge as__mark-badge--${tier}`}>{tier}</span>}
+                {tier && (
+                  <span className={`as__mark-badge as__mark-badge--${tier}`}>
+                    {tier}
+                  </span>
+                )}
               </div>
 
               {/* Delete (only if more than 1 row) */}
               {subjects.length > 1 && (
-                <button type="button" className="as__delete" onClick={() => deleteRow(i)} aria-label={`Remove row ${i + 1}`}>
+                <button
+                  type="button"
+                  className="as__delete"
+                  onClick={() => deleteRow(i)}
+                  aria-label={`Remove row ${i + 1}`}
+                >
                   <Trash2 size={15} strokeWidth={2} />
                 </button>
               )}

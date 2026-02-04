@@ -1,4 +1,5 @@
 class SubjectSanitizer {
+
   constructor(subjects = []) {
     this.subjects = subjects;
   }
@@ -15,7 +16,7 @@ class SubjectSanitizer {
       s => s.name === "Life Orientation" || s.name === "LO"
     );
     const mathOrLit = this.subjects.find(
-      s => s.name === "Mathematics" || s.name === "Mathematical Literacy"
+      s => s.name === "Mathematics" || s.name === "Mathematical Literacy" || "Technical Mathematics"
     );
 
     // Filter out compulsory subjects to get electives
@@ -30,7 +31,7 @@ class SubjectSanitizer {
     // Sort electives by highest mark
     const topElectives = electives
       .sort((a, b) => b.mark - a.mark)
-      .slice(0, 3); // pick best 3
+      .slice(0, 3); 
 
     // Final sanitized list of exactly 7 subjects
     const apsSubjects = [
@@ -40,7 +41,7 @@ class SubjectSanitizer {
       lifeOrientation,
       ...topElectives,
     ];
-
+    
     apsSubjects.forEach(subject=>{
        subject.aps_subject = 1;
     });

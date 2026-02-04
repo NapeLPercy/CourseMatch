@@ -3,11 +3,10 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import TutAPS from "../../Utils/TUT/TutAPS";
 import CourseManager from "../../Utils/CourseManager";
-import { Library } from "lucide-react";
+import { Library, Info } from "lucide-react";
 // context
 import { CourseContext } from "../../context/CourseContext";
 import { useSubjects } from "../../context/SubjectContext";
-
 // child components
 import Recommendations from "./Recommendations";
 
@@ -33,6 +32,7 @@ export default function UniversityCourses() {
   /* ------------------------------------------------ */
   const [courses, setCourses] = useState(qualifications);
   const [qualifiedCourses, setQualifiedCourses] = useState([]);
+  const [aps, setAps] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -57,10 +57,14 @@ export default function UniversityCourses() {
   useEffect(() => {
     const fetchCourses = async () => {
       const API_BASE = process.env.REACT_APP_API_BASE;
+      const token = JSON.parse(sessionStorage.getItem("token"));
       try {
         setLoading(true);
         const response = await axios.get(
           `${API_BASE}/api/university/${courseSlug}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
         );
 
         if (response.data.success) {
@@ -87,6 +91,8 @@ export default function UniversityCourses() {
 
     const apsCalc = new TutAPS(getSubjects());
     const studentAPS = apsCalc.computeAPS();
+    alert("aps is: " + studentAPS);
+    setAps(studentAPS);
 
     const studentEndorsement = JSON.parse(
       sessionStorage.getItem("student"),
@@ -99,14 +105,14 @@ export default function UniversityCourses() {
       studentAPS,
     );
 
-    console.log("BY APS",qualifiedByAps);
+    console.log("BY APS", qualifiedByAps);
 
     const qualifiedByEndorsement = courseManager.filterCoursesByEndorsement(
       qualifiedByAps,
       studentEndorsement,
     );
 
-    console.log("BY ENDORSEMENT",qualifiedByEndorsement);
+    console.log("BY ENDORSEMENT", qualifiedByEndorsement);
 
     // prerequisite filter – uncomment when ready:
     const qualifiedCourseByPrerequisite =
@@ -117,7 +123,7 @@ export default function UniversityCourses() {
 
     const qualifiedCourse = qualifiedByEndorsement;
 
-    console.log("BY PRE-REQUISITE",qualifiedCourseByPrerequisite);
+    console.log("BY PRE-REQUISITE", qualifiedCourseByPrerequisite);
 
     setTimeout(() => {
       setQualifiedCourses(qualifiedCourse);
@@ -227,6 +233,29 @@ export default function UniversityCourses() {
       <header className="uni-courses-header">
         <h1>University Courses</h1>
         <span className="uni-slug-badge">{courseSlug}</span>
+        {aps && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              padding: "8px",
+              backgroundColor: "#f0fdf4",
+              border: "1px solid #bbf7d0",
+              borderRadius: "8px",
+              color: "#166534",
+              fontFamily: "sans-serif",
+              marginTop: "10Epx",
+            }}
+          >
+            <Info size={20} color="#16a34a" style={{ flexShrink: 0 }} />
+            <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.5" }}>
+              Your APS for{" "}
+              <strong style={{ color: "#15803d" }}>{courseSlug.toLowerCase()}</strong> is{" "}
+              <strong style={{ fontSize: "1.1em" }}>{aps}</strong>
+            </p>
+          </div>
+        )}
       </header>
 
       {/* Tab Navigation */}

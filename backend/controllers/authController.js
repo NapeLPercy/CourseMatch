@@ -6,7 +6,6 @@ const dotenv = require("dotenv");
 const { v4: uuidv4 } = require("uuid");
 dotenv.config();
 
-
 exports.register = async (req, res) => {
   const { email, password } = req.body;
 
@@ -41,10 +40,10 @@ exports.register = async (req, res) => {
               if (err) return res.status(500).json({ error: err.message });
 
               res.status(201).json({ message: "User registered successfully" });
-            }
+            },
           );
         });
-      }
+      },
     );
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -56,9 +55,9 @@ exports.login = async (req, res) => {
   console.log("About to login", email, password);
 
   try {
-    // 1️⃣ Check account existence
+    // Check account existence
     db.query(
-      "SELECT id, email, password FROM account WHERE email = ?",
+      "SELECT id,role,user_id, email, password FROM account WHERE email = ?",
       [email],
       async (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -67,30 +66,39 @@ exports.login = async (req, res) => {
 
         const account = results[0];
 
-        // 2️⃣ Verify password
+        // Verify password
         const isMatch = await bcrypt.compare(password, account.password);
         if (!isMatch)
           return res.status(400).json({ error: "Invalid credentials" });
 
-        // 3️⃣ Generate JWT
+        // Generate JWT
         const token = jwt.sign(
-          { id: account.id, email: account.email },
+          {
+            userId: account.user_id,
+            accountId: account.id,
+            role: account.role,
+            email: account.email,
+          },
           process.env.JWT_SECRET,
-          { expiresIn: process.env.JWT_EXPIRES_IN }
+          { expiresIn: process.env.JWT_EXPIRES_IN },
         );
 
         // Fetch student info linked to this account
-        const studentSql = "SELECT student_id AS studentId, endorsement FROM student WHERE user_id = ?";
-        db.query(studentSql, [account.id], (err, studentResults) => {
+        const studentSql =
+          "SELECT student_id AS studentId, endorsement FROM student WHERE user_id = ?";
+        db.query(studentSql, [account.user_id], (err, studentResults) => {
           if (err) return res.status(500).json({ error: err.message });
 
           // If student record found, include it
-          const studentData = studentResults.length > 0 ? studentResults[0] : null;
+          const studentData =
+            studentResults.length > 0 ? studentResults[0] : null;
 
           // Construct final response object
           const userData = {
-            id: account.id,
+            userId: account.user_id,
+            accountId: account.id,
             email: account.email,
+            role: account.role,
             student: studentData,
           };
 
@@ -100,7 +108,7 @@ exports.login = async (req, res) => {
             user: userData,
           });
         });
-      }
+      },
     );
   } catch (err) {
     res.status(500).json({ error: err.message });

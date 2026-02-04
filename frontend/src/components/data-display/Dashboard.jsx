@@ -104,26 +104,41 @@ export default function Dashboard({ user }) {
   const studentId = student?.studentId ?? null;
   const endorsement = student?.endorsement ?? null;
 
-  // Fetch subjects
   useEffect(() => {
+    fetchSubjects();
+  }, [studentId]);
+
+  const fetchSubjects = async () => {
     if (!studentId) {
       setLoading(false);
       return;
     }
 
-    const API_BASE = process.env.REACT_APP_API_BASE;
+    try {
+      setLoading(true);
 
-    axios
-      .get(`${API_BASE}/api/subjects/${studentId}`)
-      .then((res) => {
-        if (res.data.success) {
-          setSubjects(res.data.subjects);
-          addSubjects(res.data.subjects);
-        }
-      })
-      .catch((err) => console.error("Error loading subjects:", err))
-      .finally(() => setLoading(false));
-  }, [studentId]);
+      const API_BASE = process.env.REACT_APP_API_BASE;
+      const token = JSON.parse(sessionStorage.getItem("token"));
+
+      const response = await axios.get(
+        `${API_BASE}/api/subjects/${studentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.data.success) {
+        setSubjects(response.data.subjects);
+        addSubjects(response.data.subjects);
+      }
+    } catch (error) {
+      console.error("Error loading subjects:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) return <Skeleton />;
 
@@ -138,12 +153,15 @@ export default function Dashboard({ user }) {
       )
     : 0;
 
+  //Handle subject mark save after editing
   const handleSave = async ({ Subject_Id, Mark }) => {
     const API_BASE = process.env.REACT_APP_API_BASE;
+    const token = JSON.parse(sessionStorage.getItem("token"));
     try {
       const response = await axios.put(
         `${API_BASE}/api/subjects/${Subject_Id}`,
         { Mark },
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       let data = response.data;
@@ -151,10 +169,9 @@ export default function Dashboard({ user }) {
         setSubjects((prev) =>
           prev.map((s) => (s.Subject_Id === Subject_Id ? { ...s, Mark } : s)),
         );
-         alert(data.message);
+        alert(data.message);
       }
       setEditingSubject(null);
-     
     } catch (err) {
       if (err.response) {
         alert(err.response.data.message);

@@ -34,9 +34,7 @@ function PencilIcon() {
   );
 }
 
-/* -------------------------------------------------- */
 // ViewSubjects – presentational
-/* -------------------------------------------------- */
 export default function ViewSubjects({ subjects = [], onSave }) {
   const [editingSubject, setEditingSubject] = useState(null);
 

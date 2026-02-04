@@ -36,7 +36,7 @@ export default class CourseManager {
 };
 
 SUBJECT_EQUIVALENTS = {
-    "Mathematics": ["Mathematics"],
+    "Mathematics": ["Mathematics","Technical Mathematics"],
     "Physical Sciences": ["Physical Sciences", "Technical Sciences"],
     "English FAL":["English FAL","English HL"],
   };

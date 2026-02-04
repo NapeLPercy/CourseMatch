@@ -16,19 +16,23 @@ module.exports = {
     });
   },
 
-  getSubjectsByStudentId: async (studentId) => {
-
-    const sql = "SELECT * FROM subject WHERE student_id = ?";
-
+  getSubjectsByStudentIdForUser: async (studentId, userId) => {
+    const sql = `
+    SELECT s.*
+    FROM subject s
+    JOIN student st ON st.student_id = s.student_id
+    WHERE s.student_id = ?
+      AND st.user_id = ?
+  `;
     return new Promise((resolve, reject) => {
-      db.query(sql, [studentId], (err, result) => {
+      db.query(sql, [studentId, userId], (err, result) => {
         if (err) return reject(err);
         resolve(result);
       });
     });
   },
 
-  updateMark : async (subjectId, subjectMark)=>{
+  updateMark: async (subjectId, subjectMark) => {
     const sql = "UPDATE subject SET mark=? WHERE subject_id=?";
 
     return new Promise((resolve, reject) => {
@@ -37,6 +41,5 @@ module.exports = {
         resolve(result);
       });
     });
-
-  }
+  },
 };

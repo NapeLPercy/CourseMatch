@@ -5,21 +5,21 @@ const AuthContext = createContext(null);
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  // Optional: Restore user from localStorage after refresh
+  //Restore user from localStorage after refresh
   useEffect(() => {
     const saved = sessionStorage.getItem("user");
     if (saved) setUser(JSON.parse(saved));
   }, []);
 
-  // Save user to localStorage when changed
+  //Save user to localStorage when changed
   useEffect(() => {
     if (user) {
       sessionStorage.setItem("user", JSON.stringify(user));
-       sessionStorage.setItem("student", JSON.stringify(user.student));
+      sessionStorage.setItem("student", JSON.stringify(user.student));
     } else sessionStorage.clear();
   }, [user]);
 
-  // Helper login & logout functions
+  //Helper login & logout functions
   const login = (userData) => {
     setUser(userData);
   };

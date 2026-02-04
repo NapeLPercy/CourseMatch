@@ -39,19 +39,24 @@ export default function Login() {
       const response = await axios.post(`${API_BASE}/api/auth/login`, form);
       const user = response.data.user;
       const student = user.student;
+      const role = user.role;
+      const token = response.data.token;
 
+      if (role) {
+        sessionStorage.setItem("role", JSON.stringify(role));
+      }
+      if (token) {
+        sessionStorage.setItem("token", JSON.stringify(token));
+      }
       if (student) {
         sessionStorage.setItem("student", JSON.stringify(student));
       }
-
       setSuccess("Login successful!");
       login(user);
-
       setTimeout(() => {
         navigate("/my-dashboard");
         setSuccess(null);
       }, 3000);
-      
     } catch (err) {
       console.error("Login error:", err.response?.data || err.message);
       setError(err.response?.data?.error || "Login failed: " + err.message);
