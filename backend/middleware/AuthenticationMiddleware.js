@@ -13,7 +13,6 @@ const authenticate = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(" ")[1];
 
-      console.log("This is the token", token);
       // Verify token using secret
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -33,8 +32,6 @@ const authenticate = async (req, res, next) => {
       //Attach user id to request for use in controllers
       req.userId = rows.id;
       req.role = role;
-      
-      
       next();
     } catch (error) {
       console.error("Token verification failed:", error);

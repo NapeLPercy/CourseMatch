@@ -1,0 +1,367 @@
+/* ============================================================
+   ADMIN VIEW QUALIFICATIONS — CourseMatch
+   ============================================================ */
+
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+  --shadow: rgba(30, 58, 138, 0.1);
+  --error: #f87171;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CONTAINER
+   ══════════════════════════════════════════════════════════════ */
+.avq {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* No padding — parent (ManageCourses) already handles page padding */
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SEARCH BAR
+   ══════════════════════════════════════════════════════════════ */
+.avq__search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.avq__search-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-gray);
+  pointer-events: none;
+}
+
+.avq__search-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 14px;
+  padding: 13px 14px 13px 44px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.avq__search-input::placeholder {
+  color: var(--text-gray);
+  opacity: 0.6;
+}
+
+.avq__search-input:focus {
+  border-color: var(--light-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   META (results count)
+   ══════════════════════════════════════════════════════════════ */
+.avq__meta {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-gray);
+}
+
+.avq__meta strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GRID
+   ══════════════════════════════════════════════════════════════ */
+.avq__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CARD
+   ══════════════════════════════════════════════════════════════ */
+.avq__card {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 18px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  opacity: 0;
+  animation: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+@keyframes cardIn {
+  0%   { opacity: 0; transform: translateY(14px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.avq__card:hover {
+  border-color: rgba(37, 99, 235, 0.2);
+  box-shadow: 0 6px 24px var(--shadow);
+}
+
+/* ── Header (university + faculty + actions) ────────────────── */
+.avq__card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--pale-blue);
+}
+
+.avq__header-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.avq__uni,
+.avq__faculty {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-gray);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.avq__uni-icon,
+.avq__faculty-icon {
+  color: var(--medium-blue);
+  flex-shrink: 0;
+}
+
+.avq__uni-name,
+.avq__faculty-name {
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Actions (Edit + Delete) */
+.avq__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.avq__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--pale-blue);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  color: var(--text-gray);
+}
+
+.avq__btn--edit:hover {
+  background: rgba(37, 99, 235, 0.08);
+  border-color: var(--light-blue);
+  color: var(--medium-blue);
+}
+
+.avq__btn--delete:hover {
+  background: rgba(248, 113, 113, 0.08);
+  border-color: rgba(248, 113, 113, 0.3);
+  color: var(--error);
+}
+
+/* ── Body (qualification details) ───────────────────────────── */
+.avq__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.avq__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Detail rows */
+.avq__details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.avq__detail {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-gray);
+}
+
+.avq__detail-icon {
+  color: var(--medium-blue);
+  flex-shrink: 0;
+}
+
+.avq__detail-label {
+  font-weight: 500;
+  color: var(--text-gray);
+}
+
+.avq__detail-value {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* Prerequisites */
+.avq__prereqs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--pale-blue);
+}
+
+.avq__prereqs-title {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-gray);
+}
+
+.avq__prereqs-table {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.avq__prereq-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--off-white);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.avq__prereq-name {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  flex: 1;
+}
+
+.avq__prereq-mark {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--medium-blue);
+  background: rgba(37, 99, 235, 0.08);
+  border-radius: 6px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EMPTY STATE
+   ══════════════════════════════════════════════════════════════ */
+.avq__empty {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 18px;
+  padding: 60px 24px;
+  text-align: center;
+}
+
+.avq__empty p {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .avq__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .avq__card {
+    padding: 18px 16px;
+  }
+
+  .avq__card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .avq__actions {
+    align-self: flex-end;
+  }
+
+  .avq__title {
+    font-size: 1.05rem;
+  }
+
+  .avq__prereq-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .avq__prereq-mark {
+    align-self: flex-end;
+  }
+}
+
+/*loader*/
+.avq__spinner {
+  animation: avq-spin 0.9s linear infinite;
+  margin-bottom: 0.6rem;
+}
+
+@keyframes avq-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+

@@ -32,7 +32,9 @@ import MainLayout from "./components/layout/MainLayout";
 import AuthLayout from "./components/layout/AuthLayout";
 import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
-
+import AdminAddQualification from "./components/forms/AddCourse";
+import ManageQualifications from "./components/data-display/ManageQualifications";
+import AdminViewQualification from "./components/data-display/AdminViewQualification";
 function App() {
   return (
     <UserProvider>
@@ -42,7 +44,6 @@ function App() {
             <Routes>
               {/*Nav, Footer included screen pages */}
               <Route element={<MainLayout />}>
-
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
 
@@ -52,14 +53,14 @@ function App() {
                 <Route path="/my-dashboard" element={<Dashboard />} />
 
                 <Route path="/view-courses" element={<ViewCourses />} />
-            
+
                 <Route
                   path="/view-courses/:courseSlug"
                   element={<UniversityCourses />}
                 />
 
-              <Route path="/contact-us" element={<Contact/>}/>
-                            </Route>
+                <Route path="/contact-us" element={<Contact />} />
+              </Route>
 
               {/*Full screen pages */}
               <Route element={<AuthLayout />}>
@@ -67,10 +68,14 @@ function App() {
                 <Route path="/register" element={<Account />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
-                    <Route path="*" element={<NotFound/>}/>
+                <Route path="*" element={<NotFound />} />
+
+                <Route
+                  path="/admin/manage-qualifications"
+                  element={<ManageQualifications />}
+                />
               </Route>
             </Routes>
-
           </Router>
         </SubjectProvider>
       </CourseProvider>

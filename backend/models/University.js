@@ -3,8 +3,6 @@ const db = require("../config/db");
 
 module.exports = {
   getUniversityCourses: async (universityName) => {
-    console.log("Fetching courses for university:", universityName);
-
     const sql = `
       SELECT 
         c.*,
@@ -27,13 +25,11 @@ module.exports = {
           console.error("Error fetching courses:", err);
           return reject(err);
         }
-
-        console.log("Raw course + prereq rows:", result);
-
+        
         const courseMap = {};
 
         result.forEach((row) => {
-          const code = row.Code; // ✅ correct grouping key
+          const code = row.Code; //
 
           if (!courseMap[code]) {
             courseMap[code] = {
@@ -56,6 +52,53 @@ module.exports = {
         });
 
         resolve(Object.values(courseMap));
+      });
+    });
+  },
+  
+//get all universities & faculties 
+   getUniversitiesWithFaculties: async () => {
+    const sql = `
+      SELECT
+        u.abbreaviation        AS university_abbreviation,
+        u.name                AS university_name,
+        u.url                 AS university_url,
+        f.faculty_id,
+        f.name                AS faculty_name
+      FROM university u
+      LEFT JOIN faculty f
+        ON f.University_Abbreviation = u.abbreaviation
+      ORDER BY u.abbreaviation, f.faculty_id
+    `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, (err, rows) => {
+        if (err) return reject(err);
+
+        // Transform flat rows → nested structure
+        const map = new Map();
+
+        rows.forEach((row) => {
+          const uniKey = row.university_abbreviation;
+
+          if (!map.has(uniKey)) {
+            map.set(uniKey, {
+              abbreviation: row.university_abbreviation,
+              name: row.university_name,
+              url: row.university_url,
+              faculties: [],
+            });
+          }
+
+          if (row.faculty_id) {
+            map.get(uniKey).faculties.push({
+              faculty_id: row.faculty_id,
+              name: row.faculty_name,
+            });
+          }
+        });
+
+        resolve(Array.from(map.values()));
       });
     });
   },

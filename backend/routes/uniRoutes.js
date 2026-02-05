@@ -6,6 +6,7 @@ const authorize = require("../middleware/AuthorizationMiddleware");
 // Get all courses for a university
 
 
+router.get("/get-all",authenticate, universityController.getAllUniversities);
 router.get('/:universityName',authenticate,authorize("STUDENT"),universityController.getUniversityCourses);
 
 

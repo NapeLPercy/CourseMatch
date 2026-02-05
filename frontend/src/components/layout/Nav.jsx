@@ -15,11 +15,17 @@ import {
   LogIn,
   UserPlus,
   TrendingUpDown,
+  Building2,
 } from "lucide-react";
 import "../../styles/Nav.css";
 
 export default function Nav() {
   const { user, logout } = useAuth();
+
+  const isLoggedIn = !!user;
+  const isAdmin = user?.role === "ADMIN";
+  const isStudent = isLoggedIn && !isAdmin;
+
   const [logOut, setLogOut] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -121,7 +127,8 @@ export default function Nav() {
 
           {/* ── Desktop links ── */}
           <div className="nav__desktop">
-            {!user ? (
+            {/*NON LOGGED IN USERS*/}
+            {!isLoggedIn && (
               <>
                 <NavLink to="/" icon={Home}>
                   Home
@@ -167,7 +174,10 @@ export default function Nav() {
                   )}
                 </div>
               </>
-            ) : (
+            )}
+
+            {/*LOGGED IN USER === STUDENT*/}
+            {isStudent && (
               <>
                 <NavLink to="/my-dashboard" icon={TrendingUpDown}>
                   DashBoard
@@ -195,8 +205,41 @@ export default function Nav() {
                   >
                     <LogOut size={15} strokeWidth={2} />
 
-                    {logOut? "Logging out...": "Logout"}
-                    
+                    {logOut ? "Logging out..." : "Logout"}
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/*LOGGED IN USER === ADMIN*/}
+            {isAdmin && (
+              <>
+                <NavLink to="/admin/dashboard" icon={TrendingUpDown}>
+                  Admin Dashboard
+                </NavLink>
+                <NavLink to="/admin/manage-qualifications" icon={GraduationCap}>
+                  Manage Qualifications
+                </NavLink>
+                <NavLink to="/admin/universities" icon={Building2}>
+                  Universities & Faculties
+                </NavLink>
+                <NavLink to="/admin/reports" icon={FileText}>
+                  Reports
+                </NavLink>
+
+                {/* admin pill */}
+                <div className="nav__user">
+                  <div className="nav__avatar nav__avatar--admin">
+                    <User size={15} />
+                  </div>
+                  <button
+                    type="button"
+                    className="nav__logout"
+                    onClick={handleLogout}
+                  >
+                    <LogOut size={15} strokeWidth={2} />
+
+                    {logOut ? "Logging out..." : "Logout"}
                   </button>
                 </div>
               </>
@@ -243,7 +286,7 @@ export default function Nav() {
 
           {/* Links */}
           <div className="nav__overlay-links">
-            {!user ? (
+            {!isLoggedIn && (
               <>
                 <NavLink to="/" icon={Home} className="nav__overlay-link">
                   Home
@@ -263,7 +306,9 @@ export default function Nav() {
                   Sign Up
                 </NavLink>
               </>
-            ) : (
+            )}
+
+            {isStudent && (
               <>
                 <NavLink
                   to="/my-dashboard"
@@ -301,7 +346,47 @@ export default function Nav() {
                   onClick={handleLogout}
                 >
                   <LogOut size={18} strokeWidth={2} />
-                  {logOut? "Logging out...": "Logout"}
+                  {logOut ? "Logging out..." : "Logout"}
+                </button>
+              </>
+            )}
+
+            {isAdmin && (
+              <>
+                <NavLink
+                  to="/admin/dashboard"
+                  icon={TrendingUpDown}
+                  className="nav__overlay-link"
+                >
+                  Admin Dashboard
+                </NavLink>
+                <NavLink
+                  to="/admin/manage-qualifications"
+                  icon={GraduationCap}
+                  className="nav__overlay-link"
+                >
+                  Manage Qualifications
+                </NavLink>
+                <NavLink
+                  to="/admin/universities"
+                  icon={Building2}
+                  className="nav__overlay-link"
+                >
+                  Universities & Faculties
+                </NavLink>
+
+                <NavLink to="/admin/reports" icon={FileText}>
+                  Reports
+                </NavLink>
+
+                <div className="nav__overlay-divider" />
+                <button
+                  type="button"
+                  className="nav__overlay-logout"
+                  onClick={handleLogout}
+                >
+                  <LogOut size={18} strokeWidth={2} />
+                  {logOut ? "Logging out..." : "Logout"}
                 </button>
               </>
             )}

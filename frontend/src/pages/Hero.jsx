@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import "./Hero.css";
-import bg from "../assets/uni.jpg"; // uncomment when you have your image
+//import bg from "../assets/uni.jpg"; // uncomment when you have your image
 import {useNavigate} from "react-router-dom";
 
 export default function Hero() {

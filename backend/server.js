@@ -7,6 +7,7 @@ const subjectsRoutes = require("./routes/subjectRoutes");
 const uniRoutes = require("./routes/uniRoutes");
 const chatbotRoutes = require("./routes/chatbotRoutes");
 const autoRoutes = require("./routes/automationRoutes");
+const qualificationRoutes = require("./routes/qualificationRoutes");
 
 dotenv.config();
 const app = express();
@@ -23,6 +24,7 @@ app.use("/api/subjects", subjectsRoutes);
 app.use("/api/university", uniRoutes);
 app.use("/api/chat", chatbotRoutes);
 app.use("/api/match-courses",autoRoutes);
+app.use("/api/qualification", qualificationRoutes);
 
 const PORT = process.env.PORT || 5000;
 
