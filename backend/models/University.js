@@ -2,6 +2,66 @@
 const db = require("../config/db");
 
 module.exports = {
+  //add university and courses
+    addUniversityWithFaculties: async ({ abbreviation, name, url, faculties }) => {
+    // faculties = ["Faculty of X", "Faculty of Y", ...]
+    return new Promise((resolve, reject) => {
+      db.getConnection((err, connection) => {
+        if (err) return reject(err);
+
+        const conn = connection.promise();
+
+        connection.beginTransaction(async (err) => {
+          if (err) {
+            connection.release();
+            return reject(err);
+          }
+
+          const rollback = (e) =>
+            connection.rollback(() => {
+              connection.release();
+              reject(e);
+            });
+
+          try {
+            // 1) Insert university
+            const uniSql = `
+              INSERT INTO university (abbreaviation, name, url)
+              VALUES (?, ?, ?)
+            `;
+            await conn.query(uniSql, [abbreviation, name, url]);
+
+            // 2) Insert faculties (bulk)
+            if (Array.isArray(faculties) && faculties.length > 0) {
+              const facSql = `
+                INSERT INTO faculty (name, university_abbreviation)
+                VALUES ?
+              `;
+
+              const values = faculties.map((facName) => [
+                facName.name,
+                abbreviation,
+              ]);
+
+
+              await conn.query(facSql, [values]);
+            }
+
+            // 3) Commit
+            connection.commit((err) => {
+              if (err) return rollback(err);
+
+              connection.release();
+              resolve({ success: true });
+            });
+          } catch (e) {
+            rollback(e);
+          }
+        });
+      });
+    });
+  },
+  //get courses for a specific university
   getUniversityCourses: async (universityName) => {
     const sql = `
       SELECT 
@@ -25,7 +85,7 @@ module.exports = {
           console.error("Error fetching courses:", err);
           return reject(err);
         }
-        
+
         const courseMap = {};
 
         result.forEach((row) => {
@@ -55,9 +115,9 @@ module.exports = {
       });
     });
   },
-  
-//get all universities & faculties 
-   getUniversitiesWithFaculties: async () => {
+
+  //get all universities & faculties
+  getUniversitiesWithFaculties: async () => {
     const sql = `
       SELECT
         u.abbreaviation        AS university_abbreviation,
@@ -102,5 +162,16 @@ module.exports = {
       });
     });
   },
-};
 
+  //delete university and its data
+  deleteUniversity: async (universityAbbrev) => {
+    console.log("her we are ",universityAbbrev);
+    const sql = "DELETE FROM university WHERE abbreaviation = ?";
+    return new Promise((resolve, reject) => {
+      db.query(sql, [universityAbbrev], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
+};

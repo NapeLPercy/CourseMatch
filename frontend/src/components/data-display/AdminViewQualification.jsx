@@ -13,21 +13,74 @@ import {
   Hash,
 } from "lucide-react";
 import "../../styles/AdminViewQualification.css";
+import ConfirmationModal from "./ConfirmationModal";
 
 /* ─── Single qualification card ─────────────────────────────── */
-function QualificationCard({ qual, index }) {
+function QualificationCard({ qual, index, afterDelete }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState(null);
+
   const handleEdit = () => {
     console.log("EDIT QUALIFICATION:", qual);
     alert(`Edit clicked for "${qual.name}". Check console for full data.`);
   };
 
   const handleDelete = () => {
-    console.log("DELETE QUALIFICATION:", qual);
-    alert(`Delete clicked for "${qual.name}". Check console for full data.`);
+    setModalMessage(<>You are about to delete <strong>{qual.name}</strong> from qualifications list</>);
+    setIsModalOpen(true);
   };
+
+
+  const confirmDelete=()=>{
+    deleteQualification(qual.code);
+    afterDelete(qual.code);
+  }
+
+  const cancelDelete=()=>{
+    setIsModalOpen(false);
+    setModalMessage(null);
+  }
+
+  const deleteQualification = async (code) => {
+    const API_BASE = process.env.REACT_APP_API_BASE;
+    const token = JSON.parse(sessionStorage.getItem("token"));
+  try {
+    // The 'await' keyword pauses execution until the promise is resolved
+    const response = await axios.delete(`${API_BASE}/api/qualification/${code}`,{
+      headers: {Authorization: `Bearer ${token}`}
+    });
+    
+  console.log("Data received:", response.data);
+  const data = response.data;
+  alert(data.message);
+  setIsModalOpen(false)
+  setModalMessage(null);
+  } catch (error) {
+    console.error("An error occurred during the request:");
+    
+    if (error.response) {
+      console.error("Server response data:", error.response.data);
+      console.error("Server response status:", error.response.status);
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+    } else {
+      console.error("Error message:", error.message);
+    }
+  }
+};
 
   return (
     <div className="avq__card" style={{ animationDelay: `${index * 0.05}s` }}>
+      {isModalOpen && (
+        <ConfirmationModal
+          isOpen={isModalOpen}
+          title="Delete Item?"
+          message={modalMessage}
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+          variant="danger"
+        />
+      )}
       {/* Header: University + Faculty */}
       <div className="avq__card-header">
         <div className="avq__header-left">
@@ -175,11 +228,21 @@ export default function AdminViewQualifications() {
     );
   }, [searchQuery, qualifications]);
 
+
+  //after successful course deletion
+  const handleAfterDelete=(qualificationCode)=>{
+    setQualifications(qualifications.filter(qualification=> qualification.code !== qualificationCode));
+  }
   return (
     <div className="avq">
       {loading && (
         <div className="avq__empty">
-          <Loader2 className="avq__spinner" size={28} color={"#1e3a8a"}strokeWidth={2.2} />
+          <Loader2
+            className="avq__spinner"
+            size={28}
+            color={"#1e3a8a"}
+            strokeWidth={2.2}
+          />
           <p>Loading qualifications...</p>
         </div>
       )}
@@ -206,7 +269,7 @@ export default function AdminViewQualifications() {
       {filtered.length > 0 ? (
         <div className="avq__grid">
           {filtered.map((qual, i) => (
-            <QualificationCard key={qual.code} qual={qual} index={i} />
+            <QualificationCard key={qual.code} qual={qual} index={i} afterDelete={handleAfterDelete} />
           ))}
         </div>
       ) : (

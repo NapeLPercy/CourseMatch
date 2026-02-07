@@ -1,5 +1,5 @@
 /* ============================================================
-   ADMIN VIEW QUALIFICATIONS — CourseMatch
+   VIEW UNIVERSITIES — CourseMatch
    ============================================================ */
 
 :root {
@@ -18,30 +18,29 @@
 /* ══════════════════════════════════════════════════════════════
    CONTAINER
    ══════════════════════════════════════════════════════════════ */
-.avq {
+.vu {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* No padding — parent (ManageCourses) already handles page padding */
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SEARCH BAR
+   SEARCH
    ══════════════════════════════════════════════════════════════ */
-.avq__search-wrap {
+.vu__search-wrap {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.avq__search-icon {
+.vu__search-icon {
   position: absolute;
   left: 14px;
   color: var(--text-gray);
   pointer-events: none;
 }
 
-.avq__search-input {
+.vu__search-input {
   width: 100%;
   box-sizing: border-box;
   background: var(--white);
@@ -55,34 +54,48 @@
   transition: border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
-.avq__search-input::placeholder {
+.vu__search-input::placeholder {
   color: var(--text-gray);
   opacity: 0.6;
 }
 
-.avq__search-input:focus {
+.vu__search-input:focus {
   border-color: var(--light-blue);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 /* ══════════════════════════════════════════════════════════════
-   META (results count)
+   META
    ══════════════════════════════════════════════════════════════ */
-.avq__meta {
+.vu__meta {
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   font-size: 0.82rem;
   color: var(--text-gray);
 }
 
-.avq__meta strong {
+.vu__meta strong {
   color: var(--text-dark);
   font-weight: 600;
 }
 
 /* ══════════════════════════════════════════════════════════════
+   LOADING
+   ══════════════════════════════════════════════════════════════ */
+.vu__loading {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 18px;
+  padding: 60px 24px;
+  text-align: center;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-gray);
+}
+
+/* ══════════════════════════════════════════════════════════════
    GRID
    ══════════════════════════════════════════════════════════════ */
-.avq__grid {
+.vu__grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 18px;
@@ -91,7 +104,7 @@
 /* ══════════════════════════════════════════════════════════════
    CARD
    ══════════════════════════════════════════════════════════════ */
-.avq__card {
+.vu__card {
   background: var(--white);
   border: 1px solid var(--pale-blue);
   border-radius: 18px;
@@ -109,66 +122,52 @@
   100% { opacity: 1; transform: translateY(0); }
 }
 
-.avq__card:hover {
+.vu__card:hover {
   border-color: rgba(37, 99, 235, 0.2);
   box-shadow: 0 6px 24px var(--shadow);
 }
 
-/* ── Header (university + faculty + actions) ────────────────── */
-.avq__card-header {
+/* ── Header (abbreviation + actions) ────────────────────────── */
+.vu__card-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--pale-blue);
 }
 
-.avq__header-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-
-.avq__uni,
-.avq__faculty {
+.vu__abbrev {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.8rem;
-  color: var(--text-gray);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  gap: 8px;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  border-radius: 10px;
+  padding: 6px 14px;
 }
 
-.avq__uni-icon,
-.avq__faculty-icon {
+.vu__abbrev-icon {
   color: var(--medium-blue);
-  flex-shrink: 0;
 }
 
-.avq__uni-name,
-.avq__faculty-name {
-  font-weight: 600;
-  color: var(--text-dark);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.vu__abbrev-text {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--medium-blue);
+  letter-spacing: 0.05em;
 }
 
-/* Actions (Edit + Delete) */
-.avq__actions {
+/* Actions */
+.vu__actions {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
 }
 
-.avq__btn {
+.vu__btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -182,26 +181,26 @@
   color: var(--text-gray);
 }
 
-.avq__btn--edit:hover {
+.vu__btn--edit:hover {
   background: rgba(37, 99, 235, 0.08);
   border-color: var(--light-blue);
   color: var(--medium-blue);
 }
 
-.avq__btn--delete:hover {
+.vu__btn--delete:hover {
   background: rgba(248, 113, 113, 0.08);
   border-color: rgba(248, 113, 113, 0.3);
   color: var(--error);
 }
 
-/* ── Body (qualification details) ───────────────────────────── */
-.avq__body {
+/* ── Body ───────────────────────────────────────────────────── */
+.vu__body {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-.avq__title {
+.vu__title {
   font-family: "Playfair Display", Georgia, serif;
   font-size: 1.15rem;
   font-weight: 700;
@@ -210,14 +209,7 @@
   line-height: 1.3;
 }
 
-/* Detail rows */
-.avq__details {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.avq__detail {
+.vu__detail {
   display: flex;
   align-items: center;
   gap: 7px;
@@ -226,23 +218,25 @@
   color: var(--text-gray);
 }
 
-.avq__detail-icon {
+.vu__detail-icon {
   color: var(--medium-blue);
   flex-shrink: 0;
 }
 
-.avq__detail-label {
-  font-weight: 500;
-  color: var(--text-gray);
+.vu__link {
+  color: var(--medium-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  word-break: break-all;
 }
 
-.avq__detail-value {
-  font-weight: 600;
-  color: var(--text-dark);
+.vu__link:hover {
+  color: var(--light-blue);
+  text-decoration: underline;
 }
 
-/* Prerequisites */
-.avq__prereqs {
+/* ── Faculties ──────────────────────────────────────────────── */
+.vu__faculties {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -250,7 +244,10 @@
   border-top: 1px solid var(--pale-blue);
 }
 
-.avq__prereqs-title {
+.vu__faculties-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 600;
@@ -259,45 +256,38 @@
   color: var(--text-gray);
 }
 
-.avq__prereqs-table {
+.vu__faculty-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.avq__prereq-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+.vu__faculty-item {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-dark);
   background: var(--off-white);
   border-radius: 8px;
   padding: 8px 12px;
+  position: relative;
+  padding-left: 24px;
 }
 
-.avq__prereq-name {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-dark);
-  flex: 1;
-}
-
-.avq__prereq-mark {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.78rem;
-  font-weight: 600;
+.vu__faculty-item::before {
+  content: "•";
+  position: absolute;
+  left: 12px;
   color: var(--medium-blue);
-  background: rgba(37, 99, 235, 0.08);
-  border-radius: 6px;
-  padding: 3px 8px;
-  white-space: nowrap;
+  font-weight: 700;
 }
 
 /* ══════════════════════════════════════════════════════════════
    EMPTY STATE
    ══════════════════════════════════════════════════════════════ */
-.avq__empty {
+.vu__empty {
   background: var(--white);
   border: 1px solid var(--pale-blue);
   border-radius: 18px;
@@ -305,7 +295,7 @@
   text-align: center;
 }
 
-.avq__empty p {
+.vu__empty p {
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   font-size: 0.9rem;
   color: var(--text-gray);
@@ -316,53 +306,17 @@
    RESPONSIVE
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
-  .avq__grid {
+  .vu__grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 600px) {
-  .avq__card {
+  .vu__card {
     padding: 18px 16px;
-  
   }
 
-  .avq__card-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .avq__actions {
-    align-self: flex-end;
-  }
-
-  .avq__title {
+  .vu__title {
     font-size: 1.05rem;
   }
-
-  .avq__prereq-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .avq__prereq-mark {
-    align-self: flex-end;
-  }
 }
-
-/*loader*/
-.avq__spinner {
-  animation: avq-spin 0.9s linear infinite;
-  margin-bottom: 0.6rem;
-}
-
-@keyframes avq-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-

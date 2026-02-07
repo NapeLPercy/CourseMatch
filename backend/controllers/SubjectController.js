@@ -2,16 +2,15 @@ const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const StudentModel = require("../models/Student");
-const SubjectModel = require("../models/Subject");
+const studentModel = require("../models/Student");
+const subjectModel = require("../models/Subject");
 const SubjectSanitizer = require("../services/SubjectSanitizer");
 const MatrixEndorsement = require("../services/MatrixEndorsement");
 
 //Add subjects
 exports.addSubjects = async (req, res) => {
   try {
-   
-    const { subjects} = req.body;
+    const { subjects } = req.body;
     const userId = req.userId;
     const studentId = uuidv4();
 
@@ -22,14 +21,14 @@ exports.addSubjects = async (req, res) => {
       });
     }
 
-    //clean subjects 
+    //clean subjects
     const sanitizedSubjects = new SubjectSanitizer(subjects).sanitize();
-    
+
     //compute matric endorsement
     let endorsement = new MatrixEndorsement(sanitizedSubjects).determine();
 
     //Insert student
-    await StudentModel.createStudent(studentId, endorsement, userId);
+    await studentModel.createStudent(studentId, endorsement, userId);
 
     //Prepare subject values
     const subjectValues = subjects.map((s) => [
@@ -41,11 +40,17 @@ exports.addSubjects = async (req, res) => {
     ]);
 
     //Insert all subjects
-    await SubjectModel.insertSubjects(subjectValues);
+    await subjectModel.insertSubjects(subjectValues);
+
+        /*After adding subjects and student info, I collect student so that
+      the logged in user can see thier subject(depended on on studentId)*/
+
+    const studentData = await studentModel.getStudentInfo(userId);
 
     return res.status(201).json({
       success: true,
       message: "Subjects added successfully",
+      student: studentData[0],
       endorsementSubjects: sanitizedSubjects,
     });
   } catch (error) {
@@ -57,7 +62,6 @@ exports.addSubjects = async (req, res) => {
   }
 };
 
-
 // Get subjects for a student
 exports.getSubjects = async (req, res) => {
   try {
@@ -65,29 +69,29 @@ exports.getSubjects = async (req, res) => {
     const userId = req.userId;
 
     //delegate to subject model
-    const subjects = await SubjectModel.getSubjectsByStudentIdForUser(studentId, userId);
+    const subjects = await subjectModel.getSubjectsByStudentIdForUser(
+      studentId,
+      userId,
+    );
 
     return res.status(200).json({
-      subjects:subjects,
-      success:true,
-      message:"Subjects successfuly fetched!",
+      subjects: subjects,
+      success: true,
+      message: "Subjects successfuly fetched!",
     });
-
-
   } catch (error) {
     console.error("Get subjects error:", error);
     return res.status(500).json({
       message: "Error fetching subjects",
-      success:false,
+      success: false,
     });
   }
 };
 
-
 exports.updateMark = async (req, res) => {
   try {
-    const { subjectId } = req.params;    
-    const { Mark } = req.body;            
+    const { subjectId } = req.params;
+    const { Mark } = req.body;
 
     console.log(subjectId, Mark);
     if (Mark === undefined || Mark === null) {
@@ -100,21 +104,17 @@ exports.updateMark = async (req, res) => {
       return res.status(400).json({ message: "Mark must be 0-100" });
     }
 
-    const updated = await SubjectModel.updateMark(subjectId, markNum);
+    const updated = await subjectModel.updateMark(subjectId, markNum);
 
-    console.log(updated,"HERE WE ARE");
-    
     return res.status(200).json({
       message: "Mark updated",
       success: true,
     });
-
   } catch (err) {
     console.error(err);
-     return res.status(500).json({
+    return res.status(500).json({
       message: "Server error: ",
-      success:false
+      success: false,
     });
   }
 };
-

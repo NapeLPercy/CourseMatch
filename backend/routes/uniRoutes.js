@@ -5,9 +5,10 @@ const authenticate = require("../middleware/AuthenticationMiddleware");
 const authorize = require("../middleware/AuthorizationMiddleware");
 // Get all courses for a university
 
-
+router.post("/",authenticate, authorize("ADMIN"), universityController.addUniversity);
 router.get("/get-all",authenticate, universityController.getAllUniversities);
 router.get('/:universityName',authenticate,authorize("STUDENT"),universityController.getUniversityCourses);
+router.delete("/:abbreviation", authenticate, authorize("ADMIN"), universityController.deleteUniversity);
 
 
 module.exports = router;

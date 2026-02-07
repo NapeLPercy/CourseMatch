@@ -54,7 +54,8 @@ export default function Login() {
       setSuccess("Login successful!");
       login(user);
       setTimeout(() => {
-        navigate("/my-dashboard");
+        const url = role === "STUDENT" ? "/my-dashboard" : "/admin/dashboard";
+        navigate(url);
         setSuccess(null);
       }, 3000);
     } catch (err) {

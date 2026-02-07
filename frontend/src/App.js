@@ -35,6 +35,8 @@ import Contact from "./pages/Contact";
 import AdminAddQualification from "./components/forms/AddCourse";
 import ManageQualifications from "./components/data-display/ManageQualifications";
 import AdminViewQualification from "./components/data-display/AdminViewQualification";
+import AdminDashboard from "./components/data-display/AdminDashboard";
+import AdminManageUniversities from "./components/data-display/AdminManageUniversities";
 function App() {
   return (
     <UserProvider>
@@ -51,7 +53,7 @@ function App() {
                 <Route path="/add-profile" element={<UserProfileForm />} />
                 <Route path="/my-subjects" element={<ViewSubjectsPage />} />
                 <Route path="/my-dashboard" element={<Dashboard />} />
-
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/view-courses" element={<ViewCourses />} />
 
                 <Route
@@ -73,6 +75,11 @@ function App() {
                 <Route
                   path="/admin/manage-qualifications"
                   element={<ManageQualifications />}
+                />
+
+                <Route
+                  path="/admin/manage-universities"
+                  element={<AdminManageUniversities />}
                 />
               </Route>
             </Routes>

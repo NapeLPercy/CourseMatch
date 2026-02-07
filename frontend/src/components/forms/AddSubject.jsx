@@ -343,6 +343,9 @@ export default function AddSubjects() {
 
       if (res.data) {
         addSubjects(payload);
+        if(res.data?.student){
+          sessionStorage.setItem("student",JSON.stringify(res.data.student));
+        }
         setSubmitted(true);
       }
     } catch (err) {

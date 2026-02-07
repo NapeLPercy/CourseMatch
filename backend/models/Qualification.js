@@ -165,5 +165,18 @@ module.exports = {
       });
     });
   },
+   deleteQualification: async (qualificationCode) => {
+    const sql = `DELETE FROM qualification WHERE code = ?`;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [qualificationCode], (err, result) => {
+        if (err) return reject(err);
+
+        resolve({
+          affectedRows: result.affectedRows, // 0 = not found, 1 = deleted
+        });
+      });
+    });
+  },
 };
 

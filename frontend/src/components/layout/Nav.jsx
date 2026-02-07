@@ -220,7 +220,7 @@ export default function Nav() {
                 <NavLink to="/admin/manage-qualifications" icon={GraduationCap}>
                   Manage Qualifications
                 </NavLink>
-                <NavLink to="/admin/universities" icon={Building2}>
+                <NavLink to="/admin/manage-universities" icon={Building2}>
                   Universities & Faculties
                 </NavLink>
                 <NavLink to="/admin/reports" icon={FileText}>
@@ -368,7 +368,7 @@ export default function Nav() {
                   Manage Qualifications
                 </NavLink>
                 <NavLink
-                  to="/admin/universities"
+                  to="/admin/manage-universities"
                   icon={Building2}
                   className="nav__overlay-link"
                 >

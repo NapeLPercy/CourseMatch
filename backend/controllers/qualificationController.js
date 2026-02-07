@@ -35,30 +35,66 @@ exports.addQualification = async (req, res) => {
 // Get all qualifications and thier faculty
 exports.getAllQualifications = async (req, res) => {
   try {
-   /* const {userId, role} = req;
+     const {userId, role} = req;
 
      if (!userId || !role) {
       return res.status(400).json({
         success: false,
         message: "Missing required fields",
       });
-    }*/
+    }
 
     //delegate to qualification model
     const qualifications = await courseModel.getAllQualificationsWithPrereqs();
-
 
     return res.status(200).json({
       qualifications: qualifications,
       success: true,
       message: "Qualifications successfuly fetched!",
     });
-
   } catch (error) {
     console.error("Get qualifications error:", error);
     return res.status(500).json({
       message: "Error fetching qualifications",
       success: false,
+    });
+  }
+};
+
+//delete a qualification
+exports.deleteQualification = async (req, res) => {
+  try {
+    const { code } = req.params;
+
+    if (!code || !code.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Qualification code is required",
+      });
+    }
+
+    const result = await courseModel.deleteQualification(
+      code.trim(),
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Qualification deleted successfully",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Delete qualification error:", error);
+
+    if (error.message === "Qualification not found") {
+      return res.status(404).json({
+        success: false,
+        message: "Qualification not found",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error deleting qualification",
     });
   }
 };

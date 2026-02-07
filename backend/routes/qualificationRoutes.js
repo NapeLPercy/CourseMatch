@@ -5,6 +5,7 @@ const authenticate = require("../middleware/AuthenticationMiddleware");
 const authorize = require("../middleware/AuthorizationMiddleware");
 
 // Add all courses for a university
-router.post("/add-course",authenticate, authorize("ADMIN"), qualificationController.addQualification),
-router.get("/",authenticate, authorize("ADMIN"), qualificationController.getAllQualifications),
+router.post("/add-course",authenticate, authorize("ADMIN"), qualificationController.addQualification);
+router.get("/",authenticate, authorize("ADMIN"), qualificationController.getAllQualifications);
+router.delete("/:code",authenticate, authorize("ADMIN"), qualificationController.deleteQualification),
 module.exports = router;
