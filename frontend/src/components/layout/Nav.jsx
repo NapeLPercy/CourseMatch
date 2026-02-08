@@ -189,6 +189,11 @@ export default function Nav() {
                 <NavLink to="/add-subjects" icon={FileText}>
                   Add Subjects
                 </NavLink>
+
+                <NavLink to="/student/manage-my-profile" icon={User}>
+                  Manage profile
+                </NavLink>
+
                 <NavLink to="/view-courses" icon={GraduationCap}>
                   Courses
                 </NavLink>
@@ -332,6 +337,11 @@ export default function Nav() {
                 >
                   My Subjects
                 </NavLink>
+
+                <NavLink to="/student/manage-my-profile" icon={User}>
+                  Manage profile
+                </NavLink>
+
                 <NavLink
                   to="/view-courses"
                   icon={GraduationCap}

@@ -9,27 +9,18 @@ import { CourseContext } from "../../context/CourseContext";
 import { useSubjects } from "../../context/SubjectContext";
 // child components
 import Recommendations from "./Recommendations";
-
 // styles
 import "../../styles/UniversityCourses.css";
 
 export default function UniversityCourses() {
-  /* ------------------------------------------------ */
   // Route param
-  /* ------------------------------------------------ */
   let { courseSlug } = useParams();
   courseSlug = courseSlug.toUpperCase();
   sessionStorage.setItem("visited-uni", JSON.stringify(courseSlug));
-
-  /* ------------------------------------------------ */
   // Context
-  /* ------------------------------------------------ */
   const { qualifications, updateQualifications } = useContext(CourseContext);
   const { getSubjects } = useSubjects();
-
-  /* ------------------------------------------------ */
   // State
-  /* ------------------------------------------------ */
   const [courses, setCourses] = useState(qualifications);
   const [qualifiedCourses, setQualifiedCourses] = useState([]);
   const [aps, setAps] = useState(null);
@@ -48,7 +39,7 @@ export default function UniversityCourses() {
 
   const [computingQualified, setComputingQualified] = useState(false);
   const [computingRecommendations, setComputingRecommendations] = useState(
-    () => activeTab === "recommendations",
+    () => activeTab === "recommendations",  
   );
 
   /* ------------------------------------------------ */
@@ -91,7 +82,6 @@ export default function UniversityCourses() {
 
     const apsCalc = new TutAPS(getSubjects());
     const studentAPS = apsCalc.computeAPS();
-    alert("aps is: " + studentAPS);
     setAps(studentAPS);
 
     const studentEndorsement = JSON.parse(
@@ -105,14 +95,11 @@ export default function UniversityCourses() {
       studentAPS,
     );
 
-    console.log("BY APS", qualifiedByAps);
 
     const qualifiedByEndorsement = courseManager.filterCoursesByEndorsement(
       qualifiedByAps,
       studentEndorsement,
     );
-
-    console.log("BY ENDORSEMENT", qualifiedByEndorsement);
 
     // prerequisite filter – uncomment when ready:
     const qualifiedCourseByPrerequisite =
@@ -122,8 +109,6 @@ export default function UniversityCourses() {
       );
 
     const qualifiedCourse = qualifiedByEndorsement;
-
-    console.log("BY PRE-REQUISITE", qualifiedCourseByPrerequisite);
 
     setTimeout(() => {
       setQualifiedCourses(qualifiedCourse);

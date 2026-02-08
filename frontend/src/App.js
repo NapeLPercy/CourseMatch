@@ -15,7 +15,7 @@ import Nav from "./components/layout/Nav";
 import Footer from "./components/layout/Footer";
 
 import AddSubjects from "./components/forms/AddSubject";
-import UserProfileForm from "./components/forms/UserProfileForm";
+import ManageMyProfile from "./components/data-display/ManageMyProfile";
 
 //subjects
 import ViewSubjectsPage from "./components/data-display/ViewSubjectsPage";
@@ -50,7 +50,6 @@ function App() {
                 <Route path="/about" element={<About />} />
 
                 <Route path="/add-subjects" element={<AddSubjects />} />
-                <Route path="/add-profile" element={<UserProfileForm />} />
                 <Route path="/my-subjects" element={<ViewSubjectsPage />} />
                 <Route path="/my-dashboard" element={<Dashboard />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -81,6 +80,8 @@ function App() {
                   path="/admin/manage-universities"
                   element={<AdminManageUniversities />}
                 />
+
+                <Route path="/student/manage-my-profile" element={<ManageMyProfile />} />
               </Route>
             </Routes>
           </Router>

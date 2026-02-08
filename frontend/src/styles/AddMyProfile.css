@@ -1,0 +1,333 @@
+/* ============================================================
+   STUDENT PROFILE FORM — CourseMatch
+   ============================================================ */
+
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+  --shadow: rgba(30, 58, 138, 0.1);
+  --error: #f87171;
+  --error-bg: rgba(248, 113, 113, 0.08);
+  --success: #4ade80;
+  --success-bg: rgba(74, 222, 128, 0.08);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PAGE
+   ══════════════════════════════════════════════════════════════ */
+.spf {
+  min-height: 100vh;
+  background: var(--off-white);
+  padding: 100px 24px 80px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════════════════════ */
+.spf__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.spf__header-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.14));
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--medium-blue);
+  flex-shrink: 0;
+}
+
+.spf__header-text {
+  flex: 1;
+  padding-top: 4px;
+}
+
+.spf__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.spf__subtitle {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FORM
+   ══════════════════════════════════════════════════════════════ */
+.spf__form {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 20px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION
+   ══════════════════════════════════════════════════════════════ */
+.spf__section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--pale-blue);
+}
+
+.spf__section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.spf__section-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 6px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FIELD
+   ══════════════════════════════════════════════════════════════ */
+.spf__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.spf__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  letter-spacing: 0.02em;
+}
+
+.spf__label-icon {
+  color: var(--medium-blue);
+}
+
+.spf__input,
+.spf__select,
+.spf__textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--off-white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.spf__input::placeholder,
+.spf__textarea::placeholder {
+  color: var(--text-gray);
+  opacity: 0.5;
+}
+
+.spf__input:focus,
+.spf__select:focus,
+.spf__textarea:focus {
+  border-color: var(--light-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.spf__textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Error state */
+.spf__input--error,
+.spf__select--error,
+.spf__textarea--error {
+  border-color: var(--error);
+}
+
+.spf__input--error:focus,
+.spf__select--error:focus,
+.spf__textarea--error:focus {
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15);
+}
+
+/* ── Row (two fields side by side) ──────────────────────────── */
+.spf__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ERROR MESSAGE
+   ══════════════════════════════════════════════════════════════ */
+.spf__error {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.75rem;
+  color: #991b1b;
+  font-weight: 500;
+  animation: errorSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes errorSlide {
+  0%   { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.spf__error svg {
+  color: var(--error);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SUCCESS / ERROR MESSAGES
+   ══════════════════════════════════════════════════════════════ */
+.spf__message {
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  animation: messageSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes messageSlide {
+  0%   { opacity: 0; transform: translateY(-12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.spf__message--success {
+  background: var(--success-bg);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: #16a34a;
+}
+
+.spf__message--error {
+  background: var(--error-bg);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  color: #991b1b;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SUBMIT BUTTON
+   ══════════════════════════════════════════════════════════════ */
+.spf__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  border: none;
+  border-radius: 12px;
+  padding: 14px 32px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--white);
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.32);
+  transition: transform 0.2s ease, box-shadow 0.25s ease;
+  align-self: flex-start;
+}
+
+.spf__submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(37, 99, 235, 0.42);
+}
+
+.spf__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spf__spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--white);
+  border-radius: 50%;
+  animation: spin 0.55s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .spf {
+    padding-top: 88px;
+    gap: 24px;
+  }
+
+  .spf__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .spf__header-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .spf__header-text {
+    padding-top: 0;
+  }
+
+  .spf__form {
+    padding: 24px 20px;
+    gap: 28px;
+  }
+
+  .spf__row {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .spf__submit {
+    width: 100%;
+  }
+}

@@ -1,0 +1,245 @@
+/* ============================================================
+   VIEW PROFILE — CourseMatch (Single Student)
+   ============================================================ */
+
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+  --shadow: rgba(30, 58, 138, 0.1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CONTAINER
+   ══════════════════════════════════════════════════════════════ */
+.vp {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LOADING / EMPTY
+   ══════════════════════════════════════════════════════════════ */
+.vp__loading,
+.vp__empty {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 18px;
+  padding: 60px 24px;
+  text-align: center;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-gray);
+}
+
+.vp__empty p {
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════════════════════ */
+.vp__header {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 18px;
+  padding: 24px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.vp__header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.vp__avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  flex-shrink: 0;
+}
+
+.vp__header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vp__name {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.vp__age {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-gray);
+}
+
+.vp__age svg {
+  color: var(--medium-blue);
+}
+
+.vp__edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--pale-blue);
+  border-radius: 10px;
+  padding: 11px 20px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--medium-blue);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.vp__edit-btn:hover {
+  background: rgba(37, 99, 235, 0.06);
+  border-color: var(--light-blue);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTIONS
+   ══════════════════════════════════════════════════════════════ */
+.vp__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.vp__section {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 18px;
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.vp__section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 6px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--pale-blue);
+}
+
+.vp__section-title svg {
+  color: var(--medium-blue);
+}
+
+/* ── Field ──────────────────────────────────────────────────── */
+.vp__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vp__field-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-gray);
+}
+
+.vp__field-label svg {
+  color: var(--medium-blue);
+}
+
+.vp__field-value {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dark);
+}
+
+.vp__badge {
+  display: inline-block;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--medium-blue);
+  text-transform: capitalize;
+}
+
+/* ── Row (two fields side by side) ──────────────────────────── */
+.vp__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 700px) {
+  .vp__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vp__edit-btn {
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .vp__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .vp__header-left {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vp__name {
+    font-size: 1.4rem;
+  }
+
+  .vp__section {
+    padding: 20px 18px;
+  }
+}
