@@ -17,20 +17,26 @@ const app = express();
 /*app.use(cors({
   origin: true,
   credentials: true
-}));*/
+}));
 const allowedOrigins = [
   "http://localhost:3000",
   "https://YOUR-FRONTEND.onrender.com",
+];*/
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://coursematch-ui.onrender.com",
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // allows Postman/Render health checks
+    if (!origin) return callback(null, true); // Postman/health checks
     if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error("Not allowed by CORS"));
+    return callback(new Error(`Not allowed by CORS: ${origin}`));
   },
   credentials: true,
 }));
+
 
 app.use(express.json());
 
