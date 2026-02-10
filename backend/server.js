@@ -34,6 +34,10 @@ app.use(cors({
 
 app.use(express.json());
 
+// health
+app.get("/health", (req, res) => {
+  res.json({ ok: true });
+});
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/subjects", subjectsRoutes);
