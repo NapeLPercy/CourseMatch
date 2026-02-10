@@ -14,9 +14,22 @@ const adminDashboardRoutes = require("./routes/dashboardRoutes");
 
 dotenv.config();
 const app = express();
-app.use(cors({
+/*app.use(cors({
   origin: true,
   credentials: true
+}));*/
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://YOUR-FRONTEND.onrender.com",
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allows Postman/Render health checks
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
 }));
 
 app.use(express.json());
