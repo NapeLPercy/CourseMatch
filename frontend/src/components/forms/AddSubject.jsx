@@ -14,52 +14,7 @@ import {
 } from "lucide-react";
 import { useSubjects } from "../../context/SubjectContext";
 import "../../styles/AddSubjects.css";
-
-/* ─── Subject master list ───────────────────────────────────── */
-const SUBJECTS_LIST = [
-  "Accounting",
-  "Afrikaans FAL",
-  "Afrikaans HL",
-  "Agricultural Management Practices",
-  "Agricultural Sciences",
-  "Agricultural Technology",
-  "Business Studies",
-  "Civil Technology",
-  "Computer Applications Technology",
-  "Consumer Studies",
-  "Dance Studies",
-  "Design",
-  "Dramatic Arts",
-  "Economics",
-  "Electrical Technology",
-  "Engineering Graphics & Design",
-  "English FAL",
-  "English HL",
-  "Geography",
-  "History",
-  "Hospitality Studies",
-  "Information Technology",
-  "Life Orientation",
-  "Life Sciences",
-  "Mathematical Literacy",
-  "Mathematics",
-  "Mechanical Technology",
-  "Music",
-  "Ndebele HL",
-  "Northern Sotho HL",
-  "Physical Science",
-  "Religion Studies",
-  "Southern Sotho HL",
-  "Swazi HL",
-  "Technical Mathematics",
-  "Tourism",
-  "Tsonga HL",
-  "Tswana HL",
-  "Venda HL",
-  "Visual Arts",
-  "Xhosa HL",
-  "iSiZulu HL",
-];
+import { studentSubjectsData } from "../../Utils/subjects";
 
 /* ─── Validation ────────────────────────────────────────────── */
 function validate(subjects) {
@@ -157,7 +112,7 @@ function SubjectSelect({ value, onChange, takenNames }) {
   }, [open]);
 
   // Filter: match query AND exclude already-taken names (allow current value through)
-  const filtered = SUBJECTS_LIST.filter(
+  const filtered = studentSubjectsData.filter(
     (s) =>
       s.toLowerCase().includes(query.toLowerCase()) &&
       (!takenNames.has(s) || s === value),
@@ -275,13 +230,13 @@ function SuccessScreen({ onReset }) {
 
 /* ─── Main ──────────────────────────────────────────────────── */
 export default function AddSubjects() {
-  const { addSubjects } = useSubjects();
+  const { addSubjects, getSubjects } = useSubjects();
 
   const [subjects, setSubjects] = useState([{ name: "", mark: "" }]);
   const [errors, setErrors] = useState([]); // array of strings
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false); // API in-flight
-
+  const [alreadyGotSubjects, setAlreadyGotSubjects] = useState(getSubjects().length!==0);
   const MAX = 15;
   const MIN = 7;
 
@@ -312,6 +267,10 @@ export default function AddSubjects() {
 
   /* Submit subjects */
   const handleSubmit = async () => {
+    if (alreadyGotSubjects) {
+      alert("Cannot add sujects for now");
+      return;
+    }
     const errs = validate(subjects);
     if (errs.length) {
       setErrors(errs);
@@ -343,17 +302,14 @@ export default function AddSubjects() {
 
       if (res.data) {
         addSubjects(payload);
-        if(res.data?.student){
-          sessionStorage.setItem("student",JSON.stringify(res.data.student));
+        if (res.data?.student) {
+          sessionStorage.setItem("student", JSON.stringify(res.data.student));
         }
         setSubmitted(true);
+        setAlreadyGotSubjects(true);
       }
     } catch (err) {
-      setErrors([
-        
-          err.response?.data?.error ||
-          "Submission failed. Try again.",
-      ]);
+      setErrors([err.response?.data?.error || "Submission failed. Try again."]);
     } finally {
       setLoading(false);
     }
@@ -384,6 +340,7 @@ export default function AddSubjects() {
             Enter your matric subjects and marks. You need between 7 and 15
             subjects.
           </p>
+         {alreadyGotSubjects && <p style={{color:"red"}}>You cannot add another list of subjects, Wait for the update feature</p>}
         </div>
 
         {/* Requirements checklist */}

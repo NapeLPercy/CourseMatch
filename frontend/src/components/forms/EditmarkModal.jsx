@@ -16,9 +16,9 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
     const num = Number(value);
 
     if (value.trim() === "") return "Mark cannot be empty.";
-    if (isNaN(num))            return "Mark must be a number.";
-    if (num < 0 || num > 100)  return "Mark must be between 0 and 100.";
-    return "";                          // valid
+    if (isNaN(num)) return "Mark must be a number.";
+    if (num < 0 || num > 100) return "Mark must be between 0 and 100.";
+    return ""; // valid
   };
 
   /* ------------------------------------------------ */
@@ -27,7 +27,7 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
   const handleChange = (e) => {
     const val = e.target.value;
     setMark(val);
-    setError(validate(val));   // live feedback as user types
+    setError(validate(val)); // live feedback as user types
   };
 
   const handleSave = async () => {
@@ -60,7 +60,6 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
     <div className="emd-overlay" onClick={onClose}>
       {/* sheet – stop clicks propagating to the overlay */}
       <div className="emd-sheet" onClick={(e) => e.stopPropagation()}>
-
         {/* close ✕ */}
         <button className="emd-close" onClick={onClose} aria-label="Close">
           ✕
@@ -102,6 +101,9 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
           <p className="emd-field__error">{error}</p>
         </div>
 
+        <p style={{ color: "red" }}>
+          Marks cannot be changed for now,COMING SOON!
+        </p>
         {/* action buttons */}
         <div className="emd-actions">
           <button
@@ -115,7 +117,8 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
           <button
             className={`emd-actions__btn emd-actions__btn--save${saving ? " emd-actions__btn--saving" : ""}`}
             onClick={handleSave}
-            disabled={saving || isInvalid}
+            disabled={true}
+            // disabled={saving || isInvalid}
           >
             {saving ? (
               <>

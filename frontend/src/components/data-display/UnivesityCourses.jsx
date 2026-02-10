@@ -288,7 +288,7 @@ export default function UniversityCourses() {
                 renderLoading("Preparing AI recommendations …")
               ) : (
                 <div className="uni-recommendations-wrapper">
-                  <Recommendations qualifiedCourses={qualifiedCourses} />
+                  <Recommendations />
                 </div>
               ))}
           </>

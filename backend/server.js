@@ -10,6 +10,8 @@ const autoRoutes = require("./routes/automationRoutes");
 const qualificationRoutes = require("./routes/qualificationRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const adminDashboardRoutes = require("./routes/dashboardRoutes");
+
 dotenv.config();
 const app = express();
 app.use(cors({
@@ -28,6 +30,7 @@ app.use("/api/match-courses",autoRoutes);
 app.use("/api/qualification", qualificationRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/recommendation",aiRoutes);
+app.use("/api/admin", adminDashboardRoutes);
 
 const PORT = process.env.PORT || 5000;
 

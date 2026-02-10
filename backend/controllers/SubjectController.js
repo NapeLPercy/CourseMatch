@@ -46,7 +46,7 @@ exports.addSubjects = async (req, res) => {
       the logged in user can see thier subject(depended on on studentId)*/
 
     const studentData = await studentModel.getStudentInfo(userId);
-
+    
     return res.status(201).json({
       success: true,
       message: "Subjects added successfully",

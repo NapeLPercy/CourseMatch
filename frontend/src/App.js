@@ -37,52 +37,71 @@ import ManageQualifications from "./components/data-display/ManageQualifications
 import AdminViewQualification from "./components/data-display/AdminViewQualification";
 import AdminDashboard from "./components/data-display/AdminDashboard";
 import AdminManageUniversities from "./components/data-display/AdminManageUniversities";
+import NotAuthorized from "./pages/NotAuthorized";
+import RoleRoute from "./routes/RoleRoute";
+
 function App() {
   return (
     <UserProvider>
       <CourseProvider>
         <SubjectProvider>
           <Router>
+            
             <Routes>
-              {/*Nav, Footer included screen pages */}
+              {/* Public pages with nav/footer */}
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
-
-                <Route path="/add-subjects" element={<AddSubjects />} />
-                <Route path="/my-subjects" element={<ViewSubjectsPage />} />
-                <Route path="/my-dashboard" element={<Dashboard />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/view-courses" element={<ViewCourses />} />
-
-                <Route
-                  path="/view-courses/:courseSlug"
-                  element={<UniversityCourses />}
-                />
-
                 <Route path="/contact-us" element={<Contact />} />
+
+                {/* Logged-in routes (STUDENT) */}
+                <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
+                  <Route path="/add-subjects" element={<AddSubjects />} />
+                  <Route path="/my-subjects" element={<ViewSubjectsPage />} />
+                  <Route path="/my-dashboard" element={<Dashboard />} />
+                  <Route path="/view-courses" element={<ViewCourses />} />
+                  <Route
+                    path="/view-courses/:courseSlug"
+                    element={<UniversityCourses />}
+                  />
+                  <Route
+                    path="/student/manage-my-profile"
+                    element={<ManageMyProfile />}
+                  />
+                </Route>
+
+               {/* Logged-in routes (ADMIN) */}
+                <Route element={<RoleRoute allowedRoles={["ADMIN"]} />}>
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route
+                    path="/admin/manage-qualifications"
+                    element={<ManageQualifications />}
+                  />
+                  <Route
+                    path="/admin/manage-universities"
+                    element={<AdminManageUniversities />}
+                  />
+                  <Route
+                    path="/admin/add-qualification"
+                    element={<AdminAddQualification />}
+                  />
+                  <Route
+                    path="/admin/view-qualifications"
+                    element={<AdminViewQualification />}
+                  />
+                </Route>
               </Route>
 
-              {/*Full screen pages */}
+              {/* Full screen auth pages */}
               <Route element={<AuthLayout />}>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Account />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="*" element={<NotFound />} />
-
-                <Route
-                  path="/admin/manage-qualifications"
-                  element={<ManageQualifications />}
-                />
-
-                <Route
-                  path="/admin/manage-universities"
-                  element={<AdminManageUniversities />}
-                />
-
-                <Route path="/student/manage-my-profile" element={<ManageMyProfile />} />
               </Route>
+
+              <Route path="*" element={<NotFound />} />
+              <Route path="/not-authorized" element={<NotAuthorized />} />
             </Routes>
           </Router>
         </SubjectProvider>

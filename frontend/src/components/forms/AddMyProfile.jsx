@@ -90,9 +90,6 @@ export default function AddMyProfile() {
 
   const navigate = useNavigate();
 
-  // Watch physicalLimitations to conditionally show details field
-  const physicalLimitations = watch("physicalLimitations");
-
   const onSubmit = async (data) => {
     console.log(data);
     setLoading(true);
@@ -111,10 +108,10 @@ export default function AddMyProfile() {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
-      const data = response.data;
+      const resposeData = response.data;
 
-      if (data.success) {
-        const studentProfile = data.profile;
+      if (resposeData.success) {
+        const studentProfile = resposeData.profile;
         sessionStorage.setItem(
           "student-profile",
           JSON.stringify(studentProfile),

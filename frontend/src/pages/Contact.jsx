@@ -5,41 +5,18 @@ import {
   BookOpen,
   MessageSquare,
   Send,
+  LoaderCircle,
   CheckCircle2,
   ChevronDown,
   X,
   Search,
 } from "lucide-react";
 import "./Contact.css";
+import { sendEmail } from "../Utils/emailManager";
+import { universitiesList } from "../Utils/universities";
+import { getCurrentDateTime } from "../Utils/datetime";
 
 /* ─── SA Universities list ──────────────────────────────────── */
-const UNIVERSITIES = [
-  "University of Cape Town (UCT)",
-  "University of the Witwatersrand (Wits)",
-  "Stellenbosch University",
-  "University of Pretoria (UP)",
-  "University of KwaZulu-Natal (UKZN)",
-  "Rhodes University",
-  "University of the Western Cape (UWC)",
-  "Nelson Mandela University",
-  "North-West University (NWU)",
-  "Free State University (UFS)",
-  "University of Limpopo (UL)",
-  "University of Mpumalanga (UMp)",
-  "University of Venda (Univen)",
-  "University of Fort Hare",
-  "Central University of Technology (CUT)",
-  "Durban University of Technology (DUT)",
-  "Cape Peninsula University of Technology (CPUT)",
-  "Tshwane University of Technology (TUT)",
-  "University of Johannesburg (UJ)",
-  "Mangosuthu University of Technology (MUT)",
-  "Sol Plaatje University (SPU)",
-  "Sefako Makgatho Health Sciences University (SMU)",
-  "Walter Sisulu University (WSU)",
-  "University of the Eastern Cape (UEC)",
-  "South African University of Science and Technology (SAUST)",
-];
 
 /* ─── Validation ────────────────────────────────────────────── */
 function validate(fields) {
@@ -91,7 +68,7 @@ function UniversitySelect({ value, onChange, error }) {
     if (open && inputRef.current) inputRef.current.focus();
   }, [open]);
 
-  const filtered = UNIVERSITIES.filter((u) =>
+  const filtered = universitiesList.filter((u) =>
     u.toLowerCase().includes(query.toLowerCase())
   );
 
@@ -169,6 +146,7 @@ export default function Contact() {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [shakeField, setShakeField] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const sectionRef = useRef(null);
   const [mounted, setMounted] = useState(false);
@@ -195,7 +173,9 @@ export default function Contact() {
     setTimeout(() => setShakeField(null), 500);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+
     const errs = validate(fields);
     setErrors(errs);
 
@@ -206,8 +186,26 @@ export default function Contact() {
       return;
     }
 
-    // ── success ──
-    setSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      await sendEmail({
+        from_name: fields.name,
+        from_surname: fields.surname,
+        from_email: fields.email,
+        university: fields.university,
+        message: fields.message,
+        time: getCurrentDateTime(),
+      });
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Failed to send contact email:", error);
+      setErrors({
+        message: "Failed to send your message. Please try again.",
+      });
+      triggerShake("message");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   /* ── Success screen ── */
@@ -229,6 +227,7 @@ export default function Contact() {
             onClick={() => {
               setSubmitted(false);
               setFields({ name: "", surname: "", email: "", university: "", message: "" });
+              window.scrollBy(0,20);
             }}
           >
             Send another
@@ -352,9 +351,19 @@ export default function Contact() {
           </FieldWrapper>
 
           {/* Submit */}
-          <button className="btn btn--primary" type="button" onClick={handleSubmit}>
-            <span>Send Message</span>
-            <Send size={16} strokeWidth={2.2} />
+          <button
+            className="btn btn--primary"
+            type="button"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            aria-busy={isSubmitting}
+          >
+            <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
+            {isSubmitting ? (
+              <LoaderCircle size={16} strokeWidth={2.2} className="cf__spinner" />
+            ) : (
+              <Send size={16} strokeWidth={2.2} />
+            )}
           </button>
         </div>
       </div>

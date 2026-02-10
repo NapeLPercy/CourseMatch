@@ -14,63 +14,7 @@ import {
   BookOpen,
 } from "lucide-react";
 
-/* ─── Hardcoded data ────────────────────────────────────────── */
-/*const HARD_CODED_UNIS = [
-  {
-    abbreviation: "UCT",
-    name: "University of Cape Town",
-    url: "https://www.uct.ac.za",
-    faculties: [
-      { faculty_id: 1, name: "Faculty of Science" },
-      { faculty_id: 2, name: "Faculty of Business" },
-      { faculty_id: 3, name: "Faculty of Humanities" },
-    ],
-  },
-  {
-    abbreviation: "WITS",
-    name: "University of the Witwatersrand",
-    url: "https://www.wits.ac.za",
-    faculties: [
-      { faculty_id: 10, name: "Faculty of Science" },
-      {
-        faculty_id: 11,
-        name: "Faculty of Engineering and the Built Environment",
-      },
-      { faculty_id: 12, name: "Faculty of Humanities" },
-    ],
-  },
-  {
-    abbreviation: "UP",
-    name: "University of Pretoria",
-    url: "https://www.up.ac.za",
-    faculties: [
-      {
-        faculty_id: 20,
-        name: "Faculty of Engineering, Built Environment and IT",
-      },
-      { faculty_id: 21, name: "Faculty of Economic and Management Sciences" },
-      { faculty_id: 22, name: "Faculty of Education" },
-      { faculty_id: 23, name: "Faculty of Health Sciences" },
-    ],
-  },
-];*/
-
-const SUBJECT_OPTIONS = [
-  "Mathematics",
-  "Mathematical Literacy",
-  "Physical Sciences",
-  "Life Sciences",
-  "English HL",
-  "English FAL",
-  "Afrikaans HL",
-  "Afrikaans FAL",
-  "Accounting",
-  "Business Studies",
-  "Economics",
-  "Geography",
-  "History",
-  "Life Orientation",
-];
+import { adminSubjectsData } from "../../Utils/subjects";
 
 /* ─── Helpers ───────────────────────────────────────────────── */
 function clampMark(n) {
@@ -84,7 +28,7 @@ function clampMark(n) {
 export default function AdminAddQualification() {
   // University & faculty
   const [universities, setUniversities] = useState([]);
-
+  const [subjects, setSubjects] = useState(adminSubjectsData);
   const [selectedUniAbbrev, setSelectedUniAbbrev] = useState(
     universities[0]?.abbreviation ?? "",
   );
@@ -225,7 +169,7 @@ export default function AdminAddQualification() {
 
       const universitiesData = res.data.universities;
       setUniversities(universitiesData);
-        setSelectedUniAbbrev(universitiesData[0].abbreviation);
+      setSelectedUniAbbrev(universitiesData[0].abbreviation);
       setSelectedFacultyId(universitiesData[0].faculties[0].faculty_id);
     } catch (error) {
       console.log(error.message || "Failed to fetch universities");
@@ -262,12 +206,12 @@ export default function AdminAddQualification() {
         },
       );
 
-      if(res.data.success){
-        alert(res.data.message)
+      if (res.data.success) {
+        alert(res.data.message);
         handleReset();
       }
     } catch (error) {
-        alert(error.message || "Failed to submit courses");
+      alert(error.message || "Failed to submit courses");
     }
   };
 
@@ -500,7 +444,7 @@ export default function AdminAddQualification() {
                         className={`aaq__prereq-select ${duplicate ? "aaq__prereq-select--error" : ""}`}
                       >
                         <option value="">Select subject…</option>
-                        {SUBJECT_OPTIONS.map((s) => {
+                        {subjects.map((s) => {
                           const key = s.toLowerCase();
                           const alreadyUsed =
                             usedSubjects.has(key) && key !== currentKey;

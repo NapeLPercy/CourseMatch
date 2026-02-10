@@ -1,75 +1,134 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Library, User } from "lucide-react";
 import "../../styles/Recommendations.css";
+//context
 import { useSubjects } from "../../context/SubjectContext";
-import axios from "axios";
+import { CourseContext } from "../../context/CourseContext";
 
-function Recommendations({ qualifiedCourses }) {
+import axios from "axios";
+import { generateRecommendationsPdf } from "../../Utils/recommendationsPDF";
+
+import TutAPS from "../../Utils/TUT/TutAPS";
+import CourseManager from "../../Utils/CourseManager";
+
+function Recommendations() {
   // State
   const [loading, setLoading] = useState(true);
   const [loadingProfile, setLoadingprofile] = useState(false);
   const [recommendedCourses, setRecommendedCourses] = useState([]);
   const [sortOrder, setSortOrder] = useState("desc");
-
   //context
+  const { qualifications } = useContext(CourseContext);
   const { getSubjects } = useSubjects();
 
   const navigate = useNavigate();
+  const subjects = getSubjects();
 
+  const qualifiedCourses = useMemo(() => {
+    const apsCalc = new TutAPS(subjects);
+    const studentAPS = apsCalc.computeAPS();
+    const studentEndorsement = JSON.parse(
+      sessionStorage.getItem("student"),
+    )?.endorsement;
 
-useEffect(() => {
-  // don’t call AI until we actually have data
-  const subs = getSubjects();
-  if (!subs?.length || !qualifiedCourses?.length) {
-    setLoading(false);
-    return;
-  }
-
-  fetchAiFitForUniversity(subs, qualifiedCourses);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [qualifiedCourses]); // runs when qualifiedCourses becomes available
-
-const fetchAiFitForUniversity = async (subjects, qualifiedCourses) => {
-  setLoading(true);
-  try {
-    const API_BASE = process.env.REACT_APP_API_BASE;
-    const token = JSON.parse(sessionStorage.getItem("token"));
-
-    const res = await axios.post(
-      `${API_BASE}/api/recommendation/ai-recommendations`,
-      { subjects, qualifiedCourses },
-      { headers: { Authorization: `Bearer ${token}` } }
+    const courseManager = new CourseManager();
+    const qualifiedByAps = courseManager.filterCoursesByAps(
+      qualifications,
+      studentAPS,
     );
 
-    console.log("AI RESULTS:", res.data);
-    setRecommendedCourses(res.data.results || []);
-  } catch (err) {
-    console.error("AI fit fetch failed:", err.response?.data || err.message);
-    setRecommendedCourses([]);
-  } finally {
-    setLoading(false);
-  }
-};
+    const qualifiedByEndorsement = courseManager.filterCoursesByEndorsement(
+      qualifiedByAps,
+      studentEndorsement,
+    );
+
+    return qualifiedByEndorsement;
+  }, [qualifications, subjects]);
+
+  useEffect(() => {
+    sessionStorage.setItem(
+      "qualified-courses",
+      JSON.stringify(qualifiedCourses),
+    );
+  }, [qualifiedCourses]);
+
+  useEffect(() => {
+    const recommendations = JSON.parse(
+      localStorage.getItem("ai-recommendations"),
+    );
+    if (recommendations) {
+      setRecommendedCourses(recommendations);
+      setLoading(false);
+      return;
+    }
+
+    if (!subjects?.length || !qualifiedCourses?.length) {
+      setLoading(false);
+      return;
+    }
+
+    fetchAiFitForUniversity(subjects, qualifiedCourses);
+  }, [subjects, qualifiedCourses]);
+
+  //get ai recommendations
+  const fetchAiFitForUniversity = async (subjects, qualifiedCourses) => {
+    setLoading(true);
+    try {
+      const API_BASE = process.env.REACT_APP_API_BASE;
+      const token = JSON.parse(sessionStorage.getItem("token"));
+
+      const res = await axios.post(
+        `${API_BASE}/api/recommendation/ai-recommendations`,
+        { subjects, qualifiedCourses },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      setRecommendedCourses(res.data.results || []);
+      localStorage.setItem(
+        "ai-recommendations",
+        JSON.stringify(res.data.results),
+      );
+    } catch (err) {
+      console.error("AI fit fetch failed:", err.response?.data || err.message);
+      setRecommendedCourses([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /*Handle PDF download */
+  const handleDownloadPdf = () => {
+    generateRecommendationsPdf(recommendedCourses, {
+      subtitle: "Filtered qualified courses + AI fit scoring",
+      filename: "AI-course-recommendations.pdf",
+    });
+  };
 
   /* ------------------------------------------------ */
   // Derived: sorted list
   /* ------------------------------------------------ */
-  const sortedCourses = [...recommendedCourses].sort((a, b) =>
-    sortOrder === "asc" ? a.fit_score - b.fit_score : b.fit_score - a.fit_score,
+  const sortedCourses = useMemo(
+    () =>
+      [...recommendedCourses].sort((a, b) =>
+        sortOrder === "asc"
+          ? a.fit_score - b.fit_score
+          : b.fit_score - a.fit_score,
+      ),
+    [recommendedCourses, sortOrder],
   );
 
   /* ------------------------------------------------ */
   // Reusable renderers
   /* ------------------------------------------------ */
 
-  /** Animated loading indicator – mirrors parent pattern */
+  /** Animated loading indicator - mirrors parent pattern */
   const renderLoading = () => (
     <p className="rec-loading">
       <span className="dot" />
       <span className="dot" />
       <span className="dot" />
-      Displaying AI recommended courses …
+      Displaying AI recommended courses ...
     </p>
   );
 
@@ -99,7 +158,7 @@ const fetchAiFitForUniversity = async (subjects, qualifiedCourses) => {
             );
           }}
         >
-          {noQualified ? "Go to Qualified Courses →" : "Go to Profile →"}
+          {noQualified ? "Go to Qualified Courses ->" : "Go to Profile ->"}
         </button>
       </div>
     );
@@ -117,13 +176,14 @@ const fetchAiFitForUniversity = async (subjects, qualifiedCourses) => {
         <option value="desc">Highest First</option>
         <option value="asc">Lowest First</option>
       </select>
+      <button onClick={handleDownloadPdf}>Download pdf</button>
     </div>
   );
 
   /** Single recommendation card */
   const renderCard = (course) => (
     <li className="rec-card" key={course.qualification_code}>
-      {/* fit score badge – sits to the left */}
+      {/* fit score badge - sits to the left */}
       <div className="rec-card__score-badge">
         <span className="rec-card__score-badge__value">{course.fit_score}</span>
         <span className="rec-card__score-badge__label">fit</span>

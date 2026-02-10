@@ -1,32 +1,56 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext(null);
+const AUTH_KEYS = ["user", "student", "role", "token"];
+
+function readStoredUser() {
+  try {
+    const saved = sessionStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
+  }
+}
 
 export function UserProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => readStoredUser());
+  const [authLoading, setAuthLoading] = useState(true);
 
-  //Restore user from localStorage after refresh
+  // Mark auth restore as complete after first mount.
   useEffect(() => {
-    const saved = sessionStorage.getItem("user");
-    if (saved) setUser(JSON.parse(saved));
+    setAuthLoading(false);
   }, []);
 
-  //Save user to localStorage when changed
+  // Keep only auth-related keys in sync without wiping unrelated app caches.
   useEffect(() => {
     if (user) {
       sessionStorage.setItem("user", JSON.stringify(user));
-      sessionStorage.setItem("student", JSON.stringify(user.student));
-    } else sessionStorage.clear();
+      if (user.student) {
+        sessionStorage.setItem("student", JSON.stringify(user.student));
+      } else {
+        sessionStorage.removeItem("student");
+      }
+      if (user.role) {
+        sessionStorage.setItem("role", JSON.stringify(user.role));
+      } else {
+        sessionStorage.removeItem("role");
+      }
+    } else {
+      AUTH_KEYS.forEach((key) => sessionStorage.removeItem(key));
+    }
   }, [user]);
 
   //Helper login & logout functions
   const login = (userData) => {
     setUser(userData);
   };
-  const logout = () => setUser(null);
+  const logout = () => {
+    setUser(null);
+    sessionStorage.clear();
+  }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, authLoading }}>
       {children}
     </AuthContext.Provider>
   );

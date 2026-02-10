@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import AuthCard from "../components/layout/AuthCard";
 import ".././styles/Account.css";
+import { validatePassword } from "../Utils/passwordManager";
 
 export default function Account() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -25,38 +26,38 @@ export default function Account() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
-  const validatePassword = (password) => {
-    // Client-side validation
-    if (password.trim().length === 0) {
-      setError("Password field is required.");
-      setTimeout(() => {
-        setError(null);
-      }, 3000);
-      return;
-    }
-
-    if (form.password.length < 6) {
-      setError("Password must be at least 8 characters long.");
-      setTimeout(() => {
-        setError(null);
-      }, 3000);
-      return;
-    }
-    return true;
+  //
+  const clearAfterDelay = (setter, ms = 3000) => {
+    setTimeout(() => setter(null), ms);
   };
+
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
 
-    if(!validatePassword(form.password)) return;
+    setError(null);
+    setSuccess(null);
+
+    const passwordError = validatePassword(form.password);
+    if (passwordError) {
+      setError(passwordError);
+      setTimeout(() => setError(null), 6000);
+      return;
+    }
+
+    const API_BASE = process.env.REACT_APP_API_BASE;
+    if (!API_BASE) {
+      setError("Configuration error: API base URL is missing.");
+      clearAfterDelay(setError);
+      return;
+    }
 
     setLoading(true);
 
-    const API_BASE = process.env.REACT_APP_API_BASE;
-    
     try {
-      const response = await axios.post(`${API_BASE}/api/auth/register`, form);
+      await axios.post(`${API_BASE}/api/auth/register`, form);
       setSuccess("Registration successful! You can now log in.");
       setTimeout(() => {
         setSuccess(null);
@@ -64,10 +65,10 @@ export default function Account() {
       }, 3000);
     } catch (err) {
       console.error("Registration error:", err.response?.data || err.message);
-      setError(err.response?.data?.error || "Registration failed");
-      setTimeout(() => {
-        setError(null);
-      }, 3000);
+      setError(
+        err.response?.data?.error || "Registration failed. Please try again.",
+      );
+      clearAfterDelay(setError);
     } finally {
       setLoading(false);
     }
