@@ -40,20 +40,28 @@ import AdminManageUniversities from "./components/data-display/AdminManageUniver
 import NotAuthorized from "./pages/NotAuthorized";
 import RoleRoute from "./routes/RoleRoute";
 
+//cookies
+import CookieModal from "./components/data-display/CookieModal";
+import RouteTracking from "./routes/RouteTracking";
+//terms 
+import TermsAndConditions from "./components/data-display/TermsAndConditions";
+
 function App() {
   return (
     <UserProvider>
       <CourseProvider>
         <SubjectProvider>
           <Router>
-            
+            <CookieModal />
+            <RouteTracking />
+
             <Routes>
               {/* Public pages with nav/footer */}
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact-us" element={<Contact />} />
-
+                <Route path="/terms-and-conditions" element={<TermsAndConditions/>}/>
                 {/* Logged-in routes (STUDENT) */}
                 <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
                   <Route path="/add-subjects" element={<AddSubjects />} />
@@ -70,7 +78,7 @@ function App() {
                   />
                 </Route>
 
-               {/* Logged-in routes (ADMIN) */}
+                {/* Logged-in routes (ADMIN) */}
                 <Route element={<RoleRoute allowedRoles={["ADMIN"]} />}>
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
                   <Route

@@ -32,8 +32,16 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 60% at 25% 50%, rgba(37, 99, 235, 0.35) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 70% at 75% 30%, rgba(59, 130, 246, 0.22) 0%, transparent 65%);
+    radial-gradient(
+      ellipse 70% 60% at 25% 50%,
+      rgba(37, 99, 235, 0.35) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 60% 70% at 75% 30%,
+      rgba(59, 130, 246, 0.22) 0%,
+      transparent 65%
+    );
   pointer-events: none;
   z-index: 0;
 }
@@ -65,8 +73,13 @@
 }
 
 @keyframes geoFloat {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50%      { transform: translateY(-26px) rotate(3deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-26px) rotate(3deg);
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -91,7 +104,10 @@
   font-weight: 500;
   color: var(--white);
   cursor: pointer;
-  transition: background 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
+  transition:
+    background 0.22s ease,
+    border-color 0.22s ease,
+    transform 0.22s ease;
 }
 
 .auth__back:hover {
@@ -116,8 +132,14 @@
 }
 
 @keyframes cardEnter {
-  0%   { opacity: 0; transform: scale(0.94) translateY(16px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* Title */
@@ -137,6 +159,39 @@
   flex-direction: column;
   gap: 0;
 }
+/*=================SUCESS TEXT====================*/
+.rp__success {
+  background-color: #ecfdf5;        /* soft green */
+  border: 1px solid #a7f3d0;        /* subtle green border */
+  color: #065f46;                   /* deep green text */
+  padding: 0px 18px !important;
+  border-radius: 10px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  animation: fadeInSuccess 0.3s ease;
+}
+
+.rp__success-text {
+  margin: 0;
+}
+
+/* subtle animation */
+@keyframes fadeInSuccess {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 /* ══════════════════════════════════════════════════════════════
    RESPONSIVE

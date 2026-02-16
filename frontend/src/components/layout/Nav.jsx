@@ -52,6 +52,7 @@ export default function Nav() {
     "/my-subjects",
     "/login",
     "/register",
+    "/terms-and-conditions",
   ];
 
   // derived state (no setState)

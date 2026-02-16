@@ -82,9 +82,6 @@ export default function Login() {
 
       {success && (
         <div className="rp__success">
-          <div className="rp__success-icon">
-            <CheckCircle2 size={48} strokeWidth={1.4} />
-          </div>
           <p className="rp__success-text">{success}</p>
         </div>
       )}

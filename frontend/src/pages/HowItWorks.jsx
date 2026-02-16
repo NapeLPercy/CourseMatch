@@ -34,11 +34,11 @@ const STEPS = [
   {
     id: 1,
     Icon: ClipboardList,
-    label: "Input",
-    title: "Submit Your Marks",
+    label: "Assess",
+    title: "Submit Your Academic Profile",
     description:
-      "Drop in your matric subject marks and overall performance. The engine digests everything in seconds — no forms to hunt through, no guesswork on your end.",
-    tags: ["Instant upload", "Auto-detection", "Subject mapping"],
+      "Enter your matric subjects, marks, and key profile details. CourseMatch calculates your APS, checks endorsement eligibility, and prepares your academic snapshot instantly.",
+    tags: ["APS calculation", "Endorsement check", "Subject validation"],
   },
   {
     id: 2,
@@ -46,19 +46,20 @@ const STEPS = [
     label: "Match",
     title: "See What You Qualify For",
     description:
-      "Browse a ranked list of universities and courses tailored exactly to your results. Every entry shows your fit score, the gap (if any), and what it would take to close it.",
-    tags: ["Fit scoring", "Gap analysis", "University data"],
+      "Get a ranked list of real university qualifications you meet the requirements for. See your fit score, required subjects, and exactly where you stand.",
+    tags: ["Requirement matching", "Fit scoring", "University database"],
   },
   {
     id: 3,
     Icon: Sparkles,
-    label: "Personalise",
-    title: "Build Your Path",
+    label: "Refine",
+    title: "Discover Your Best-Fit Path",
     description:
-      "Tell us your goals, strengths, and interests. The AI layers that onto your marks and surfaces options you wouldn't have found on your own — ranked by real potential.",
-    tags: ["AI insights", "Goal matching", "Hidden gems"],
+      "Layer in your strengths, interests, and goals. Our AI surfaces overlooked opportunities and ranks options by true academic potential — not guesswork.",
+    tags: ["AI insights", "Goal alignment", "Hidden opportunities"],
   },
 ];
+
 
 /* ─── Individual step card ─────────────────────────────────── */
 function StepCard({ step, index }) {

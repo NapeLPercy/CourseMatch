@@ -26,6 +26,7 @@ const allowedOrigins = [
 const allowedOrigins = [
   "http://localhost:3000",
   "https://coursematch-ui.onrender.com",
+ // "http://192.168.43.69:3000",
 ];
 
 app.use(cors({

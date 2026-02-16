@@ -31,8 +31,6 @@ export default function Account() {
     setTimeout(() => setter(null), ms);
   };
 
- 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
@@ -87,9 +85,6 @@ export default function Account() {
 
       {success && (
         <div className="rp__success">
-          <div className="rp__success-icon">
-            <CheckCircle2 size={48} strokeWidth={1.4} />
-          </div>
           <p className="rp__success-text">{success}</p>
         </div>
       )}
@@ -147,6 +142,33 @@ export default function Account() {
           </div>
         </div>
 
+        {/*CREATE ACCOUNT DISCLAIMER */}
+        <p
+          style={{
+            fontSize: "0.85rem",
+            color: "#475569",
+            textAlign: "center",
+            marginTop: "0px",
+          }}
+        >
+          By creating an account, you accept our{" "}
+          <a
+            href="/terms-and-conditions"
+            style={{
+              color: "#2563eb",
+              fontWeight: "600",
+              textDecoration: "none",
+              borderBottom: "1px solid transparent",
+              transition: "border-color 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.target.style.borderBottomColor = "#2563eb")}
+            onMouseLeave={(e) =>
+              (e.target.style.borderBottomColor = "transparent")
+            }
+          >
+            Terms and Conditions
+          </a>
+        </p>
         {/* Submit */}
         <button type="submit" className="register__submit" disabled={loading}>
           {loading ? (

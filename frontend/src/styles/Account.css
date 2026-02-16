@@ -114,7 +114,6 @@
   cursor: pointer;
   box-shadow: 0 4px 18px rgba(37, 99, 235, 0.32);
   transition: transform 0.2s ease, box-shadow 0.25s ease, opacity 0.2s ease;
-  margin-top: 8px;
 }
 
 .register__submit:hover:not(:disabled) {

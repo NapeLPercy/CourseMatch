@@ -1,5 +1,5 @@
 import "../../styles/Footer.css"; // <-- your custom css
-
+import CookieSettingsLink from "../data-display/CookieSettingLink";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -18,9 +18,10 @@ export default function Footer() {
 
         {/* Links */}
         <nav className="footer__links" aria-label="Footer navigation">
-          <a href="#terms" className="footer__link">Terms &amp; Conditions</a>
+          <a href="/terms-and-conditions" className="footer__link">Terms &amp; Conditions</a>
           <span className="footer__divider" aria-hidden="true" />
-          <a href="#cookies" className="footer__link">Cookies</a>
+          
+          <CookieSettingsLink/>
         </nav>
 
         {/* Credit */}
