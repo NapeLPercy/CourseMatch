@@ -16,6 +16,7 @@ import {
   UserPlus,
   TrendingUpDown,
   Building2,
+  Mail,
 } from "lucide-react";
 import "../../styles/Nav.css";
 
@@ -140,6 +141,10 @@ export default function Nav() {
                 </NavLink>
                 <NavLink to="/about" icon={Info}>
                   About Us
+                </NavLink>
+
+                <NavLink to="/contact-us" icon={Mail}>
+                  Contact us
                 </NavLink>
 
                 {/* Account dropdown */}
@@ -304,6 +309,15 @@ export default function Nav() {
                 <NavLink to="/about" icon={Info} className="nav__overlay-link">
                   About Us
                 </NavLink>
+
+                <NavLink
+                  to="/contact-us"
+                  icon={Mail}
+                  className="nav__overlay-link"
+                >
+                  Contact us
+                </NavLink>
+
                 <div className="nav__overlay-divider" />
                 <NavLink to="/login" icon={LogIn} className="nav__overlay-link">
                   Sign In

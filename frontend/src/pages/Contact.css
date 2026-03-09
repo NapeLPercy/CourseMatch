@@ -27,8 +27,9 @@
   overflow: hidden;
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .contact--mounted {
@@ -45,14 +46,22 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, transparent 65%);
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.2) 0%,
+    transparent 65%
+  );
   pointer-events: none;
   animation: contactGlow 6s ease-in-out infinite alternate;
 }
 
 @keyframes contactGlow {
-  0%   { transform: translate(-50%, -50%) scale(1); }
-  100% { transform: translate(-50%, -50%) scale(1.14); }
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.14);
+  }
 }
 
 /* Decorative geometry circles */
@@ -81,8 +90,13 @@
 }
 
 @keyframes geoFloat {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50%      { transform: translateY(-22px) rotate(3deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-22px) rotate(3deg);
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -101,6 +115,13 @@
 /* ══════════════════════════════════════════════════════════════
    HEADER
    ══════════════════════════════════════════════════════════════ */
+.contact__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centers items horizontally */
+  text-align: center; /* centers text */
+}
+
 .contact__icon-wrap {
   width: 56px;
   height: 56px;
@@ -131,7 +152,7 @@
   font-weight: 700;
   line-height: 1.2;
   color: var(--primary-blue);
-  margin: 0 0 16px;
+  margin: 0 0 12px;
 }
 
 .contact__title-accent {
@@ -144,8 +165,9 @@
   font-size: 0.92rem;
   line-height: 1.7;
   color: var(--primary-blue);
-  margin: 0;
+  margin: 0 auto; /* centers block */
   max-width: 440px;
+  text-align: center;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -183,7 +205,9 @@
   color: var(--error);
   opacity: 0;
   transform: translateY(-4px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
   min-height: 18px;
 }
 
@@ -235,9 +259,10 @@
   font-size: 0.9rem;
   color: var(--text-dark);
   outline: none;
-  transition: border-color 0.25s ease,
-              background 0.25s ease,
-              box-shadow 0.25s ease;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .cf__input::placeholder {
@@ -269,11 +294,22 @@
 
 /* Shake animation */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%      { transform: translateX(-6px); }
-  40%      { transform: translateX(6px); }
-  60%      { transform: translateX(-4px); }
-  80%      { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
 }
 
 .cf__input--shake {
@@ -308,9 +344,10 @@
   padding: 13px 16px;
   cursor: pointer;
   outline: none;
-  transition: border-color 0.25s ease,
-              background 0.25s ease,
-              box-shadow 0.25s ease;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .cf__select-trigger:hover {
@@ -381,8 +418,14 @@
 }
 
 @keyframes panelDrop {
-  0%   { opacity: 0; transform: translateY(-8px) scaleY(0.95); }
-  100% { opacity: 1; transform: translateY(0) scaleY(1); }
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scaleY(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
 }
 
 /* Search row inside panel */
@@ -443,7 +486,9 @@
   font-size: 0.83rem;
   color: rgba(219, 234, 254, 0.75);
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -484,7 +529,9 @@
   font-size: 0.92rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.22s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.25s ease;
   margin-top: 4px;
 }
 
@@ -565,8 +612,14 @@
 }
 
 @keyframes successFade {
-  0%   { opacity: 0; transform: translateY(16px) scale(0.97); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .contact__success-icon {
@@ -584,8 +637,14 @@
 }
 
 @keyframes iconPop {
-  0%   { transform: scale(0.6); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .contact__success-title {

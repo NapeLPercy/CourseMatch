@@ -1,32 +1,5 @@
-export default class CourseManager {
-  constructor() {}
-
-  //filter by aps
-  filterCoursesByAps(qualifications, aps) {
-    return qualifications.filter(q => q.minimum_aps <= aps);
-  }
-
-
-  //filter by diploma,cert or bachelor
-  filterCoursesByEndorsement(qualifications, studentEndorsement) {
-    return qualifications.filter(q => {
-      const min = q.minimum_endorsement;
-
-      if (min === "Certificate") {
-        return ["Certificate", "Diploma", "Bachelor"].includes(studentEndorsement);
-      }
-      if (min === "Diploma") {
-        return ["Diploma", "Bachelor"].includes(studentEndorsement);
-      }
-      if (min === "Bachelor") {
-        return studentEndorsement === "Bachelor";
-      }
-
-      return false;
-    });
-  }
-
- //  SUBJECT EQUIVALENTS MAP
+ class EndorsementFilter{// -------------------------
+  //  SUBJECT EQUIVALENTS MAP
   // -------------------------
  PREREQ_FAMILIES = {
   MATH: ["Mathematics", "Technical Mathematics", "Math Literacy"],

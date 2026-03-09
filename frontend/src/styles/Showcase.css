@@ -1,0 +1,624 @@
+/* ============================================================
+   COURSEMATCH IN ACTION (SHOWCASE) — CourseMatch
+   ============================================================ */
+
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+  --green: #16a34a;
+  --green-light: #22c55e;
+  --red: #dc2626;
+  --yellow: #eab308;
+  --shadow: rgba(30, 58, 138, 0.1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION
+   ══════════════════════════════════════════════════════════════ */
+.cmaction {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--white) 0%, var(--off-white) 100%);
+  padding: 100px 24px 80px;
+  overflow: hidden;
+}
+
+.cmaction__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INTRO
+   ══════════════════════════════════════════════════════════════ */
+.cmaction__intro {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.cmaction__eyebrow {
+  display: inline-block;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--medium-blue);
+  background: rgba(37, 99, 235, 0.08);
+  border-radius: 6px;
+  padding: 6px 14px;
+  margin-bottom: 20px;
+}
+
+.cmaction__intro h2 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.3;
+  margin: 0 0 16px;
+}
+
+.cmaction__intro p {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LAYOUT (Two-column)
+   ══════════════════════════════════════════════════════════════ */
+.cmaction__layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STUDENT CARD (Left sidebar)
+   ══════════════════════════════════════════════════════════════ */
+.cmaction__student-card {
+  position: sticky;
+  top: 100px;
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 20px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cmaction__student-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--pale-blue);
+}
+
+.cmaction__label {
+  display: block;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-gray);
+  margin-bottom: 8px;
+}
+
+.cmaction__student-header h3 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.cmaction__aps-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  border-radius: 12px;
+  padding: 10px 16px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  flex-shrink: 0;
+}
+
+.cmaction__aps-badge strong {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1;
+}
+
+.cmaction__aps-badge span {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cmaction__student-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cmaction__student-section h4 {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+.cmaction__subject-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cmaction__subject-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--off-white);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.85rem;
+}
+
+.cmaction__subject-item span {
+  color: var(--text-gray);
+}
+
+.cmaction__subject-item strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.cmaction__profile-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cmaction__profile-pills span {
+  display: inline-block;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--medium-blue);
+}
+
+.cmaction__student-section p {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-gray);
+  margin: 0 0 8px;
+}
+
+.cmaction__student-section p strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESULTS PANEL (Right side)
+   ══════════════════════════════════════════════════════════════ */
+.cmaction__results {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TABS
+   ══════════════════════════════════════════════════════════════ */
+.cmaction__tabs {
+  display: flex;
+  gap: 8px;
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 14px;
+  padding: 6px;
+}
+
+.cmaction__tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  position: relative;
+}
+
+.cmaction__tab:hover {
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.cmaction__tab--active {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.cmaction__tab--active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 12px;
+  right: 12px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--medium-blue), var(--light-blue));
+  border-radius: 3px 3px 0 0;
+  animation: tabUnderline 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tabUnderline {
+  0%   { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+.cmaction__tab-name {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-gray);
+  transition: color 0.3s ease;
+}
+
+.cmaction__tab--active .cmaction__tab-name {
+  color: var(--medium-blue);
+}
+
+.cmaction__tab-score {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-gray);
+  opacity: 0.7;
+}
+
+.cmaction__tab--active .cmaction__tab-score {
+  opacity: 1;
+  color: var(--light-blue);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   QUALIFICATION CARD
+   ══════════════════════════════════════════════════════════════ */
+.cmaction__qualification-card {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 4px 20px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: cardSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes cardSlide {
+  0%   { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.cmaction__qualification-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.cmaction__badge {
+  display: inline-block;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.cmaction__qualification-card .cmaction__badge {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #059669;
+}
+
+.cmaction__qualification-top h3 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.cmaction__fit-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, 
+    rgba(37, 99, 235, 0.08),
+    rgba(59, 130, 246, 0.12)
+  );
+  border: 2px solid var(--light-blue);
+  border-radius: 14px;
+  padding: 14px 20px;
+  flex-shrink: 0;
+}
+
+.cmaction__fit-box strong {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--medium-blue);
+  line-height: 1;
+}
+
+.cmaction__fit-box span {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-gray);
+}
+
+/* ── Meta info ──────────────────────────────────────────────── */
+.cmaction__qualification-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.cmaction__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--off-white);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.cmaction__meta-item span {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-gray);
+}
+
+.cmaction__meta-item strong {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* ── Progress bar ───────────────────────────────────────────── */
+.cmaction__progress {
+  position: relative;
+  width: 100%;
+  height: 12px;
+  background: var(--off-white);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.cmaction__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--medium-blue), var(--light-blue));
+  border-radius: 12px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
+}
+
+/* ── Detail grid ────────────────────────────────────────────── */
+.cmaction__qualification-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.cmaction__detail-block {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cmaction__detail-block h4 {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.cmaction__detail-block p {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+/* ── Prerequisites list ─────────────────────────────────────── */
+.cmaction__req-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cmaction__req-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--off-white);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-gray);
+  border-left: 3px solid transparent;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.cmaction__req-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Status colors */
+.cmaction__req-item--met {
+  border-left-color: var(--green);
+}
+
+.cmaction__req-item--met .cmaction__req-icon {
+  background: rgba(22, 163, 74, 0.15);
+  color: var(--green);
+}
+
+.cmaction__req-item--not-met {
+  border-left-color: var(--red);
+}
+
+.cmaction__req-item--not-met .cmaction__req-icon {
+  background: rgba(220, 38, 38, 0.15);
+  color: var(--red);
+}
+
+.cmaction__req-item--warn {
+  border-left-color: var(--yellow);
+}
+
+.cmaction__req-item--warn .cmaction__req-icon {
+  background: rgba(234, 179, 8, 0.15);
+  color: #a16207;
+}
+
+.cmaction__req-item--missing {
+  border-left-color: var(--text-gray);
+}
+
+.cmaction__req-item--missing .cmaction__req-icon {
+  background: rgba(71, 85, 105, 0.15);
+  color: var(--text-gray);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .cmaction__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cmaction__student-card {
+    position: static;
+  }
+
+  .cmaction__qualification-meta {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .cmaction {
+    padding: 80px 20px 60px;
+  }
+
+  .cmaction__container {
+    gap: 36px;
+  }
+
+  .cmaction__tabs {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cmaction__tab {
+    width: 100%;
+  }
+
+  .cmaction__qualification-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cmaction__qualification-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .cmaction__qualification-top {
+    flex-direction: column;
+  }
+
+  .cmaction__fit-box {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 500px) {
+  .cmaction__qualification-card {
+    padding: 22px 18px;
+  }
+
+  .cmaction__student-card {
+    padding: 20px;
+  }
+}

@@ -28,7 +28,7 @@ export default function Footer() {
         <div className="footer__credit">
           <span className="footer__copy">&copy; {year} CourseMatch. All rights reserved.</span>
           <span className="footer__created">
-            Created by <span className="footer__creator">Lekoloane Nape Percy</span>
+            Developed by <span className="footer__creator">Lekoloane Nape Percy</span>
           </span>
         </div>
 

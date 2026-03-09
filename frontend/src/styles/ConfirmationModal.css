@@ -170,8 +170,8 @@
 /* Cancel button (ghost) */
 .cm__btn--cancel {
   background: transparent;
-  border: 1px solid var(--pale-blue);
-  color: var(--text-gray);
+  border: 1px solid var(--pale-blue) !important;
+  color: var(--text-gray) !important;
 }
 
 .cm__btn--cancel:hover {
@@ -218,6 +218,8 @@
 @media (max-width: 500px) {
   .cm__modal {
     padding: 32px 24px 24px;
+    margin-bottom: 50px;
+    border-radius: 22px !important;
   }
 
   .cm__icon {

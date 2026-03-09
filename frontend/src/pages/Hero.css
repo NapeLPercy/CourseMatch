@@ -1,7 +1,5 @@
-
 /* ============================================================
-   HERO — CourseMatch
-   Palette driven by user variables. Editorial-luxury tone.
+   HERO — CourseMatch (Enhanced Two-Column)
    ============================================================ */
 
 :root {
@@ -31,7 +29,8 @@
   justify-content: center;
   overflow: hidden;
   background: var(--primary-blue);
-  font-family: "Playfair Display", Georgia, serif; /* headline */
+  font-family: "Playfair Display", Georgia, serif;
+  padding: 80px 24px;
 }
 
 /* ── Gradient mesh — layered atmosphere ───────────────────── */
@@ -45,17 +44,7 @@
   z-index: 1;
 }
 
-/* ── Optional background image layer ─────────────────────── */
-.intro__image {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.12;
-  z-index: 2;
-}
-
-/* ── Dark overlay (tint over image or mesh) ──────────────── */
+/* ── Dark overlay ──────────────────────────────────────────── */
 .intro__overlay {
   position: absolute;
   inset: 0;
@@ -108,13 +97,23 @@
   50%      { transform: translateY(-28px) rotate(4deg); }
 }
 
-/* ── Content wrapper ─────────────────────────────────────── */
-.intro__content {
+/* ══════════════════════════════════════════════════════════════
+   CONTAINER (Two-column layout)
+   ══════════════════════════════════════════════════════════════ */
+.intro__container {
   position: relative;
   z-index: 10;
-  max-width: 680px;
-  width: 90%;
-  padding: 0 24px;
+  max-width: 1200px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* ── Left column: Text content ────────────────────────────── */
+.intro__content {
+  max-width: 600px;
   text-align: left;
 }
 
@@ -123,7 +122,8 @@
 .intro__title,
 .intro__text,
 .intro__actions,
-.intro__pills {
+.intro__pills,
+.intro__card {
   opacity: 0;
   transform: translateY(28px);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
@@ -135,6 +135,18 @@
 .intro--mounted .intro__text   { opacity: 1; transform: translateY(0); transition-delay: 0.48s; }
 .intro--mounted .intro__actions { opacity: 1; transform: translateY(0); transition-delay: 0.62s; }
 .intro--mounted .intro__pills  { opacity: 1; transform: translateY(0); transition-delay: 0.78s; }
+
+/* Card slides in from the right */
+.intro__card {
+  opacity: 0;
+  transform: translateX(60px);
+}
+
+.intro--mounted .intro__card {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.5s;
+}
 
 /* ── Badge ────────────────────────────────────────────────── */
 .intro__badge {
@@ -152,7 +164,6 @@
   color: var(--pale-blue);
   text-transform: uppercase;
   margin-bottom: 28px;
-  margin-top: 40px;
 }
 
 .intro__badge-dot {
@@ -186,7 +197,6 @@
   font-style: italic;
 }
 
-/* Underline accent on the highlight word */
 .intro__title-highlight::after {
   content: "";
   position: absolute;
@@ -238,10 +248,8 @@
   letter-spacing: 0.02em;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.25s ease;
-  -webkit-font-smoothing: antialiased;
 }
 
-/* Primary */
 .btn--primary-start {
   background: linear-gradient(135deg, var(--medium-blue) 0%, var(--light-blue) 100%);
   color: var(--white);
@@ -253,12 +261,6 @@
   box-shadow: 0 8px 32px rgba(37, 99, 235, 0.45);
 }
 
-.btn--primary-start:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.3);
-}
-
-/* Ghost */
 .btn--ghost {
   background: transparent;
   color: var(--pale-blue);
@@ -271,17 +273,12 @@
   transform: translateY(-2px);
 }
 
-.btn--ghost:active {
-  transform: translateY(0);
-}
-
 /* ── Trust pills ──────────────────────────────────────────── */
 .intro__pills {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  padding-bottom:30px;
 }
 
 .intro__pill {
@@ -308,6 +305,115 @@
   border-radius: 50%;
   background: rgba(219, 234, 254, 0.2);
   margin: 0 4px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RIGHT CARD (Platform preview)
+   ══════════════════════════════════════════════════════════════ */
+.intro__card {
+  position: relative;
+  margin-top: 40px;
+}
+
+.intro__card-inner {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.intro__card-inner:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* Steps */
+.intro__card-steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.intro__card-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.intro__card-step-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  color: var(--white);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+  transition: transform 0.3s ease;
+}
+
+.intro__card-step:hover .intro__card-step-number {
+  transform: scale(1.15) rotate(15deg);
+}
+
+.intro__card-step-text {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.3;
+}
+
+/* Image */
+.intro__card-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, 
+    rgba(37, 99, 235, 0.2),
+    rgba(59, 130, 246, 0.15)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.intro__card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Placeholder (remove when you add real image) */
+.intro__card-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+}
+
+/* Hide placeholder when image loads */
+.intro__card-img + .intro__card-placeholder {
+  display: none;
 }
 
 /* ── Scroll hint ──────────────────────────────────────────── */
@@ -342,17 +448,36 @@
   100% { transform: scaleY(1); transform-origin: top; opacity: 0; }
 }
 
-/* ── Responsive ───────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .intro__container {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .intro__card {
+    order: 2;
+  }
+
+  .intro__content {
+    order: 1;
+  }
+}
+
 @media (max-width: 640px) {
+  .intro {
+    padding: 100px 20px 60px;
+  }
+
   .intro__content {
     text-align: center;
-    align-items: center;
   }
 
   .intro__badge {
     margin-left: auto;
     margin-right: auto;
-    margin-top: 70px;
   }
 
   .intro__text {
@@ -365,6 +490,21 @@
 
   .intro__pills {
     justify-content: center;
+  }
+
+  .intro__card-steps {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .intro__card-step {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .intro__card-step-text {
+    text-align: left;
   }
 
   .intro__geo--1 { width: 340px; height: 340px; top: -120px; right: -100px; }
