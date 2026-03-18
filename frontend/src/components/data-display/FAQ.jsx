@@ -126,7 +126,7 @@ export default function FAQ() {
               className="faq__cta-btn"
               onClick={() => {
                 navigate("/contact-us");
-                window.scrollTo(0, 0);
+               // window.scrollTo(0, 0);
               }}
             >
               Contact Us

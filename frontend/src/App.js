@@ -45,13 +45,14 @@ import CookieModal from "./components/data-display/CookieModal";
 import RouteTracking from "./routes/RouteTracking";
 //terms 
 import TermsAndConditions from "./components/data-display/TermsAndConditions";
-
+import ScrollToTop from "./components/ScrollToTop";
 function App() {
   return (
     <UserProvider>
       <CourseProvider>
         <SubjectProvider>
           <Router>
+            <ScrollToTop/>
             <CookieModal />
             <RouteTracking />
 

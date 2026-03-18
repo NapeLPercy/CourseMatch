@@ -1,6 +1,10 @@
 import { useMemo, useState } from "react";
 import ".././styles/Showcase.css";
 
+
+function appendSubjects(subjects){
+  return subjects.map(subject=>{return subject.name}).join(", ");
+}
 const student = {
   fullName: "Sipho Mokoena",
   aps: 36,
@@ -177,20 +181,25 @@ export default function CourseMatchAction() {
             <div className="cmaction__student-section">
               <h4>Subjects</h4>
               <div className="cmaction__subject-list">
-                {student.subjects.map((subject) => (
+                
+                <div key={1} className="cmaction__subject-item">
+                    <span>{appendSubjects(student.subjects)}</span>
+                  </div>
+
+                {/*student.subjects.map((subject) => (
                   <div key={subject.name} className="cmaction__subject-item">
                     <span>{subject.name}</span>
                     <strong>{subject.mark}%</strong>
                   </div>
-                ))}
+                ))*/}
               </div>
             </div>
 
-            <div className="cmaction__student-section">
+            <div className="cmaction__student-section" style={{paddingBottom: "0",}}>
               <h4>Profile</h4>
-              <div className="cmaction__profile-pills">
-                <span>{student.profile.problemSolvingApproach}</span>
-                <span>{student.profile.workStyle}</span>
+              <div className="cmaction__profile-pills" >
+               {/* <span>{student.profile.problemSolvingApproach}</span>
+                <span>{student.profile.workStyle}</span>*/}
                 <span>{student.profile.preferredEnvironment}</span>
                 <span>Enjoys {student.profile.enjoyedSubjects}</span>
                 <span>Hobbies: {student.profile.hobbies}</span>

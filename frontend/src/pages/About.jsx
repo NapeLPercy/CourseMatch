@@ -255,9 +255,9 @@ export default function About() {
             type="button"
             onClick={() => {
               navigate("/contact-us");
-              window.scrollTo({
+              /*window.scrollTo({
                 top:0, left:0,behavior: 'smooth' 
-              });
+              });*/
             }}
           >
             <span>Contact Us</span>
