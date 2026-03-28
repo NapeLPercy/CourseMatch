@@ -1,8 +1,6 @@
-/* ===================================================
-   Recommendations.css
+/*Recommendations.css
    Visually consistent with UniversityCourses.css
-   Uses the same :root variables & card patterns
-   =================================================== */
+   Uses the same :root variables & card patterns */
 
 :root {
   --primary-blue: #1e3a8a;
@@ -15,7 +13,7 @@
   --text-gray: #475569;
 }
 
-/* ---- Controls row (sort bar) --------------------- */
+/*  Controls row (sort bar)  */
 .rec-controls {
   display: flex;
   align-items: center;
@@ -59,8 +57,38 @@
   border-color: var(--medium-blue);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
+/*download btn*/
+.download-pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(37, 99, 235, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2563eb;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(30, 58, 138, 0.1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-/* ---- Course list --------------------------------- */
+.download-pdf-btn:hover {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(30, 58, 138, 0.15);
+}
+
+.download-pdf-btn:active {
+  transform: translateY(0);
+}
+/* Course list */
 .rec-list {
   list-style: none;
   padding: 0;

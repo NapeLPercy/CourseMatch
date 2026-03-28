@@ -10,8 +10,6 @@ exports.getAIRecommendations= async (req, res) => {
     const userId = req.userId;
     const { qualifiedCourses, subjects } = req.body;
 
-    console.log("DATA",subjects,qualifiedCourses);
-
     if (!userId) {
       return res.status(401).json({ success: false, message: "Not authenticated" });
     }
@@ -52,7 +50,6 @@ exports.getAIRecommendations= async (req, res) => {
       courses: qualifiedCourses,
     });
 
-    console.log("IN THE CONTROLLER",results);
 
     return res.status(200).json({
       success: true,

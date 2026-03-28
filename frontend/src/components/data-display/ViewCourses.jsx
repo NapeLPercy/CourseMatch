@@ -1,6 +1,4 @@
-// src/pages/ViewCourses.jsx
 import "../../styles/ViewCourses.css";
-
 
 import React, { useRef, useState, useEffect } from "react";
 import UniversityList from "./UniversityList";

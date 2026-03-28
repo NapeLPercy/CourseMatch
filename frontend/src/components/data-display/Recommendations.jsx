@@ -8,16 +8,16 @@ import { CourseContext } from "../../context/CourseContext";
 
 import axios from "axios";
 import { generateRecommendationsPdf } from "../../Utils/recommendationsPDF";
+import renderRecommendationCard from "../ui/RecommendationCard";
+import ErrorState from "../ui/ErrorState";
+import CourseFilter from "../../Utils/courseFilters/CourseFilter";
 
-import TutAPS from "../../Utils/TUT/TutAPS";
-import CourseManager from "../../Utils/CourseManager";
-
-function Recommendations() {
+function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
   // State
   const [loading, setLoading] = useState(true);
-  const [loadingProfile, setLoadingprofile] = useState(false);
   const [recommendedCourses, setRecommendedCourses] = useState([]);
   const [sortOrder, setSortOrder] = useState("desc");
+  const [error, setError] = useState(null);
   //context
   const { qualifications } = useContext(CourseContext);
   const { getSubjects } = useSubjects();
@@ -25,25 +25,29 @@ function Recommendations() {
   const navigate = useNavigate();
   const subjects = getSubjects();
 
+  //used to change the parent values
+  const handleUpdate = (aps, unlockedCount) => {
+    setAps(aps);
+    setUnlockedCount(unlockedCount);
+  };
+
+  //filter courses
   const qualifiedCourses = useMemo(() => {
-    const apsCalc = new TutAPS(subjects);
-    const studentAPS = apsCalc.computeAPS();
     const studentEndorsement = JSON.parse(
       sessionStorage.getItem("student"),
     )?.endorsement;
 
-    const courseManager = new CourseManager();
-    const qualifiedByAps = courseManager.filterCoursesByAps(
+    const courseFilter = new CourseFilter(
+      subjects,
       qualifications,
-      studentAPS,
-    );
-
-    const qualifiedByEndorsement = courseManager.filterCoursesByEndorsement(
-      qualifiedByAps,
       studentEndorsement,
+      uniSlug,
     );
 
-    return qualifiedByEndorsement;
+    const qualifiedCourses = courseFilter.getQualifiedCourses();
+    handleUpdate(sessionStorage.getItem("aps"), qualifiedCourses.length);
+
+    return qualifiedCourses;
   }, [qualifications, subjects]);
 
   useEffect(() => {
@@ -74,6 +78,7 @@ function Recommendations() {
   //get ai recommendations
   const fetchAiFitForUniversity = async (subjects, qualifiedCourses) => {
     setLoading(true);
+    setError(null);//
     try {
       const API_BASE = process.env.REACT_APP_API_BASE;
       const token = JSON.parse(sessionStorage.getItem("token"));
@@ -91,7 +96,11 @@ function Recommendations() {
       );
     } catch (err) {
       console.error("AI fit fetch failed:", err.response?.data || err.message);
-      setRecommendedCourses([]);
+      setError(
+        "Failed to get AI recommedations",
+        err.response?.data || err.message,
+      );
+      //setRecommendedCourses([]);
     } finally {
       setLoading(false);
     }
@@ -105,9 +114,7 @@ function Recommendations() {
     });
   };
 
-  /* ------------------------------------------------ */
   // Derived: sorted list
-  /* ------------------------------------------------ */
   const sortedCourses = useMemo(
     () =>
       [...recommendedCourses].sort((a, b) =>
@@ -117,10 +124,6 @@ function Recommendations() {
       ),
     [recommendedCourses, sortOrder],
   );
-
-  /* ------------------------------------------------ */
-  // Reusable renderers
-  /* ------------------------------------------------ */
 
   /** Animated loading indicator - mirrors parent pattern */
   const renderLoading = () => (
@@ -132,37 +135,45 @@ function Recommendations() {
     </p>
   );
 
-  /** Empty state with contextual CTA */
+  
+    /** Empty state with contextual CTA */
   const renderEmptyState = () => {
-    const noQualified = qualifiedCourses.length === 0;
+    
+    if (error) {
+      return (
+        <div className="rec-empty">
+          <ErrorState
+            message={error}
+            onRetry={() => fetchAiFitForUniversity(subjects, qualifiedCourses)}
+          />
+        </div>
+      );
+    }
+
+    const noQualified = qualifiedCourses.length === 0 || error === null;
 
     return (
       <div className="rec-empty">
         <div className="rec-empty__icon">
-          {noQualified ? (
-            <Library color="#1e3a8a" size={54} />
-          ) : (
-            <User color="#1e3a8a" size={54} />
-          )}
+          <Library color="#1e3a8a" size={54} />
         </div>
         <p className="rec-empty__text">
           {noQualified
             ? "You need to complete your qualified courses first so we can generate recommendations for you."
-            : "Enter your personalized profile data to get courses suitable for you."}
+            : ""}
         </p>
         <button
           className="rec-empty__btn"
           onClick={() => {
-            navigate(
-              noQualified ? "/qualified-courses" : "/student/manage-my-profile",
-            );
+            navigate("/qualified-courses");
           }}
         >
-          {noQualified ? "Go to Qualified Courses ->" : "Go to Profile ->"}
+          {noQualified ? "Go to Qualified Courses ->" : ""}
         </button>
       </div>
     );
   };
+
 
   /** Sort controls bar */
   const renderControls = () => (
@@ -176,30 +187,10 @@ function Recommendations() {
         <option value="desc">Highest First</option>
         <option value="asc">Lowest First</option>
       </select>
-      <button onClick={handleDownloadPdf}>Download pdf</button>
+      <button className="download-pdf-btn" onClick={handleDownloadPdf}>
+        Download PDF
+      </button>
     </div>
-  );
-
-  /** Single recommendation card */
-  const renderCard = (course) => (
-    <li className="rec-card" key={course.qualification_code}>
-      {/* fit score badge - sits to the left */}
-      <div className="rec-card__score-badge">
-        <span className="rec-card__score-badge__value">{course.fit_score}</span>
-        <span className="rec-card__score-badge__label">fit</span>
-      </div>
-
-      {/* name + code */}
-      <div className="rec-card__header">
-        <h3 className="rec-card__title">{course.qualification_name}</h3>
-        <span className="rec-card__code">{course.qualification_code}</span>
-      </div>
-
-      {/* AI reasoning */}
-      <p className="rec-card__reason">
-        <strong>Why this course?</strong> {course.reason}
-      </p>
-    </li>
   );
 
   /** Full sorted list */
@@ -207,14 +198,12 @@ function Recommendations() {
     <>
       {renderControls()}
       <ul className="rec-list">
-        {sortedCourses.map((course) => renderCard(course))}
+        {sortedCourses.map((course) => renderRecommendationCard(course))}
       </ul>
     </>
   );
 
-  /* ------------------------------------------------ */
   // Main render logic
-  /* ------------------------------------------------ */
   if (loading) return renderLoading();
   if (recommendedCourses.length === 0) return renderEmptyState();
 

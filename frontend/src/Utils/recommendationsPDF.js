@@ -9,6 +9,9 @@ export function generateRecommendationsPdf(
   recommendations,
   options = {}
 ) {
+  //sort recommendations
+  recommendations.sort((a,b)=>b.fit_score - a.fit_score);
+
   const {
     title = "CourseMatch AI Recommendations",
     subtitle = "",

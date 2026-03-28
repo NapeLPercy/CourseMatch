@@ -1,31 +1,30 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import TutAPS from "../../Utils/TUT/TutAPS";
-import CourseManager from "../../Utils/CourseManager";
-import { Library, Info } from "lucide-react";
-// context
+import CourseFilter from "../../Utils/courseFilters/CourseFilter";
+import { Info } from "lucide-react";
 import { CourseContext } from "../../context/CourseContext";
 import { useSubjects } from "../../context/SubjectContext";
-// child components
 import Recommendations from "./Recommendations";
-// styles
+import renderCourseList from "../ui/CourseList";
 import "../../styles/UniversityCourses.css";
 
 export default function UniversityCourses() {
   // Route param
-  let { courseSlug } = useParams();
-  courseSlug = courseSlug.toUpperCase();
-  sessionStorage.setItem("visited-uni", JSON.stringify(courseSlug));
-  // Context
+  let { courseSlug: universitySlug } = useParams();
+
+  universitySlug = universitySlug.toUpperCase();
+
   const { qualifications, updateQualifications } = useContext(CourseContext);
   const { getSubjects } = useSubjects();
-  // State
+
   const [courses, setCourses] = useState(qualifications);
   const [qualifiedCourses, setQualifiedCourses] = useState([]);
-  const [aps, setAps] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [aps, setAps] = useState(null);
+  const [unlockedCount, setUnlockedCount] = useState(null);
 
   const [activeTab, setActiveTab] = useState(() => {
     try {
@@ -39,12 +38,10 @@ export default function UniversityCourses() {
 
   const [computingQualified, setComputingQualified] = useState(false);
   const [computingRecommendations, setComputingRecommendations] = useState(
-    () => activeTab === "recommendations",  
+    () => activeTab === "recommendations",
   );
 
-  /* ------------------------------------------------ */
   // Fetch courses on mount / slug change
-  /* ------------------------------------------------ */
   useEffect(() => {
     const fetchCourses = async () => {
       const API_BASE = process.env.REACT_APP_API_BASE;
@@ -52,7 +49,7 @@ export default function UniversityCourses() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${API_BASE}/api/university/${courseSlug}`,
+          `${API_BASE}/api/university/${universitySlug}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -67,62 +64,49 @@ export default function UniversityCourses() {
       } catch (err) {
         setError(err.message || "Something went wrong");
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       }
     };
 
     fetchCourses();
-  }, [courseSlug]);
+  }, [universitySlug]);
 
-  /* ------------------------------------------------ */
+
+ 
+
   // Compute qualified courses
-  /* ------------------------------------------------ */
   const computeQualifiedCourses = () => {
     setComputingQualified(true);
-
-    const apsCalc = new TutAPS(getSubjects());
-    const studentAPS = apsCalc.computeAPS();
-    setAps(studentAPS);
 
     const studentEndorsement = JSON.parse(
       sessionStorage.getItem("student"),
     )?.endorsement;
 
-    const courseManager = new CourseManager();
-
-    const qualifiedByAps = courseManager.filterCoursesByAps(
-      courses,
-      studentAPS,
-    );
-
-
-    const qualifiedByEndorsement = courseManager.filterCoursesByEndorsement(
-      qualifiedByAps,
+    const courseFilter = new CourseFilter(
+      getSubjects(),
+      qualifications,
       studentEndorsement,
+      universitySlug,
     );
 
-    // prerequisite filter – uncomment when ready:
-    const qualifiedCourseByPrerequisite =
-      courseManager.filterCoursesByPrerequisites(
-        getSubjects(),
-        qualifiedByEndorsement,
-      );
-
-    const qualifiedCourse = qualifiedByEndorsement;
+    const qualifiedQualifications = courseFilter.getQualifiedCourses();
 
     setTimeout(() => {
-      setQualifiedCourses(qualifiedCourse);
+      setQualifiedCourses(qualifiedQualifications);
+      //set unlockedCount and aps
+      setAps(sessionStorage.getItem("aps"));
+      setUnlockedCount(qualifiedQualifications.length);
       setComputingQualified(false);
       sessionStorage.setItem(
         "qualified-courses",
-        JSON.stringify(qualifiedCourse),
+        JSON.stringify(qualifiedQualifications),
       );
-    }, 500);
+    }, 1000);
   };
 
-  /* ------------------------------------------------ */
   // Auto-compute when switching to "qualified" tab
-  /* ------------------------------------------------ */
   useEffect(() => {
     if (
       activeTab === "qualified" &&
@@ -133,11 +117,7 @@ export default function UniversityCourses() {
     }
   }, [activeTab, courses]);
 
-  /* ------------------------------------------------ */
-  // Reusable renderers
-  /* ------------------------------------------------ */
-
-  /** Animated loading indicator */
+  //Animated loading indicator
   const renderLoading = (message) => (
     <p className="uni-status">
       <span className="dot" />
@@ -147,99 +127,32 @@ export default function UniversityCourses() {
     </p>
   );
 
-  /** Single course card */
-  const renderCourseCard = (course, index) => (
-    <li className="uni-course-card" key={index}>
-      <h3 className="uni-course-card__title">{course.qualification_name}</h3>
-
-      <div className="uni-course-card__meta">
-        <span className="uni-course-card__meta-item">
-          <strong>Code:</strong> {course.qualification_code}
-        </span>
-        <span className="uni-course-card__meta-item">
-          <strong>Duration:</strong> {course.minimum_duration} yrs
-        </span>
-        <span className="uni-course-card__meta-item">
-          <strong>Min APS:</strong> {course.minimum_aps}
-        </span>
-      </div>
-
-      {course.prereqs && course.prereqs.length > 0 && (
-        <div className="uni-course-card__prereqs">
-          <p className="uni-course-card__prereqs-label">Prerequisites</p>
-          <ul className="uni-course-card__prereqs-list">
-            {course.prereqs.map((prereq, idx) => (
-              <li className="uni-course-card__prereq-tag" key={idx}>
-                {prereq.subject_name}
-                <span className="prereq-mark">{prereq.min_mark}%</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </li>
-  );
-
-  /** Full course list or empty state */
-  const renderCourseList = (courseList, emptyMessage) => {
-    if (courseList.length === 0) {
-      return (
-        <div className="uni-empty-state">
-          <div className="uni-empty-icon">
-            <Library color="#1e3a8a" size={54} />
-          </div>
-          <p>{emptyMessage}</p>
-        </div>
-      );
-    }
-
-    return (
-      <ul className="uni-course-list">
-        {courseList.map((course, index) => renderCourseCard(course, index))}
-      </ul>
-    );
-  };
-
-  /* ------------------------------------------------ */
   // Tab definitions – keeps the tab bar DRY
-  /* ------------------------------------------------ */
   const tabs = [
     { id: "full", label: "Full Courses" },
     { id: "qualified", label: "Qualified Courses" },
     { id: "recommendations", label: "AI Recommendations" },
   ];
 
-  /* ------------------------------------------------ */
-  // Render
-  /* ------------------------------------------------ */
   return (
     <div className="uni-courses-wrapper">
       {/* Header */}
       <header className="uni-courses-header">
-        <h1>University Courses</h1>
-        <span className="uni-slug-badge">{courseSlug}</span>
+        <h1>
+          {JSON.parse(sessionStorage.getItem("visited-uni"))?.name} Courses
+        </h1>
+
         {aps && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              padding: "8px",
-              backgroundColor: "#f0fdf4",
-              border: "1px solid #bbf7d0",
-              borderRadius: "8px",
-              color: "#166534",
-              fontFamily: "sans-serif",
-              marginTop: "10Epx",
-            }}
-          >
-            <Info size={20} color="#16a34a" style={{ flexShrink: 0 }} />
-            <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.5" }}>
-              Your APS for{" "}
-              <strong style={{ color: "#15803d" }}>{courseSlug.toLowerCase()}</strong> is{" "}
-              <strong style={{ fontSize: "1.1em" }}>{aps}</strong>
-            </p>
-          </div>
+          <p className="uni-courses-aps">
+            Your APS for {universitySlug}: <strong>{aps}</strong>
+          </p>
+        )}
+
+        {unlockedCount && (
+          <p className="uni-courses-unlocked">
+            You unlocked <strong>{unlockedCount}</strong> qualification
+            {unlockedCount !== 1 ? "s" : ""}
+          </p>
         )}
       </header>
 
@@ -258,15 +171,9 @@ export default function UniversityCourses() {
         ))}
       </nav>
 
-      {/* Content */}
       <div className="uni-content-area" role="tabpanel">
-        {/* ─── Loading ─── */}
         {loading && renderLoading("Loading courses …")}
-
-        {/* ─── Error ─── */}
         {error && <p className="uni-status error">{error}</p>}
-
-        {/* ─── Tabs ─── */}
         {!loading && !error && (
           <>
             {activeTab === "full" &&
@@ -288,7 +195,13 @@ export default function UniversityCourses() {
                 renderLoading("Preparing AI recommendations …")
               ) : (
                 <div className="uni-recommendations-wrapper">
-                  <Recommendations />
+                  <Recommendations
+                    //aps={aps}
+                    setAps={setAps}
+                   // unlockedCount={unlockedCount}
+                    setUnlockedCount={setUnlockedCount}
+                    uniSlug={universitySlug}
+                  />{" "}
                 </div>
               ))}
           </>

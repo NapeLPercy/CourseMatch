@@ -1,8 +1,6 @@
-/* ===================================================
-   UniversityCourses.css
+/*UniversityCourses.css
    Responsive layout – desktop & mobile
-   Uses the project's existing :root variables
-   =================================================== */
+   Uses the project's existing :root variables */
 :root {
   --primary-blue: #1e3a8a;
   --medium-blue: #2563eb;
@@ -13,7 +11,7 @@
   --text-dark: #1e293b;
   --text-gray: #475569;
 }
-/* ---- Page Shell --------------------------------- */
+/* Page Shell */
 .uni-courses-wrapper {
   max-width: 860px;
   margin: 0 auto;
@@ -22,6 +20,7 @@
   color: var(--text-dark);
   min-height: 100vh;
 }
+
 
 .uni-courses-header {
   margin-bottom: 8px;
@@ -35,18 +34,32 @@
   letter-spacing: -0.02em;
 }
 
-.uni-courses-header .uni-slug-badge {
-  display: inline-block;
-  margin-top: 6px;
-  background: var(--pale-blue);
-  color: var(--primary-blue);
-  font-size: 0.78rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 4px 10px;
-  border-radius: 20px;
+.uni-courses-aps {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.95rem;
+  color: var(--text-gray);
+  margin: 8px 0 0;
 }
+
+.uni-courses-aps strong {
+  color: var(--medium-blue);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.uni-courses-unlocked {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-gray);
+  margin: 6px 0 0;
+}
+
+.uni-courses-unlocked strong {
+  color: var(--green);
+  font-weight: 700;
+}
+
+
 
 /* ---- Tab Bar ------------------------------------- */
 .uni-tab-bar {

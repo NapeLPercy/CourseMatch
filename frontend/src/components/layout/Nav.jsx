@@ -201,7 +201,7 @@ export default function Nav() {
                 </NavLink>
 
                 <NavLink to="/student/manage-my-profile" icon={User}>
-                  Manage profile
+                  Manage Profile
                 </NavLink>
 
                 <NavLink to="/view-courses" icon={GraduationCap}>
@@ -358,7 +358,7 @@ export default function Nav() {
                 </NavLink>
 
                 <NavLink to="/student/manage-my-profile" icon={User}>
-                  Manage profile
+                  Manage Profile
                 </NavLink>
 
                 <NavLink

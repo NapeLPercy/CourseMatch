@@ -1,6 +1,6 @@
- class EndorsementFilter{// -------------------------
-  //  SUBJECT EQUIVALENTS MAP
-  // -------------------------
+export default class FilterBySubjects {
+  constructor() {}
+
  PREREQ_FAMILIES = {
   MATH: ["Mathematics", "Technical Mathematics", "Math Literacy"],
   SCIENCE: ["Physical Sciences", "Technical Sciences"],
@@ -42,8 +42,6 @@ doesStudentMeetFamily(group, studentSubjects) {
     this.doesStudentMeetSingleOption(prereq, studentSubjects)
   );
 }
-
-
 
  doesStudentMeetSingleOption(option, studentSubjects) {
   const validNames = this.SUBJECT_EQUIVALENTS[option.subject_name] || [option.subject_name];

@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GraduationCap, ArrowRight, BookOpen } from "lucide-react";
 import "../../styles/UniversityList.css";
@@ -28,6 +28,11 @@ function FacultyMarquee({ faculties }) {
 /* ─── Single university card ────────────────────────────────── */
 function UniCard({ uni, index }) {
   const navigate = useNavigate();
+
+  const handleViewCourses = (uni) => {
+    sessionStorage.setItem("visited-uni",JSON.stringify({name:uni.name,id:uni.id}));
+    navigate(`/view-courses/${uni.id}`);
+  };
 
   return (
     <div className="uni__card" style={{ animationDelay: `${index * 0.07}s` }}>
@@ -59,7 +64,7 @@ function UniCard({ uni, index }) {
       <button
         type="button"
         className="uni__cta"
-        onClick={() => navigate(`/view-courses/${uni.id}`)}
+        onClick={()=>handleViewCourses(uni)}
         aria-label={`View courses at ${uni.name}`}
       >
         <span className="uni__cta-text">View Courses</span>
@@ -69,7 +74,6 @@ function UniCard({ uni, index }) {
   );
 }
 
-/* ─── Export ────────────────────────────────────────────────── */
 export default function UniversityList() {
   const [universities, setUniversities] = useState(universitiesData);
   return (
