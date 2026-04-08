@@ -4,8 +4,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 const subjectModel = require("../models/Subject");
 const { insertStudentEndorsement } = require("../services/studentService");
-const SubjectsSanitizer = require("./subjectsSanitizer");
-const MatrixEndorsement = require("./matrixEndorsement");
+const SubjectsSanitizer = require("../services/subjectsSanitizer");
+const MatrixEndorsement = require("../services/matrixEndorsement");
 
 /* 1 Clean subjects
 2 Compute matric endorsement for 7 clean subjects

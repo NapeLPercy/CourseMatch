@@ -1,7 +1,7 @@
 const db = require("../config/db");
 const { v4: uuidv4 } = require("uuid");
 const aiRecommendationModel = require("../models/aiRecommendationModel");
-const AiFitService = require("./aiRecommendationsBuilder");
+const AiFitService = require("../services/aiRecommendationsBuilder");
 
 /* 1 Checks if AI recommendations already exist for this university
 2 Fetch if the exist
