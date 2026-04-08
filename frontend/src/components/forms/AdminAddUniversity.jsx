@@ -13,13 +13,21 @@ import {
   AlertCircle,
 } from "lucide-react";
 import "../../styles/AdminAddUniversity.css";
+import { addUniversity } from "../../services/universityService";
+import SubmitError from "../ui/SubmitError";
+import SubmitSuccess from "../ui/SubmitSuccess";
+import SmallLoader from "../ui/SmallLoader";
 
-/* ─── Main component ────────────────────────────────────────── */
+/* Main component */
 export default function AdminAddUniversity() {
   // University fields
   const [abbreviation, setAbbreviation] = useState("");
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   // Faculties (dynamic list)
   const [faculties, setFaculties] = useState([{ id: uuidv4(), name: "" }]);
@@ -89,36 +97,34 @@ export default function AdminAddUniversity() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = {
+    setLoading(true);
+    const university = {
       abbreviation: abbreviation.trim(),
       name: name.trim(),
       url: url.trim() || null,
       faculties: faculties.map((f) => ({ name: f.name.trim() })),
     };
 
-    const API_BASE = process.env.REACT_APP_API_BASE;
-    const token = JSON.parse(sessionStorage.getItem("token"));
-    console.log(payload);
     try {
-      const res = await axios.post(
-        `${API_BASE}/api/university/`,
-        { university: payload }, // Data object as the second argument
-        {
-          // Config object as the third argument
-          headers: {
-            Authorization: `Bearer ${token}`, // Correct "Authorization" header name
-          },
-        },
-      );
-      console.log(res.data);
+      const { data } = await addUniversity(university);
 
-      if (res.data.success) {
-        alert(res.data.message);
-        handleReset();
+      if (!data.success) {
+        setError("Failed to add a university");
+        return;
       }
+
+      setSuccess("Successfully submitted university");
+      setLoading(false);
+      setTimeout(() => {
+        handleReset();
+      }, 6000);
     } catch (err) {
-      alert(err.message || "Failed to submit University data ");
+      setError("Failed to submit university data");
     } finally {
+      setTimeout(() => {
+        setError(null);
+        setSuccess(null);
+      }, 5000);
     }
   };
 
@@ -262,6 +268,9 @@ export default function AdminAddUniversity() {
 
         {/* Actions */}
         <div className="au__actions">
+          {error && <SubmitError error={error} />}
+          {success && <SubmitSuccess success={success} />}
+
           <button
             type="button"
             className="au__btn au__btn--ghost"
@@ -274,10 +283,19 @@ export default function AdminAddUniversity() {
           <button
             type="submit"
             className="au__btn au__btn--primary"
-            disabled={!canSubmit}
+            disabled={!canSubmit || loading}
           >
-            <Save size={16} strokeWidth={2.2} />
-            Save University
+            {loading ? (
+              <>
+                <SmallLoader />
+                <span className="aaq__btn-text">Processing...</span>
+              </>
+            ) : (
+              <>
+                <Save size={16} strokeWidth={2.2} />
+                <span className="aaq__btn-text">Save University</span>
+              </>
+            )}
           </button>
         </div>
       </form>

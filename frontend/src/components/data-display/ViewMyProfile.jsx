@@ -12,57 +12,39 @@ import {
   Award,
   Users,
   Lightbulb,
-  Clock,
-  DollarSign,
-  MapPin,
-  AlertCircle,
   Sparkles,
 } from "lucide-react";
 import "../../styles/ViewMyProfile.css";
-/* ─── Main component ────────────────────────────────────────── */
+import { getCompleteStudentInfo } from "../../services/studentService";
+import ErrorState from "../ui/ErrorState";
+import EmptyState from "../ui/EmptyState";
+import Skeleton from "../ui/Skeleton";
+/* Main component */
 export default function ViewMyProfile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Fetch current student's profile
+  const [error, setError] = useState(null);
+  
   useEffect(() => {
-    // Simulate fetch
     fetchStudentProfile();
   }, []);
 
+  //fetch student complete profile
   const fetchStudentProfile = async () => {
+    setError(null);
     try {
-      const API_BASE = process.env.REACT_APP_API_BASE;
-      const token = JSON.parse(sessionStorage.getItem("token"));
-
-      if (!token) {
-        console.warn("No auth token found when fetching student profile");
-        return null;
+      const { data } = await getCompleteStudentInfo();
+      if (!data.success) {
+        setError("Failed to fetch personal profile");
+        return;
       }
-
-      const response = await axios.get(`${API_BASE}/api/student/get-profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = response.data;
-      if (data.success) {
-         sessionStorage.setItem(
-          "student-profile",
-          JSON.stringify(data.profile),
-        );
-
-        setTimeout(() => {
-          setProfile(data.profile);
-          setLoading(false);
-        }, 300);
-      }
+      setProfile(data.profile);
     } catch (error) {
-      console.error(
-        "Failed to fetch student profile:",
-        error.response?.data || error.message,
-      );
-      setLoading(false);
+      setError("Failed to fetch personal profile");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     }
   };
 
@@ -72,22 +54,17 @@ export default function ViewMyProfile() {
   };
 
   if (loading) {
+    return <Skeleton />;
+  }
+
+  if ((!profile && !error) || !profile?.aspiration) {
     return (
-      <div className="vp">
-        <div className="vp__loading">Loading your profile...</div>
-      </div>
+      <EmptyState message="No profile found. Please create one in the 'Add Profile' tab." />
     );
   }
 
-  if (!profile) {
-    return (
-      <div className="vp">
-        <div className="vp__empty">
-          <p>No profile found. Please create one in the "Add Profile" tab.</p>
-        </div>
-      </div>
-    );
-  }
+  if (error)
+    return <ErrorState message={error} onRetry={fetchStudentProfile} />;
 
   return (
     <div className="vp">

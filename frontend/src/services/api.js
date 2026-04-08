@@ -2,7 +2,7 @@ import axios from "axios";
 
 //base url
 const api = axios.create({
-  baseURL: import.meta.env.VITE_REACT_BASE_API,
+  baseURL: process.env.REACT_APP_API_BASE,
 
   headers: {
     "Content-Type": "application/json",
@@ -13,11 +13,11 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     
-    const rawUser = sessionStorage.getItem("docutracker_user");
-    const user = rawUser ? JSON.parse(rawUser) : null;
+    const rawToken = sessionStorage.getItem("token");
+    const token = rawToken ? JSON.parse(rawToken) : null;
 
-    if (user?.token) {
-      config.headers.Authorization = `Bearer ${user.token}`;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;
@@ -53,3 +53,47 @@ function handleApiError(error, fallbackMessage) {
   };
 }
 export {api,handleApiError};
+
+/*
+import axios from "axios";
+
+// base url
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_BASE,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// attach token
+api.interceptors.request.use(
+  (config) => {
+    const rawToken = sessionStorage.getItem("token");
+    const token = rawToken ? JSON.parse(rawToken) : null;
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// CENTRALIZED ERROR HANDLING (THIS IS THE FIX)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const formattedError = {
+      message:
+        error.response?.data?.message ||
+        "Something went wrong. Please try again.",
+      status: error.response?.status || null,
+      code: error.response?.data?.code || null,
+    };
+
+    return Promise.reject(formattedError); // IMPORTANT
+  }
+);
+
+export { api };*/

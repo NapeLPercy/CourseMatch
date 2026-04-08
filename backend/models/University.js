@@ -3,8 +3,12 @@ const db = require("../config/db");
 
 module.exports = {
   //add university and courses
-    addUniversityWithFaculties: async ({ abbreviation, name, url, faculties }) => {
-    // faculties = ["Faculty of X", "Faculty of Y", ...]
+  addUniversityWithFaculties: async ({
+    abbreviation,
+    name,
+    url,
+    faculties,
+  }) => {
     return new Promise((resolve, reject) => {
       db.getConnection((err, connection) => {
         if (err) return reject(err);
@@ -24,14 +28,12 @@ module.exports = {
             });
 
           try {
-            // 1) Insert university
             const uniSql = `
               INSERT INTO university (abbreaviation, name, url)
               VALUES (?, ?, ?)
             `;
             await conn.query(uniSql, [abbreviation, name, url]);
 
-            // 2) Insert faculties (bulk)
             if (Array.isArray(faculties) && faculties.length > 0) {
               const facSql = `
                 INSERT INTO faculty (name, university_abbreviation)
@@ -43,11 +45,9 @@ module.exports = {
                 abbreviation,
               ]);
 
-
               await conn.query(facSql, [values]);
             }
 
-            // 3) Commit
             connection.commit((err) => {
               if (err) return rollback(err);
 
@@ -89,7 +89,7 @@ module.exports = {
         const courseMap = {};
 
         result.forEach((row) => {
-          const code = row.Code; //
+          const code = row.Code;
 
           if (!courseMap[code]) {
             courseMap[code] = {
@@ -135,7 +135,6 @@ module.exports = {
       db.query(sql, (err, rows) => {
         if (err) return reject(err);
 
-        // Transform flat rows → nested structure
         const map = new Map();
 
         rows.forEach((row) => {
@@ -165,7 +164,6 @@ module.exports = {
 
   //delete university and its data
   deleteUniversity: async (universityAbbrev) => {
-    console.log("her we are ",universityAbbrev);
     const sql = "DELETE FROM university WHERE abbreaviation = ?";
     return new Promise((resolve, reject) => {
       db.query(sql, [universityAbbrev], (err, result) => {

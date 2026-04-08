@@ -8,9 +8,9 @@ const q = (sql, params = []) =>
     });
   });
 
+  //Admin dashboard data
 module.exports = {
   getDashboardData: async () => {
-    // Run in parallel for speed
     const [
       studentsRows,
       universitiesRows,
@@ -30,7 +30,7 @@ module.exports = {
       recentAiUsageRows,
 
     ] = await Promise.all([
-      q(`SELECT COUNT(*) AS count FROM student`),
+      q(`SELECT COUNT(*) AS count FROM student_profile`),
       q(`SELECT COUNT(*) AS count FROM university`),
       q(`SELECT COUNT(*) AS count FROM faculty`),
       q(`SELECT COUNT(*) AS count FROM qualification`),
@@ -63,24 +63,22 @@ module.exports = {
         WHERE f.faculty_id IS NULL
       `),
 
-      //  studentsWithoutProfilesRows
+      //  studentsWithoutCompleteProfilesRows
       q(`
         SELECT COUNT(*) AS count
-        FROM student st
-        LEFT JOIN student_profile sp ON sp.user_id = st.user_id
-        WHERE sp.user_id IS NULL
+        FROM student_profile sp
+        WHERE sp.aspiration IS NULL
       `),
 
       //studentsWithoutSubjectsRows
       q(`
         SELECT COUNT(*) AS count
-        FROM student st
-        LEFT JOIN subject s ON s.student_id = st.student_id
+        FROM student_profile sp
+        LEFT JOIN subject s ON s.student_id = sp.id
         WHERE s.subject_id IS NULL
       `),
 
-      // Recent activity (requires created_at columns; if missing, these will error)
-      // If you haven't added created_at yet, comment these two blocks out.
+      // Recent activity
       q(`
         SELECT code, name, created_at
         FROM qualification

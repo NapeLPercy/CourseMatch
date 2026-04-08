@@ -5,23 +5,23 @@ dotenv.config();
 const userModel = require("../models/User");
 
 const authenticate = async (req, res, next) => {
- 
   let token;
 
-  // Check for Authorization header and Bearer token
+  /* 1 Check for Authorization header and Bearer token
+  2 Verify token using secret
+  3 Verify decoded user_id exist in DB
+  4 Attach user id & role to request for use in controllers
+  */
   if (req.headers.authorization?.startsWith("Bearer")) {
     try {
       token = req.headers.authorization.split(" ")[1];
 
-      // Verify token using secret
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // Get user info from MySQL
       const response = await userModel.getUser(decoded.userId);
 
       const rows = response[0];
 
-      //get role
       const role = decoded.role;
       if (!(rows.id && role)) {
         return res
@@ -29,7 +29,6 @@ const authenticate = async (req, res, next) => {
           .json({ success: false, message: "User not found" });
       }
 
-      //Attach user id to request for use in controllers
       req.userId = rows.id;
       req.role = role;
       next();

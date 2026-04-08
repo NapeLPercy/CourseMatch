@@ -11,16 +11,15 @@ import Account from "./pages/Account";
 import Home from "./pages/Home";
 import About from "./pages/About";
 
-import Nav from "./components/layout/Nav";
-import Footer from "./components/layout/Footer";
-
-import AddSubjects from "./components/forms/AddSubject";
+import AddSubjects from "./components/forms/AddSubjects";
 import ManageMyProfile from "./components/data-display/ManageMyProfile";
 
 //subjects
 import ViewSubjectsPage from "./components/data-display/ViewSubjectsPage";
-import Dashboard from "./components/data-display/Dashboard";
-import ViewCourses from "./components/data-display/ViewCourses";
+import StudentDashboard from "./components/data-display/StudentDashboard";
+import TutorDashboard from "./components/data-display/TutorDashboard";
+import ParentDashboard from "./components/data-display/ParentDashboard";
+import StudentViewUniversities from "./components/data-display/StudentViewUniversities";
 import UniversityCourses from "./components/data-display/UnivesityCourses";
 
 //auth
@@ -29,11 +28,12 @@ import ForgotPassword from "./pages/ForgotPassword";
 
 import Chat from "./components/layout/Chat";
 import MainLayout from "./components/layout/MainLayout";
+import NavLayout from "./components/layout/NavLayout";
 import AuthLayout from "./components/layout/AuthLayout";
 import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
-import AdminAddQualification from "./components/forms/AddCourse";
-import ManageQualifications from "./components/data-display/ManageQualifications";
+import AdminAddQualification from "./components/forms/AdminAddCourse";
+import AdminManageQualifications from "./components/data-display/AdminManageQualifications";
 import AdminViewQualification from "./components/data-display/AdminViewQualification";
 import AdminDashboard from "./components/data-display/AdminDashboard";
 import AdminManageUniversities from "./components/data-display/AdminManageUniversities";
@@ -43,16 +43,19 @@ import RoleRoute from "./routes/RoleRoute";
 //cookies
 import CookieModal from "./components/data-display/CookieModal";
 import RouteTracking from "./routes/RouteTracking";
-//terms 
+//terms
 import TermsAndConditions from "./components/data-display/TermsAndConditions";
 import ScrollToTop from "./components/ScrollToTop";
+import WelcomeOnboarding from "./components/data-display/WelcomeOnboarding";
+import GuestCalculateAPS from "./components/forms/GuestCalculateAPS";
+import TutorHome from "./pages/TutorHome";
 function App() {
   return (
     <UserProvider>
       <CourseProvider>
         <SubjectProvider>
           <Router>
-            <ScrollToTop/>
+            <ScrollToTop />
             <CookieModal />
             <RouteTracking />
 
@@ -62,13 +65,39 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact-us" element={<Contact />} />
-                <Route path="/terms-and-conditions" element={<TermsAndConditions/>}/>
+                <Route
+                  path="/terms-and-conditions"
+                  element={<TermsAndConditions />}
+                />
+
+                <Route path="/tutors/home" element={<TutorHome />} />
+              </Route>
+
+              {/* Shows nav only */}
+              <Route element={<NavLayout />}>
+
+              {/*GUEST */}
+
+              <Route path="/aps-calculator" element={<GuestCalculateAPS/>}/>
+
                 {/* Logged-in routes (STUDENT) */}
                 <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
-                  <Route path="/add-subjects" element={<AddSubjects />} />
-                  <Route path="/my-subjects" element={<ViewSubjectsPage />} />
-                  <Route path="/my-dashboard" element={<Dashboard />} />
-                  <Route path="/view-courses" element={<ViewCourses />} />
+                  <Route
+                    path="/student/add/subjects"
+                    element={<AddSubjects />}
+                  />
+                  <Route
+                    path="/student/view/subjects"
+                    element={<ViewSubjectsPage />}
+                  />
+                  <Route
+                    path="/student/dashboard"
+                    element={<StudentDashboard />}
+                  />
+                  <Route
+                    path="/view-courses"
+                    element={<StudentViewUniversities />}
+                  />
                   <Route
                     path="/view-courses/:courseSlug"
                     element={<UniversityCourses />}
@@ -79,12 +108,25 @@ function App() {
                   />
                 </Route>
 
+                {/* Logged-in routes (PARENT) */}
+                <Route element={<RoleRoute allowedRoles={["PARENT"]} />}>
+                  <Route
+                    path="/parent/dashboard"
+                    element={<ParentDashboard />}
+                  />
+                </Route>
+
+                {/* Logged-in routes (TUTOR) */}
+                <Route element={<RoleRoute allowedRoles={["TUTOR"]} />}>
+                  <Route path="/tutor/dashboard" element={<TutorDashboard />} />
+                </Route>
+
                 {/* Logged-in routes (ADMIN) */}
                 <Route element={<RoleRoute allowedRoles={["ADMIN"]} />}>
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
                   <Route
                     path="/admin/manage-qualifications"
-                    element={<ManageQualifications />}
+                    element={<AdminManageQualifications />}
                   />
                   <Route
                     path="/admin/manage-universities"
@@ -99,6 +141,11 @@ function App() {
                     element={<AdminViewQualification />}
                   />
                 </Route>
+              </Route>
+
+              {/* Logged-in routes (ADMIN) */}
+              <Route element={<RoleRoute allowedRoles={["GUEST"]} />}>
+                <Route path="/welcome" element={<WelcomeOnboarding />} />
               </Route>
 
               {/* Full screen auth pages */}

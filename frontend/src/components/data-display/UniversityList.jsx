@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { GraduationCap, ArrowRight, BookOpen } from "lucide-react";
 import "../../styles/UniversityList.css";
 import { universitiesData } from "../../Utils/universities";
-/* ─── Data ──────────────────────────────────────────────────── */
 
-/* ─── Marquee strip for faculties ───────────────────────────── */
+/* Marquee strip for faculties */
 function FacultyMarquee({ faculties }) {
   // Duplicate the list so the loop is seamless
   const doubled = [...faculties, ...faculties];
@@ -25,7 +24,7 @@ function FacultyMarquee({ faculties }) {
   );
 }
 
-/* ─── Single university card ────────────────────────────────── */
+/*  Single university card  */
 function UniCard({ uni, index }) {
   const navigate = useNavigate();
 

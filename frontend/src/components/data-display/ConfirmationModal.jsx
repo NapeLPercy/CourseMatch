@@ -11,7 +11,7 @@ export default function ConfirmationModal({
   onCancel,
   confirmText = "Confirm",
   cancelText = "Cancel",
-  variant = "danger", // "danger" | "primary"
+  variant = "danger",
 }) {
   const modalRef = useRef(null);
 

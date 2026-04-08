@@ -1,16 +1,19 @@
-const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const universityModel = require("../models/University");
+const {
+  deleteUniversity,
+  getAllUniversities,
+  getUniversityCourses,
+  addUniversity,
+} = require("../services/universityService");
 
 // Get courses for each university
 exports.getUniversityCourses = async (req, res) => {
   try {
     const { universityName } = req.params;
 
-    const qualifications =
-      await universityModel.getUniversityCourses(universityName);
+    const qualifications = await getUniversityCourses(universityName);
 
     return res.status(200).json({
       message: "Courses successfully fetched",
@@ -29,7 +32,7 @@ exports.getUniversityCourses = async (req, res) => {
 //get all universities and thier faculties
 exports.getAllUniversities = async (req, res) => {
   try {
-    const universities = await universityModel.getUniversitiesWithFaculties();
+    const universities = await getAllUniversities();
 
     return res.status(200).json({
       message: "Universities successfully fetched",
@@ -57,8 +60,8 @@ exports.deleteUniversity = async (req, res) => {
       });
     }
 
-    const result = await universityModel.deleteUniversity(abbreviation.trim());
-    console.log(result);
+    const result = await deleteUniversity(abbreviation.trim());
+ 
 
     if (result === 0) {
       return res.status(404).json({
@@ -70,7 +73,7 @@ exports.deleteUniversity = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "University and related data deleted successfully",
-      meta: result, // counts
+      meta: result,
     });
   } catch (error) {
     console.error("Delete university error:", error);
@@ -95,7 +98,7 @@ exports.addUniversity = async (req, res) => {
     }
 
     //Insert university and faculty
-    await universityModel.addUniversityWithFaculties(university);
+    await addUniversity(university);
 
     return res.status(201).json({
       success: true,

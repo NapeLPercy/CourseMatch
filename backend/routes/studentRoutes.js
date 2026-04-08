@@ -1,11 +1,34 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const studentController = require('../controllers/studentController');
+const studentController = require("../controllers/studentController");
 const authenticate = require("../middleware/AuthenticationMiddleware");
 const authorize = require("../middleware/AuthorizationMiddleware");
 
-// add student profile
-router.post('/add-profile',authenticate,authorize("STUDENT"),studentController.addProfile);
-router.get('/get-profile',authenticate,authorize("STUDENT"),studentController.getProfile);
+router.post(
+  "/profile/basic",
+  authenticate,
+  studentController.createBasicProfile,
+);
+
+router.get(
+  "/profile/basic",
+  authenticate,
+  authorize("STUDENT"),
+  studentController.getBasicProfile,
+);
+
+router.patch(
+  "/profile",
+  authenticate,
+  authorize("STUDENT"),
+  studentController.completeProfile,
+);
+
+router.get(
+  "/profile",
+  authenticate,
+  authorize("STUDENT"),
+  studentController.getProfile,
+);
 
 module.exports = router;

@@ -1,98 +1,74 @@
-// ViewSubjects.jsx
-import React from "react";
-import "../../styles/ViewSubjects.css";
+import React, { useState } from "react";
+import { Edit3 } from "lucide-react";
 import EditmarkModal from "../forms/EditmarkModal";
-import { useState } from "react";
-/* -------------------------------------------------- */
-// Helper: map a numeric mark to a colour-band class
-/* -------------------------------------------------- */
+import EmptyState from "../ui/EmptyState";
+import "../../styles/ViewSubjects.css";
+
 function getMarkBand(mark) {
-  if (mark >= 70) return { cls: "vs-card__mark--high", label: "Great" };
-  if (mark >= 50) return { cls: "vs-card__mark--mid", label: "Good" };
-  if (mark >= 30) return { cls: "vs-card__mark--low", label: "Fair" };
-  return { cls: "vs-card__mark--fail", label: "Fail" };
+  if (mark >= 80) return { cls: "vs__card-mark--distinction", label: "Distinction" };
+  if (mark >= 70) return { cls: "vs__card-mark--strong", label: "Strong" };
+  if (mark >= 60) return { cls: "vs__card-mark--solid", label: "Solid" };
+  if (mark >= 50) return { cls: "vs__card-mark--developing", label: "Developing" };
+  if (mark >= 40) return { cls: "vs__card-mark--emerging", label: "Emerging" };
+  return { cls: "vs__card-mark--needs-support", label: "Need Support" };
 }
 
-/* -------------------------------------------------- */
-// Pencil SVG – kept inline as a tiny component so the
-// icon scales with the button and inherits its colour
-/* -------------------------------------------------- */
-function PencilIcon() {
-  return (
-    <svg
-      className="vs-card__edit-btn__icon"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M11.5 1.5l3 3L5 13H2v-3L11.5 1.5z" />
-    </svg>
-  );
-}
-
-// ViewSubjects – presentational
 export default function ViewSubjects({ subjects = [], onSave }) {
   const [editingSubject, setEditingSubject] = useState(null);
 
-  /* ---- empty state ---- */
-  if (subjects.length === 0) {
-    return (
-      <div className="vs-wrapper">
-        <header className="vs-header">
-          <h1 className="vs-header__title">Subjects</h1>
-        </header>
-        <div className="vs-empty">
-          <div className="vs-empty__icon">📖</div>
-          <p>You have not submitted your subjects yet.</p>
-        </div>
-      </div>
-    );
-  }
-
-  /* ---- subject list ---- */
   return (
-    <div className="vs-wrapper">
-      <header className="vs-header">
-        <h1 className="vs-header__title">Subjects</h1>
-        <span className="vs-header__count">
-          {subjects.length} {subjects.length === 1 ? "subject" : "subjects"}
-        </span>
+    <div className="vs">
+      {/* Header */}
+      <header className="vs__header">
+        <div className="vs__header-text">
+          <h1 className="vs__title">My Subjects</h1>
+          <p className="vs__subtitle">
+            View and manage the subjects you've submitted for course matching
+          </p>
+        </div>
+        <div className="vs__count-badge">
+          <strong>{subjects.length}</strong>
+          <span>{subjects.length === 1 ? "subject" : "subjects"}</span>
+        </div>
       </header>
 
-      <ul className="vs-list">
-        {subjects.map((s) => {
-          const { cls, label } = getMarkBand(s.Mark);
+      {/* Empty State */}
+      {subjects.length === 0 && (
+        <EmptyState message="You haven't submitted any subjects yet. Add your subjects to get matched with courses." />
+      )}
 
-          return (
-            <li className="vs-card" key={s.Subject_Id}>
-              {/* colour-coded mark badge */}
-              <div className={`vs-card__mark ${cls}`}>
-                <span className="vs-card__mark__value">{s.Mark}</span>
-                <span className="vs-card__mark__label">{label}</span>
+      {/* Subjects Grid */}
+      {subjects.length > 0 && (
+        <div className="vs__grid">
+          {subjects.map((subject) => {
+            const { cls, label } = getMarkBand(subject.mark);
+            return (
+              <div className="vs__card" key={subject.subject_id}>
+                {/* Subject Name */}
+                <div className="vs__card-header">
+                  <h3 className="vs__card-name">{subject.name}</h3>
+                  <button
+                    className="vs__card-edit"
+                    onClick={() => setEditingSubject(subject)}
+                    aria-label={`Edit ${subject.name}`}
+                  >
+                    <Edit3 size={14} strokeWidth={2.2} />
+                    Edit
+                  </button>
+                </div>
+
+                {/* Mark Badge */}
+                <div className={`vs__card-mark ${cls}`}>
+                  <span className="vs__card-mark-value">{subject.mark}%</span>
+                  <span className="vs__card-mark-label">{label}</span>
+                </div>
               </div>
+            );
+          })}
+        </div>
+      )}
 
-              {/* subject name */}
-              <span className="vs-card__name">{s.Name}</span>
-
-              {/* edit button */}
-              <button
-                className="vs-card__edit-btn"
-                onClick={() => setEditingSubject(s)}
-                aria-label={`Edit ${s.Name}`}
-              >
-                <PencilIcon />
-                <span>Edit</span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-
-      {/* modal — only mounts when a subject is selected */}
+      {/* Edit Modal */}
       {editingSubject && (
         <EditmarkModal
           subject={editingSubject}
@@ -103,7 +79,6 @@ export default function ViewSubjects({ subjects = [], onSave }) {
           onClose={() => setEditingSubject(null)}
         />
       )}
-
     </div>
   );
 }

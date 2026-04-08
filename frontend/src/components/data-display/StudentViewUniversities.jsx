@@ -1,9 +1,8 @@
 import "../../styles/ViewCourses.css";
-
 import React, { useRef, useState, useEffect } from "react";
 import UniversityList from "./UniversityList";
 
-export default function ViewCourses() {
+export default function StudentViewUniversities() {
   const [ref, setRef] = useState(null);
   const [visible, setVisible] = useState(false);
 

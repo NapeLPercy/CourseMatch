@@ -17,11 +17,11 @@ export default function AuthCard({ title, children }) {
       <button
         type="button"
         className="auth__back"
-        onClick={() => navigate("/")}
+        onClick={() => navigate(-1)}
         aria-label="Go back"
       >
         <ArrowLeft size={18} strokeWidth={2} />
-        <span>Home</span>
+        <span>back</span>
       </button>
 
       {/* Card */}

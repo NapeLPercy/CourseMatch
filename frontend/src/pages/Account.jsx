@@ -14,6 +14,7 @@ import {
 import AuthCard from "../components/layout/AuthCard";
 import ".././styles/Account.css";
 import { validatePassword } from "../Utils/passwordManager";
+import { register } from "../services/accountService";
 
 export default function Account() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -45,22 +46,22 @@ export default function Account() {
       return;
     }
 
-    const API_BASE = process.env.REACT_APP_API_BASE;
-    if (!API_BASE) {
-      setError("Configuration error: API base URL is missing.");
-      clearAfterDelay(setError);
-      return;
-    }
-
     setLoading(true);
 
     try {
-      await axios.post(`${API_BASE}/api/auth/register`, form);
-      setSuccess("Registration successful! You can now log in.");
+      const {data} = await register(form);
+      console.log("here is the reply", data);
+      if (!data.success) {
+        setError(data.message || "Registration failed. Please try again.");
+        return;
+      }
+
+      setSuccess("Registration successful");
       setTimeout(() => {
         setSuccess(null);
         navigate("/login");
-      }, 3000);
+      }, 2000);
+      
     } catch (err) {
       console.error("Registration error:", err.response?.data || err.message);
       setError(
@@ -69,6 +70,7 @@ export default function Account() {
       clearAfterDelay(setError);
     } finally {
       setLoading(false);
+      clearAfterDelay(setError);
     }
   };
 

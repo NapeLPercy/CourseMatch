@@ -22,7 +22,7 @@ export default class CourseFilter {
       this.subjects,
       this.universitySlug,
     );
-
+    
     // Second filter
     const qualifiedByEndorsement = filterCoursesByEndorsement(
       qualifiedByAps,

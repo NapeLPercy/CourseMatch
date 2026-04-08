@@ -14,6 +14,7 @@ import {
 import AuthCard from "../components/layout/AuthCard";
 import { useAuth } from "../context/AuthContext";
 import ".././styles/Login.css";
+import { userLogin } from "../services/accountService";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -32,38 +33,42 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    const API_BASE = process.env.REACT_APP_API_BASE;
+    setError(null);
 
     try {
-      const response = await axios.post(`${API_BASE}/api/auth/login`, form);
-      const user = response.data.user;
-      const student = user.student;
-      const role = user.role;
-      const token = response.data.token;
+      const { data } = await userLogin(form);
 
-      if (role) {
-        sessionStorage.setItem("role", JSON.stringify(role));
+      // success only reaches here
+      if (data.token) {
+        sessionStorage.setItem("token", JSON.stringify(data.token));
       }
-      if (token) {
-        sessionStorage.setItem("token", JSON.stringify(token));
-      }
-      if (student) {
-        sessionStorage.setItem("student", JSON.stringify(student));
-      }
+
+      console.log("Here is the data",data);
+      const role = data.user.role;
+
+      let pathUrl = "/welcome";
+      if (role === "STUDENT") pathUrl = "/student/dashboard";
+      else if (role === "PARENT") pathUrl = "/parent/dashboard";
+      else if (role === "TUTOR") pathUrl = "/tutor/dashboard";
+      else if (role === "ADMIN") pathUrl = "/admin/dashboard"
+      
+
+      login(data.user);
       setSuccess("Login successful!");
-      login(user);
+
       setTimeout(() => {
-        const url = role === "STUDENT" ? "/my-dashboard" : "/admin/dashboard";
-        navigate(url);
+        navigate(pathUrl);
         setSuccess(null);
-      }, 3000);
+      }, 1500);
     } catch (err) {
-      console.error("Login error:", err.response?.data || err.message);
-      setError(err.response?.data?.error || "Login failed: " + err.message);
-      setTimeout(() => {
-        setError(null);
-      }, 3000);
+      // Handle backend errors (401, 400, etc)
+      if (err.response) {
+        setError(err.response.data.message || "Login failed");
+      } else {
+        setError("Network error. Please try again.");
+      }
+
+      setTimeout(() => setError(null), 3000);
     } finally {
       setLoading(false);
     }

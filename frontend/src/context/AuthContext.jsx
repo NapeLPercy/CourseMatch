@@ -30,7 +30,7 @@ export function UserProvider({ children }) {
       } else {
         sessionStorage.removeItem("student");
       }
-      if (user.role) {
+      if (user?.role) {
         sessionStorage.setItem("role", JSON.stringify(user.role));
       } else {
         sessionStorage.removeItem("role");

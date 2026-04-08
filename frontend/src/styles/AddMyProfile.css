@@ -24,7 +24,7 @@
 .spf {
   min-height: 100vh;
   background: var(--off-white);
-  padding: 50px 0px 80px;
+  padding: 4px 0px 10px;
   max-width: 900px;
   margin: 0 auto;
   width: 100%;
@@ -32,50 +32,6 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   HEADER
-   ══════════════════════════════════════════════════════════════ */
-.spf__header {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.spf__header-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.14));
-  border: 1px solid rgba(37, 99, 235, 0.14);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--medium-blue);
-  flex-shrink: 0;
-}
-
-.spf__header-text {
-  flex: 1;
-  padding-top: 4px;
-}
-
-.spf__title {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
-  font-weight: 700;
-  color: var(--text-dark);
-  margin: 0 0 8px;
-  line-height: 1.2;
-}
-
-.spf__subtitle {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--text-gray);
-  margin: 0;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -298,24 +254,10 @@
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 600px) {
   .spf {
-    padding-top: 40px;
+    padding-top: 4px;
     gap: 24px;
   }
 
-  .spf__header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .spf__header-icon {
-    width: 56px;
-    height: 56px;
-  }
-
-  .spf__header-text {
-    padding-top: 0;
-  }
 
   .spf__form {
     padding: 24px 20px;

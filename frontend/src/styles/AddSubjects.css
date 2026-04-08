@@ -100,7 +100,8 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-width: 210px;
+ 
+  width: 277px !important;
   flex-shrink: 0;
 }
 
@@ -497,23 +498,6 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
-.as__mark-badge {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 2px 6px;
-  border-radius: 6px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.as__mark-badge--excellent { background: rgba(34, 197, 94, 0.1);  color: #15803d; }
-.as__mark-badge--good      { background: rgba(37, 99, 235, 0.1);  color: var(--medium-blue); }
-.as__mark-badge--average   { background: rgba(234, 179, 8, 0.1);  color: #a16207; }
-.as__mark-badge--low       { background: rgba(248, 113, 113, 0.1); color: #dc2626; }
-
 /* ── Delete button ── */
 .as__delete {
   display: flex;
@@ -754,5 +738,11 @@
 
   .as__add-btn {
     justify-content: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  .as{
+    min-width: 990px;
   }
 }

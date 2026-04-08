@@ -1,31 +1,38 @@
+/* Compute a matric endorsement depending on marks */
 class MatricEndorsement {
   constructor(subjects = []) {
-    this.subjects = subjects.map(s => ({
+    this.subjects = subjects.map((s) => ({
       ...s,
-      mark: Number(s.mark)
+      mark: Number(s.mark),
     }));
   }
 
-  // -------- HELPERS --------
+  // get HL
   getHomeLanguage() {
     return this.subjects.find(
-      s => s.name.endsWith("HL") || s.name === "Sesotho HL" || s.name === "English HL"
+      (s) =>
+        s.name.endsWith("HL") ||
+        s.name === "Sesotho HL" ||
+        s.name === "English HL",
     );
   }
 
+  // get LO
   getLifeOrientation() {
     return this.subjects.find(
-      s => s.name === "Life Orientation" || s.name === "LO"
+      (s) => s.name === "Life Orientation" || s.name === "LO",
     );
   }
 
+  //get electives & maths subjects
   getOtherSubjects() {
     const hl = this.getHomeLanguage();
     const lo = this.getLifeOrientation();
-    return this.subjects.filter(s => s !== hl && s !== lo);
+    return this.subjects.filter((s) => s !== hl && s !== lo);
   }
 
-  // ---------------- NSC PASS BASELINE ----------------
+  // Basic NSC pass
+
   /**
    * NSC Pass requires:
    * - HL >= 40%
@@ -36,14 +43,12 @@ class MatricEndorsement {
     const hl = this.getHomeLanguage();
     if (!hl || hl.mark < 40) return false;
 
-    // Count how many subjects passed at 30% or higher
-    const passedSubjects = this.subjects.filter(s => s.mark >= 30).length;
-    
-    // Need at least 6 subjects passed (can fail 1)
+    const passedSubjects = this.subjects.filter((s) => s.mark >= 30).length;
     return passedSubjects >= 6;
   }
 
-  // ---------------- ENDORSEMENTS ----------------
+  // Endorsement computation
+
   /**
    * Bachelor's Degree Pass:
    * - HL >= 40%
@@ -53,15 +58,12 @@ class MatricEndorsement {
    */
   isBachelor() {
     if (!this.hasNSCPass()) return false;
-    
+
     const hl = this.getHomeLanguage();
     const lo = this.getLifeOrientation();
-    const others = this.subjects.filter(s => s !== hl && s !== lo);
-    
-    const at50Plus = others.filter(s => s.mark >= 50).length;
-    
-    // Need 4 subjects at 50% or higher (from the 5 non-HL, non-LO subjects)
-    // The other 1-2 subjects can be at 30%+ OR one can fail
+    const others = this.subjects.filter((s) => s !== hl && s !== lo);
+
+    const at50Plus = others.filter((s) => s.mark >= 50).length;
     return at50Plus >= 4;
   }
 
@@ -74,14 +76,12 @@ class MatricEndorsement {
    */
   isDiploma() {
     if (!this.hasNSCPass()) return false;
-    
+
     const hl = this.getHomeLanguage();
     const lo = this.getLifeOrientation();
-    const others = this.subjects.filter(s => s !== hl && s !== lo);
-    
-    const at40Plus = others.filter(s => s.mark >= 40).length;
-    
-    // Need 4 subjects at 40% or higher (from the 5 non-HL, non-LO subjects)
+    const others = this.subjects.filter((s) => s !== hl && s !== lo);
+
+    const at40Plus = others.filter((s) => s.mark >= 40).length;
     return at40Plus >= 4;
   }
 
@@ -94,26 +94,25 @@ class MatricEndorsement {
    */
   isHigherCertificate() {
     if (!this.hasNSCPass()) return false;
-    
+
     const hl = this.getHomeLanguage();
-    const others = this.subjects.filter(s => s !== hl);
-    
-    const at40Plus = others.filter(s => s.mark >= 40).length;
-    const at30Plus = others.filter(s => s.mark >= 30).length;
-    
-    // Need 2 at 40%+ and at least 3 more at 30%+ (can have 1 failure)
+    const others = this.subjects.filter((s) => s !== hl);
+
+    const at40Plus = others.filter((s) => s.mark >= 40).length;
+    const at30Plus = others.filter((s) => s.mark >= 30).length;
+
     return at40Plus >= 2 && at30Plus >= 5;
   }
 
-  // ---------------- FINAL RESULT ----------------
+  // Determine actual endorsement
   determine() {
     const hl = this.getHomeLanguage();
-    
+
     if (!hl) return "Failure - No Home Language";
     if (hl.mark < 40) return "Failure - Home Language below 40%";
-    
+
     // Check if minimum 6 subjects passed
-    const passedSubjects = this.subjects.filter(s => s.mark >= 30).length;
+    const passedSubjects = this.subjects.filter((s) => s.mark >= 30).length;
     if (passedSubjects < 6) return "Failure - Less than 6 subjects passed";
 
     // Check in order of most stringent to least stringent

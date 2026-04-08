@@ -1,0 +1,342 @@
+/* WELCOME ONBOARDING — CourseMatch */
+
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+  --shadow: rgba(30, 58, 138, 0.1);
+  --green: #16a34a;
+}
+
+/* CONTAINER */
+.welcome {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--off-white) 0%, var(--white) 100%);
+  padding: 10px 24px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome__container {
+  max-width: 900px;
+  width: 100%;
+  animation: containerFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes containerFade {
+  0%   { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/*HEADER*/
+.welcome__header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.welcome__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 16px;
+  line-height: 1.2;
+}
+
+.welcome__subtitle {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+/* ROLE CARDS */
+.welcome__roles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.welcome__role-card {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 20px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  /*box-shadow: 0 2px 12px var(--shadow);*/
+  animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--index, 0) * 0.1s);
+}
+
+.welcome__role-card:nth-child(1) { --index: 0; }
+.welcome__role-card:nth-child(2) { --index: 1; }
+.welcome__role-card:nth-child(3) { --index: 2; }
+
+@keyframes cardIn {
+  0%   { opacity: 0; transform: translateY(20px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.welcome__role-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(30, 58, 138, 0.15);
+  border-color: var(--light-blue);
+}
+
+.welcome__role-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.12));
+  border: 2px solid rgba(37, 99, 235, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--medium-blue);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.welcome__role-card:hover .welcome__role-icon {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(59, 130, 246, 0.2));
+}
+
+.welcome__role-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.welcome__role-desc {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+.welcome__role-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--pale-blue);
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--medium-blue);
+  cursor: pointer;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  margin-top: 8px;
+}
+
+.welcome__role-card:hover .welcome__role-btn {
+  background: rgba(37, 99, 235, 0.08);
+  border-color: var(--light-blue);
+}
+
+/*FORM*/
+.welcome__form {
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 20px;
+  padding: 36px 32px;
+  /*box-shadow: 0 4px 20px var(--shadow);*/
+  animation: formSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes formSlide {
+  0%   { opacity: 0; transform: translateX(20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.welcome__form-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--pale-blue);
+}
+
+.welcome__form-header h3 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 8px;
+}
+
+.welcome__form-header p {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.95rem;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+.welcome__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.welcome__field label {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.welcome__field input,
+.welcome__field select {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--off-white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.welcome__field input:focus,
+.welcome__field select:focus {
+  border-color: var(--light-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.welcome__field input::placeholder {
+  color: var(--text-gray);
+  opacity: 0.5;
+}
+
+.welcome__field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.welcome__error {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.75rem;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.welcome__form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--pale-blue);
+}
+
+.welcome__btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.25s ease;
+}
+
+.welcome__btn--ghost {
+  background: transparent;
+  border: 1px solid var(--pale-blue);
+  color: var(--text-gray);
+}
+
+.welcome__btn--ghost:hover {
+  background: var(--off-white);
+  color: var(--text-dark);
+}
+
+.welcome__btn--primary {
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  color: var(--white);
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.3);
+}
+
+.welcome__btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(37, 99, 235, 0.4);
+}
+
+.welcome__btn--primary:active {
+  transform: translateY(0);
+}
+
+/*loading */
+.welcome__btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.spinner-icon {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .welcome__roles {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .welcome {
+    padding: 20px 20px 30px;
+  }
+
+  .welcome__form {
+    padding: 28px 24px;
+  }
+
+  .welcome__field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome__form-actions {
+    flex-direction: column;
+  }
+
+  .welcome__btn {
+    width: 100%;
+  }
+}

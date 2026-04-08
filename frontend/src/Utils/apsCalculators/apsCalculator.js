@@ -1,5 +1,5 @@
 import computeTutAPS from "./TUT/TutAPS";
-
+import computeUjAPS from "./UJ/ujAPS";
 //calculate each university's aps using its own rules
 function calculateApsForUniversity(subjects, universitySlug) {
   let aps = null;
@@ -7,8 +7,8 @@ function calculateApsForUniversity(subjects, universitySlug) {
     case "TUT":
       aps = computeTutAPS(subjects);
       break;
-    case "UL":
-      aps = 0;
+    case "UJ":
+      aps = computeUjAPS(subjects);
       break;
     default:
       alert("This university does not exist");

@@ -14,6 +14,22 @@ export const universitiesData = [
       "Agriculture & Environmental Sciences",
     ],
   },
+  {
+    id: "uj",
+    name: "University of Johannesburg",
+    description:
+      "A comprehensive university at the heart of Gauteng, recognised for applied research and industry partnerships.",
+    logo: null,
+    faculties: [
+      "Sciences",
+      "Humanities & Social Sciences",
+      "Engineering",
+      "Education",
+      "Business & Management",
+      "Health Sciences",
+      "ICT",
+    ],
+  },
 ];
 
 export const universitiesList =  [
@@ -44,22 +60,7 @@ export const universitiesList =  [
   "South African University of Science and Technology (SAUST)",
 ];
 /*,
-  {
-    id: "uj",
-    name: "University of Johannesburg",
-    description:
-      "A comprehensive university at the heart of Gauteng, recognised for applied research and industry partnerships.",
-    logo: null,
-    faculties: [
-      "Sciences",
-      "Humanities & Social Sciences",
-      "Engineering",
-      "Education",
-      "Business & Management",
-      "Health Sciences",
-      "ICT",
-    ],
-  },
+  
   {
     id: "up",
     name: "University of Pretoria",

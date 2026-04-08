@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { GraduationCap, Plus, Edit3 } from "lucide-react";
-import AdminAddQualification from "../forms/AddCourse";
+import AdminAddQualification from "../forms/AdminAddCourse";
 import "../../styles/ManageQualifications.css";
 import AdminViewQualifications from "./AdminViewQualification";
 
 export default function ManageQualifications() {
-  const [activeTab, setActiveTab] = useState("add"); // "add" | "edit"
+  const [activeTab, setActiveTab] = useState("add");
 
   return (
     <div className="mc">

@@ -22,7 +22,7 @@
 .aaq {
   min-height: 100vh;
   background: var(--off-white);
-  padding: 50px 0px 80px;
+  padding: 5px 0px 40px;
   max-width: 1100px;
   margin: 0 auto;
   width: 100%;
@@ -32,48 +32,7 @@
   gap: 28px;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   HEADER
-   ══════════════════════════════════════════════════════════════ */
-.aaq__header {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-}
 
-.aaq__header-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 15px;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.14));
-  border: 1px solid rgba(37, 99, 235, 0.14);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--medium-blue);
-  flex-shrink: 0;
-}
-
-.aaq__header-text {
-  flex: 1;
-}
-
-.aaq__title {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(1.6rem, 3vw, 2rem);
-  font-weight: 700;
-  color: var(--text-dark);
-  margin: 0 0 6px;
-  line-height: 1.25;
-}
-
-.aaq__subtitle {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.88rem;
-  line-height: 1.6;
-  color: var(--text-gray);
-  margin: 0;
-}
 
 /* ══════════════════════════════════════════════════════════════
    GRID
@@ -505,7 +464,7 @@
 
 @media (max-width: 600px) {
   .aaq {
-    padding-top: 40px;
+    padding-top: 4px;
     gap: 20px;
   }
 

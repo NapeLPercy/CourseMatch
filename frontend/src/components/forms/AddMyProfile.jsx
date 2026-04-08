@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import {
-  User,
-  Calendar,
   Award,
   Target,
   Heart,
@@ -16,25 +12,13 @@ import {
   Sparkles,
   Users,
   Lightbulb,
-  Clock,
-  DollarSign,
-  MapPin,
   AlertCircle,
 } from "lucide-react";
 import "../../styles/AddMyProfile.css";
+import { addCompleteStudentInfo } from "../../services/studentService";
 
-/* ─── Validation schema ─────────────────────────────────────── */
+/*  Validation schema */
 const schema = yup.object().shape({
-  fullName: yup
-    .string()
-    .required("Full name is required")
-    .min(3, "Name must be at least 3 characters"),
-  age: yup
-    .number()
-    .typeError("Enter a valid age")
-    .required("Age is required")
-    .min(16, "Minimum age is 16")
-    .max(60, "Maximum age is 60"),
   strengths: yup
     .string()
     .required("Tell us at least one strength")
@@ -65,7 +49,6 @@ const schema = yup.object().shape({
     .required("This field is required")
     .min(3, "Please name at least one subject"),
 
-  // NEW FIELDS for better course matching
   problemSolvingApproach: yup
     .string()
     .required("Select your problem-solving approach"),
@@ -73,7 +56,7 @@ const schema = yup.object().shape({
   workStyle: yup.string().required("Select your preferred work style"),
 });
 
-/* ─── Main component ────────────────────────────────────────── */
+/*  Main component */
 export default function AddMyProfile() {
   const {
     register,
@@ -88,117 +71,37 @@ export default function AddMyProfile() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  const navigate = useNavigate();
-
-  const onSubmit = async (data) => {
-    console.log(data);
+  //add profile data
+  const onSubmit = async (profileData) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
 
-    const API_BASE = process.env.REACT_APP_API_BASE;
-    const token = JSON.parse(sessionStorage.getItem("token"));
     try {
-      const response = await axios.post(
-        `${API_BASE}/api/student/add-profile`,
-        {
-          profileData: data,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-      const resposeData = response.data;
+      const { data } = await addCompleteStudentInfo(profileData);
 
-      if (resposeData.success) {
-        const studentProfile = resposeData.profile;
-        sessionStorage.setItem(
-          "student-profile",
-          JSON.stringify(studentProfile),
-        );
-        setSuccess("Profile saved successfully");
+      if (!data.success) {
+        setError("Failed to submit profile. Please try again.");
+        return;
       }
+
+      setSuccess("Profile saved successfully");
     } catch (err) {
-      console.error("Profile submission error:", err);
-      setError(
-        err.response?.data?.error ||
-          "Failed to submit profile. Please try again.",
-      );
+      setError("Failed to submit profile. Please try again.");
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+        setError(null);
+        setSuccess(null);
+      }, 1000);
     }
   };
 
   return (
     <div className="spf">
-      {/* Header */}
-      <header className="spf__header">
-        <div className="spf__header-icon">
-          <User size={28} strokeWidth={1.6} />
-        </div>
-        <div className="spf__header-text">
-          <h1 className="spf__title">Student Profile</h1>
-          <p className="spf__subtitle">
-            Help us match you with the best possible courses by sharing a bit
-            about yourself.
-          </p>
-        </div>
-      </header>
-
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="spf__form">
-        {/* ── Section 1: Personal Info ── */}
-        <div className="spf__section">
-          <h2 className="spf__section-title">Personal Information</h2>
-
-          <div className="spf__row">
-            <div className="spf__field">
-              <label htmlFor="spf-name" className="spf__label">
-                <User size={14} strokeWidth={2} className="spf__label-icon" />
-                Full Name *
-              </label>
-              <input
-                id="spf-name"
-                type="text"
-                {...register("fullName")}
-                placeholder="e.g., John Doe"
-                className={`spf__input ${errors.fullName ? "spf__input--error" : ""}`}
-              />
-              {errors.fullName && (
-                <span className="spf__error">
-                  <AlertCircle size={12} strokeWidth={2} />
-                  {errors.fullName.message}
-                </span>
-              )}
-            </div>
-
-            <div className="spf__field">
-              <label htmlFor="spf-age" className="spf__label">
-                <Calendar
-                  size={14}
-                  strokeWidth={2}
-                  className="spf__label-icon"
-                />
-                Age *
-              </label>
-              <input
-                id="spf-age"
-                type="number"
-                {...register("age")}
-                placeholder="e.g., 19"
-                className={`spf__input ${errors.age ? "spf__input--error" : ""}`}
-              />
-              {errors.age && (
-                <span className="spf__error">
-                  <AlertCircle size={12} strokeWidth={2} />
-                  {errors.age.message}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* ── Section 2: Strengths & Goals ── */}
+        {/* ── Section 1: Strengths & Goals ── */}
         <div className="spf__section">
           <h2 className="spf__section-title">Strengths & Goals</h2>
 
@@ -269,7 +172,7 @@ export default function AddMyProfile() {
           <div className="spf__field">
             <label htmlFor="spf-aspiration" className="spf__label">
               <Heart size={14} strokeWidth={2} className="spf__label-icon" />
-              Aspirations or dream paths
+              Aspirations or dream paths *
             </label>
             <textarea
               id="spf-aspiration"
@@ -289,7 +192,7 @@ export default function AddMyProfile() {
           <div className="spf__field">
             <label htmlFor="spf-dreamjob" className="spf__label">
               <Sparkles size={14} strokeWidth={2} className="spf__label-icon" />
-              Dream Job
+              Dream Job *
             </label>
             <input
               id="spf-dreamjob"

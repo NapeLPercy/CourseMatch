@@ -10,7 +10,7 @@ export function generateRecommendationsPdf(
   options = {}
 ) {
   //sort recommendations
-  recommendations.sort((a,b)=>b.fit_score - a.fit_score);
+  recommendations.sort((a,b)=>b.fitScore - a.fitScore);
 
   const {
     title = "CourseMatch AI Recommendations",
@@ -35,9 +35,9 @@ export function generateRecommendationsPdf(
   // Table rows
   const rows = (recommendations || []).map((r, idx) => [
     idx + 1,
-    r.qualification_code ?? "",
-    r.qualification_name ?? "",
-    String(r.fit_score ?? ""),
+    r.qualificationCode ?? "",
+    r.qualificationName ?? "",
+    String(r.fitScore ?? ""),
     r.reason ?? "",
   ]);
 

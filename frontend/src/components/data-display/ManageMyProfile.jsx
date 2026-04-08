@@ -5,7 +5,7 @@ import ViewMyProfile from "./ViewMyProfile";
 import "../../styles/ManageMyProfile.css";
 
 export default function ManageMyProfile() {
-  const [activeTab, setActiveTab] = useState("add"); // "add" | "view"
+  const [activeTab, setActiveTab] = useState("add");
 
   return (
     <div className="mp">

@@ -13,6 +13,7 @@ export default function filterCoursesByEndorsement(
   return qualifications.filter((q) => {
     const min = q.minimum_endorsement;
 
+    console.log(min,studentEndorsement);
     if (min === "Certificate") {
       return ["Certificate", "Diploma", "Bachelor"].includes(
         studentEndorsement,

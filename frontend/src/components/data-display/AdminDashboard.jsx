@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { formatTimestamp } from "../../Utils/datetime";
 
-/* ─── Skeleton Loader ───────────────────────────────────────── */
+/* Skeleton Loader  */
 function SkeletonLoader() {
   return (
     <div className="ad">
@@ -45,7 +45,7 @@ function SkeletonLoader() {
   );
 }
 
-/* ─── Main Component ────────────────────────────────────────── */
+/* Main Component */
 export default function AdminDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);

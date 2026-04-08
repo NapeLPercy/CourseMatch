@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import EditmarkModal from "../forms/EditmarkModal";
-
+import Skeleton from "../ui/Skeleton";
 import {
   BookOpen,
   BarChart2,
@@ -15,8 +15,10 @@ import {
 } from "lucide-react";
 import { useSubjects } from "../../context/SubjectContext";
 import "../../styles/Dashboard.css";
+import { getSubjects } from "../../services/subjectService";
+import { getBasicStudentInfo } from "../../services/studentService";
+import ErrorState from "../ui/ErrorState";
 
-/* ─── Helpers ───────────────────────────────────────────────── */
 function parseStudent() {
   try {
     const raw = sessionStorage.getItem("student");
@@ -35,40 +37,16 @@ function markTier(mark) {
   return "low";
 }
 
-/* ─── Skeleton loader ───────────────────────────────────────── */
-function Skeleton() {
-  return (
-    <div className="dash">
-      {/* Header skeleton */}
-      <div className="dash__header">
-        <div className="dash__skel dash__skel--title" />
-        <div className="dash__skel dash__skel--sub" />
-      </div>
-      {/* Cards skeleton */}
-      <div className="dash__stats">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="dash__card dash__card--skel">
-            <div className="dash__skel dash__skel--icon" />
-            <div className="dash__skel dash__skel--val" />
-            <div className="dash__skel dash__skel--label" />
-          </div>
-        ))}
-      </div>
-      {/* Table skeleton */}
-      <div className="dash__table-wrap">
-        {[1, 2, 3, 4].map((i) => (
-          <div
-            key={i}
-            className="dash__skel dash__skel--row"
-            style={{ animationDelay: `${i * 0.08}s` }}
-          />
-        ))}
-      </div>
-    </div>
-  );
+function getPerformanceLabel(mark) {
+  if (mark >= 80) return "Distinction";
+  if (mark >= 70) return "Strong";
+  if (mark >= 60) return "Solid";
+  if (mark >= 50) return "Developing";
+  if (mark >= 40) return "Emerging";
+  return "Needs Support";
 }
 
-/* ─── Empty state ───────────────────────────────────────────── */
+/* Empty state */
 function EmptyState({ navigate }) {
   return (
     <div className="dash__empty">
@@ -82,7 +60,7 @@ function EmptyState({ navigate }) {
       <button
         className="dash__empty-btn"
         type="button"
-        onClick={() => navigate("/add-subjects")}
+        onClick={() => navigate("/student/add/subjects")}
       >
         <PlusCircle size={16} strokeWidth={2} />
         Add Subjects
@@ -91,9 +69,11 @@ function EmptyState({ navigate }) {
   );
 }
 
-/* ─── Main component ────────────────────────────────────────── */
-export default function Dashboard({ user }) {
+/* Main component */
+export default function StudentDashboard({ user }) {
+  const [studentProfile, setStudentProfile] = useState(null);
   const [subjects, setSubjects] = useState([]);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editingSubject, setEditingSubject] = useState(null);
   const navigate = useNavigate();
@@ -101,55 +81,59 @@ export default function Dashboard({ user }) {
 
   // Parse student from session
   const student = parseStudent();
-  const studentId = student?.studentId ?? null;
   const endorsement = student?.endorsement ?? null;
 
   useEffect(() => {
-    fetchSubjects();
-  }, [studentId]);
+    fetchStudentProfile();
+  }, []);
 
-  const fetchSubjects = async () => {
-    if (!studentId) {
-      setLoading(false);
-      return;
-    }
-
+  //fetch student basic data
+  const fetchStudentProfile = async () => {
     try {
+      setError(null);
       setLoading(true);
 
-      const API_BASE = process.env.REACT_APP_API_BASE;
-      const token = JSON.parse(sessionStorage.getItem("token"));
+      const { data } = await getBasicStudentInfo();
 
-      const response = await axios.get(
-        `${API_BASE}/api/subjects/${studentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (response.data.success) {
-        setSubjects(response.data.subjects);
-        addSubjects(response.data.subjects);
+      console.log("basic info", data);
+      if (!data.success) {
+        setError("Failed to fetch dashboard data");
+        return;
       }
+      setStudentProfile(data.profile);
+
+      ///save student endorsement in the session
+      sessionStorage.setItem(
+        "endorsement",
+        JSON.stringify(data.profile.endorsement),
+      );
+      const { data: subjectsData } = await getSubjects();
+
+      console.log("subjects info", subjectsData);
+      if (!subjectsData.success) {
+        setError("Failed to fetch dashboard data");
+        return;
+      }
+
+      setStudentProfile(data.profile);
+      setSubjects(subjectsData.subjects);
+      addSubjects(subjectsData.subjects);
     } catch (error) {
-      console.error("Error loading subjects:", error);
+      setError("Error occurred");
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <Skeleton />;
-
   // Derived stats
   const totalSubjects = subjects.length;
   const endorsementCount = subjects.filter(
-    (s) => s.Endorsement_Subject === 1,
+    (s) => s.endorsement_subject === 1,
   ).length;
   const avgMark = totalSubjects
     ? Math.round(
-        subjects.reduce((sum, s) => sum + Number(s.Mark), 0) / totalSubjects,
+        subjects.reduce((sum, s) => sum + Number(s.mark), 0) / totalSubjects,
       )
     : 0;
 
@@ -183,6 +167,14 @@ export default function Dashboard({ user }) {
   };
 
   /* ── Render ── */
+
+  if (error) {
+    console.log("There is error");
+    return <ErrorState message={error} onRetry={fetchStudentProfile} />;
+  }
+
+  if (loading) return <Skeleton />;
+
   return (
     <div className="dash">
       {/* ════ HEADER ════ */}
@@ -190,9 +182,11 @@ export default function Dashboard({ user }) {
         <div className="dash__header-left">
           <h1 className="dash__greeting">
             Welcome back,{" "}
-            <span className="dash__name">{user?.name || "Student"}</span>
+            <span className="dash__name">
+              {studentProfile.fullName || "Student"}
+            </span>
           </h1>
-          {endorsement && (
+          {studentProfile.endorsement && (
             <div className="dash__endorsement">
               <Award
                 size={15}
@@ -200,7 +194,7 @@ export default function Dashboard({ user }) {
                 className="dash__endorsement-icon"
               />
               <span>
-                Endorsement: <strong>{endorsement}</strong>
+                Endorsement: <strong>{studentProfile.endorsement}</strong>
               </span>
             </div>
           )}
@@ -208,7 +202,7 @@ export default function Dashboard({ user }) {
         <button
           className="dash__add-btn"
           type="button"
-          onClick={() => navigate("/add-subjects")}
+          onClick={() => navigate("/student/add/subjects")}
         >
           <PlusCircle size={16} strokeWidth={2} />
           <span>Add Subjects</span>
@@ -250,15 +244,14 @@ export default function Dashboard({ user }) {
           {/* Desktop table header */}
           <div className="dash__table-header">
             <span className="dash__th dash__th--name">Subject</span>
-            <span className="dash__th dash__th--mark">Mark</span>
-            <span className="dash__th dash__th--endo">Endorsement</span>
+            <span className="dash__th dash__th--mark">Mark & Comment</span>
             <span className="dash__th dash__th--action" />
           </div>
 
           {/* Rows */}
           {subjects.map((s, i) => {
-            const tier = markTier(Number(s.Mark));
-            const isEndo = s.Endorsement_Subject === 1;
+            const tier = markTier(Number(s.mark));
+            const isEndo = s.endorsement_subject === 1;
 
             return (
               <div
@@ -271,25 +264,33 @@ export default function Dashboard({ user }) {
                   <div className="dash__row-icon">
                     <BookOpen size={16} strokeWidth={2} />
                   </div>
-                  <span className="dash__subject-name">{s.Name}</span>
+                  <span className="dash__subject-name">{s.name}</span>
                 </div>
 
-                {/* Mark badge */}
+                {/*SUBJECTS BADGES*/}
                 <div className="dash__cell dash__cell--mark">
-                  <span className={`dash__badge dash__badge--${tier}`}>
-                    {s.Mark}%
-                  </span>
-                </div>
+                  {(() => {
+                    const label = getPerformanceLabel(s.mark);
 
-                {/* Endorsement pill */}
-                <div className="dash__cell dash__cell--endo">
-                  {isEndo ? (
-                    <span className="dash__pill dash__pill--yes">
-                      <Award size={12} strokeWidth={2.2} /> Yes
-                    </span>
-                  ) : (
-                    <span className="dash__pill dash__pill--no">—</span>
-                  )}
+                    return (
+                      <span className="dash__badge dash__badge--combo">
+                        <span className={`dash__badge--${tier}`}>
+                          {s.mark}%
+                        </span>
+                        <span className="dash__badge-separator">:</span>
+
+                        {label === "Distinction" && (
+                          <Award size={12} strokeWidth={2.2} />
+                        )}
+
+                        <span
+                          className={`dash__badge--${label.toLowerCase().replace(/\s/g, "-")}`}
+                        >
+                          {label}
+                        </span>
+                      </span>
+                    );
+                  })()}
                 </div>
 
                 {/* Edit */}
@@ -298,7 +299,7 @@ export default function Dashboard({ user }) {
                     type="button"
                     className="dash__edit"
                     onClick={() => setEditingSubject(s)}
-                    aria-label={`Edit ${s.Name}`}
+                    aria-label={`Edit ${s.name}`}
                   >
                     <Pencil size={15} strokeWidth={2} />
                     <span>Edit</span>

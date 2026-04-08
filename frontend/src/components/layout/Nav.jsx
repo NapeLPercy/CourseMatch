@@ -1,104 +1,123 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import {
-  Menu,
-  X,
-  ChevronDown,
-  LogOut,
-  User,
-  BookOpen,
-  FileText,
-  GraduationCap,
-  Home,
-  Info,
-  LogIn,
-  UserPlus,
-  TrendingUpDown,
-  Building2,
-  Mail,
-} from "lucide-react";
+import { Menu, X, ChevronDown, LogOut, User } from "lucide-react";
+import { NAV_CONFIG } from "../../Utils/textData/menuConfig";
 import "../../styles/Nav.css";
+import SmallLoader from "../ui/SmallLoader";
 
 export default function Nav() {
   const { user, logout } = useAuth();
 
   const isLoggedIn = !!user;
   const isAdmin = user?.role === "ADMIN";
-  const isStudent = isLoggedIn && !isAdmin;
+  const isTutor = user?.role === "TUTOR";
+  const isParent = user?.role === "PARENT";
+
+  const currentRole = !isLoggedIn
+    ? "guest"
+    : isAdmin
+      ? "admin"
+      : isTutor
+        ? "tutor"
+        : isParent
+          ? "parent"
+          : "student";
+
+  const navItems = NAV_CONFIG[currentRole];
 
   const [logOut, setLogOut] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [scrolled, setScrolled] = useState(false); // frosted on scroll
-  const [mobile, setMobile] = useState(false); // mobile drawer open
-  const [accountOpen, setAccountOpen] = useState(false); // desktop dropdown
-  const dropdownRef = useRef(null);
-
-  //Checks if user access white coloured pages which requires the
-  // nav bar to just be blue-like, even without a scroll
-  // useRouteMatchIncludes();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobile, setMobile] = useState(false);
+  const [openDropdowns, setOpenDropdowns] = useState({});
+  const dropdownRefs = useRef({});
 
   // Pages where navbar must be colored immediately
   const forceColoredRoutes = [
+    "/tutors/home",
+    "/aps-calculator",
     "/view-courses",
-    "/add-subjects",
-    "/my-dashboard",
+    "/student/add/subjects",
+    "/student/dashboard",
+    "/tutor/dashboard",
+    "/parent/dashboard",
     "/admin/dashboard",
     "/student/manage-my-profile",
     "/admin/manage-qualifications",
     "/admin/manage-universities",
     "/contact-us",
-    "/my-subjects",
+    "/student/view/subjects",
     "/login",
     "/register",
     "/terms-and-conditions",
+    "/welcome",
+    "/faq",
+    "/about",
   ];
 
-  // derived state (no setState)
   const forceColored = forceColoredRoutes.some((route) =>
     location.pathname.startsWith(route),
   );
 
-  // ── Scroll listener ──────────────────────────────────────
+  // Scroll listener
   useEffect(() => {
     const onScroll = () => {
-      // If the route forces colored nav, ignore scroll state
       if (forceColored) return;
       setScrolled(window.scrollY > 40);
     };
-
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [forceColored]);
 
   const navColored = forceColored || scrolled;
 
-  // ── Close dropdown on outside click ──────────────────────
+  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target))
-        setAccountOpen(false);
+      const isInsideDropdown = Object.values(dropdownRefs.current).some(
+        (ref) => ref && ref.contains(e.target),
+      );
+
+      if (isInsideDropdown) return; // ✅ ignore internal clicks
+
+      setOpenDropdowns({});
     };
-    document.addEventListener("mousedown", handler);
+
+    //document.addEventListener("mousedown", handler);
+    //document.addEventListener("click", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // ── Lock body scroll when mobile drawer is open ─────────
+  // Lock body scroll when mobile drawer is open
   useEffect(() => {
     document.body.style.overflow = mobile ? "hidden" : "";
     return () => (document.body.style.overflow = "");
   }, [mobile]);
 
-  // ── Close mobile drawer on route change ──────────────────
+  // Close mobile drawer on route change
   useEffect(() => {
     setMobile(false);
+    setOpenDropdowns({});
   }, [location.pathname]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1100) {
+        setMobile(false); // close overlay
+        setOpenDropdowns({}); // optional: reset dropdowns (prevents weird states)
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleLogout = () => {
     setLogOut(true);
-
     setTimeout(() => {
       logout();
       navigate("/");
@@ -108,22 +127,97 @@ export default function Nav() {
 
   const isActive = (path) => location.pathname === path;
 
-  /* ─── Shared link component ────────────────────────────── */
-  const NavLink = ({ to, icon: Icon, children, className = "" }) => (
-    <Link
-      to={to}
-      className={`nav__link ${isActive(to) ? "nav__link--active" : ""} ${className}`}
-      onClick={() => setMobile(false)}
-    >
-      {Icon && <Icon size={15} strokeWidth={2} className="nav__link-icon" />}
-      {children}
-    </Link>
-  );
+  const toggleDropdown = (key) => {
+    setOpenDropdowns((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
-  /* ─── RENDER ───────────────────────────────────────────── */
+  // Render a single nav item (with or without dropdown)
+  const renderNavItem = (item, index, isMobile = false) => {
+    const key = `${item.label}-${index}`;
+    const Icon = item.icon;
+
+    // Item with dropdown
+    if (item.dropdown) {
+      const isOpen = openDropdowns[key];
+
+      return (
+        <div
+          key={key}
+          ref={(el) => (dropdownRefs.current[key] = el)}
+          className="nav__dropdown-wrap"
+        >
+          <button
+            type="button"
+            className={`nav__dropdown-trigger ${
+              isOpen ? "nav__dropdown-trigger--open" : ""
+            } ${isMobile ? "nav__overlay-link" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleDropdown(key);
+            }}
+            aria-haspopup="true"
+            aria-expanded={isOpen}
+          >
+            {Icon && (
+              <Icon size={15} strokeWidth={2} className="nav__link-icon" />
+            )}
+            {item.label}
+            <ChevronDown
+              size={14}
+              strokeWidth={2.2}
+              className={`nav__dropdown-chevron ${
+                isOpen ? "nav__dropdown-chevron--open" : ""
+              }`}
+            />
+          </button>
+
+          {isOpen && (
+            <div className="nav__dropdown-panel">
+              {item.dropdown.map((subItem, subIndex) => {
+                const SubIcon = subItem.icon;
+                console.log(subItem.path);
+                return (
+                  <Link
+                    key={subIndex}
+                    to={subItem.path}
+                    className="nav__dropdown-item"
+                    onClick={() => {
+                      requestAnimationFrame(() => {
+                        setOpenDropdowns({});
+                        setMobile(false);
+                      });
+                    }}
+                  >
+                    {SubIcon && <SubIcon size={15} strokeWidth={2} />}
+                    {subItem.label}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // Regular link
+    return (
+      <Link
+        key={key}
+        to={item.path}
+        className={`nav__link ${isActive(item.path) ? "nav__link--active" : ""} ${
+          isMobile ? "nav__overlay-link" : ""
+        }`}
+        onClick={() => setMobile(false)}
+      >
+        {Icon && <Icon size={15} strokeWidth={2} className="nav__link-icon" />}
+        {item.label}
+      </Link>
+    );
+  };
+
   return (
     <>
-      {/* ════ Main bar ════ */}
+      {/* Main nav bar */}
       <nav className={`nav ${navColored ? "nav--scrolled" : ""}`}>
         <div className="nav__inner">
           {/* Logo */}
@@ -131,137 +225,61 @@ export default function Nav() {
             Course<span className="nav__logo-accent">Match</span>
           </Link>
 
-          {/* ── Desktop links ── */}
+          {/* Desktop links */}
           <div className="nav__desktop">
-            {/*NON LOGGED IN USERS*/}
-            {!isLoggedIn && (
+            {navItems.main.map((item, index) =>
+              renderNavItem(item, index, false),
+            )}
+
+            {/* Guest actions (login/signup buttons) */}
+            {navItems.actions && (
               <>
-                <NavLink to="/" icon={Home}>
-                  Home
-                </NavLink>
-                <NavLink to="/about" icon={Info}>
-                  About Us
-                </NavLink>
+                <Link
+                  to={navItems.actions.login.path}
+                  className={`nav__action-btn nav__action-btn--${navItems.actions.login.variant}`}
+                >
+                  <navItems.actions.login.icon size={15} strokeWidth={2} />
+                  {navItems.actions.login.label}
+                </Link>
+                <Link
+                  to={navItems.actions.signup.path}
+                  className={`nav__action-btn nav__action-btn--${navItems.actions.signup.variant}`}
+                >
+                  <navItems.actions.signup.icon size={15} strokeWidth={2} />
+                  {navItems.actions.signup.label}
+                </Link>
+              </>
+            )}
 
-                <NavLink to="/contact-us" icon={Mail}>
-                  Contact us
-                </NavLink>
-
-                {/* Account dropdown */}
-                <div ref={dropdownRef} className="nav__dropdown-wrap">
-                  <button
-                    type="button"
-                    className={`nav__dropdown-trigger ${accountOpen ? "nav__dropdown-trigger--open" : ""}`}
-                    onClick={() => setAccountOpen((o) => !o)}
-                    aria-haspopup="true"
-                    aria-expanded={accountOpen}
-                  >
-                    Account
-                    <ChevronDown
-                      size={14}
-                      strokeWidth={2.2}
-                      className={`nav__dropdown-chevron ${accountOpen ? "nav__dropdown-chevron--open" : ""}`}
-                    />
-                  </button>
-
-                  {accountOpen && (
-                    <div className="nav__dropdown-panel">
-                      <Link
-                        to="/login"
-                        className="nav__dropdown-item"
-                        onClick={() => setAccountOpen(false)}
-                      >
-                        <LogIn size={15} strokeWidth={2} /> Sign In
-                      </Link>
-                      <Link
-                        to="/register"
-                        className="nav__dropdown-item"
-                        onClick={() => setAccountOpen(false)}
-                      >
-                        <UserPlus size={15} strokeWidth={2} /> Sign Up
-                      </Link>
-                    </div>
+            {/* Logged-in user pill + logout */}
+            {navItems.showUser && (
+              <div className="nav__user">
+                <div
+                  className={`nav__avatar ${
+                    navItems.isAdmin ? "nav__avatar--admin" : ""
+                  }`}
+                >
+                  <User size={15} strokeWidth={2} />
+                </div>
+                <button
+                  type="button"
+                  className="nav__logout"
+                  onClick={handleLogout}
+                  disabled={logOut}
+                >
+                  {logOut ? (
+                    <SmallLoader />
+                  ) : (
+                    <LogOut size={15} strokeWidth={2} />
                   )}
-                </div>
-              </>
-            )}
-
-            {/*LOGGED IN USER === STUDENT*/}
-            {isStudent && (
-              <>
-                <NavLink to="/my-dashboard" icon={TrendingUpDown}>
-                  DashBoard
-                </NavLink>
-                <NavLink to="/my-subjects" icon={BookOpen}>
-                  My Subjects
-                </NavLink>
-
-                <NavLink to="/add-subjects" icon={FileText}>
-                  Add Subjects
-                </NavLink>
-
-                <NavLink to="/student/manage-my-profile" icon={User}>
-                  Manage Profile
-                </NavLink>
-
-                <NavLink to="/view-courses" icon={GraduationCap}>
-                  Courses
-                </NavLink>
-
-                {/* User pill + logout */}
-                <div className="nav__user">
-                  <div className="nav__avatar">
-                    <User size={15} strokeWidth={2} />
-                  </div>
-                  <button
-                    type="button"
-                    className="nav__logout"
-                    onClick={handleLogout}
-                  >
-                    <LogOut size={15} strokeWidth={2} />
-
-                    {logOut ? "Logging out..." : "Logout"}
-                  </button>
-                </div>
-              </>
-            )}
-
-            {/*LOGGED IN USER === ADMIN*/}
-            {isAdmin && (
-              <>
-                <NavLink to="/admin/dashboard" icon={TrendingUpDown}>
-                  Admin Dashboard
-                </NavLink>
-                <NavLink to="/admin/manage-qualifications" icon={GraduationCap}>
-                  Manage Qualifications
-                </NavLink>
-                <NavLink to="/admin/manage-universities" icon={Building2}>
-                  Universities & Faculties
-                </NavLink>
-                <NavLink to="/admin/reports" icon={FileText}>
-                  Reports
-                </NavLink>
-
-                {/* admin pill */}
-                <div className="nav__user">
-                  <div className="nav__avatar nav__avatar--admin">
-                    <User size={15} />
-                  </div>
-                  <button
-                    type="button"
-                    className="nav__logout"
-                    onClick={handleLogout}
-                  >
-                    <LogOut size={15} strokeWidth={2} />
-
-                    {logOut ? "Logging out..." : "Logout"}
-                  </button>
-                </div>
-              </>
+                  {logOut ? "Logging out..." : "Logout"}
+                </button>
+              </div>
             )}
           </div>
 
-          {/* ── Mobile hamburger ── */}
+          {/* Mobile hamburger */}
+
           <button
             type="button"
             className="nav__hamburger"
@@ -277,10 +295,10 @@ export default function Nav() {
         </div>
       </nav>
 
-      {/* ════ Mobile overlay ════ */}
+      {/* Mobile overlay */}
       <div className={`nav__overlay ${mobile ? "nav__overlay--open" : ""}`}>
         <div className="nav__overlay-inner">
-          {/* Close */}
+          {/* Close button */}
           <button
             type="button"
             className="nav__overlay-close"
@@ -290,131 +308,51 @@ export default function Nav() {
             <X size={22} strokeWidth={2} />
           </button>
 
-          {/* Logo inside overlay */}
-          <Link
-            to="/"
-            className="nav__logo nav__overlay-logo"
-            onClick={() => setMobile(false)}
-          >
-            Course<span className="nav__logo-accent">Match</span>
-          </Link>
-
           {/* Links */}
           <div className="nav__overlay-links">
-            {!isLoggedIn && (
+            {navItems.main.map((item, index) =>
+              renderNavItem(item, index, true),
+            )}
+
+            {/* Guest actions */}
+            {navItems.actions && (
               <>
-                <NavLink to="/" icon={Home} className="nav__overlay-link">
-                  Home
-                </NavLink>
-                <NavLink to="/about" icon={Info} className="nav__overlay-link">
-                  About Us
-                </NavLink>
-
-                <NavLink
-                  to="/contact-us"
-                  icon={Mail}
-                  className="nav__overlay-link"
-                >
-                  Contact us
-                </NavLink>
-
                 <div className="nav__overlay-divider" />
-                <NavLink to="/login" icon={LogIn} className="nav__overlay-link">
-                  Sign In
-                </NavLink>
-                <NavLink
-                  to="/register"
-                  icon={UserPlus}
-                  className="nav__overlay-link"
+                <Link
+                  to={navItems.actions.login.path}
+                  className="nav__overlay-link nav__overlay-link--ghost"
+                  //nav__overlay-link nav__overlay-link--primary"
+                  onClick={() => setMobile(false)}
                 >
-                  Sign Up
-                </NavLink>
+                  <navItems.actions.login.icon size={18} strokeWidth={2} />
+                  {navItems.actions.login.label}
+                </Link>
+                <Link
+                  to={navItems.actions.signup.path}
+                  className="nav__overlay-link nav__overlay-link--primary"
+                  onClick={() => setMobile(false)}
+                >
+                  <navItems.actions.signup.icon size={18} strokeWidth={2} />
+                  {navItems.actions.signup.label}
+                </Link>
               </>
             )}
 
-            {isStudent && (
+            {/* Logged-in logout button */}
+            {navItems.showUser && (
               <>
-                <NavLink
-                  to="/my-dashboard"
-                  icon={TrendingUpDown}
-                  className="nav__overlay-link"
-                >
-                  DashBoard
-                </NavLink>
-
-                <NavLink
-                  to="/add-subjects"
-                  icon={FileText}
-                  className="nav__overlay-link"
-                >
-                  Add Subjects
-                </NavLink>
-                <NavLink
-                  to="/my-subjects"
-                  icon={BookOpen}
-                  className="nav__overlay-link"
-                >
-                  My Subjects
-                </NavLink>
-
-                <NavLink to="/student/manage-my-profile" icon={User}>
-                  Manage Profile
-                </NavLink>
-
-                <NavLink
-                  to="/view-courses"
-                  icon={GraduationCap}
-                  className="nav__overlay-link"
-                >
-                  Courses
-                </NavLink>
                 <div className="nav__overlay-divider" />
                 <button
                   type="button"
                   className="nav__overlay-logout"
                   onClick={handleLogout}
+                  disabled={logOut}
                 >
-                  <LogOut size={18} strokeWidth={2} />
-                  {logOut ? "Logging out..." : "Logout"}
-                </button>
-              </>
-            )}
-
-            {isAdmin && (
-              <>
-                <NavLink
-                  to="/admin/dashboard"
-                  icon={TrendingUpDown}
-                  className="nav__overlay-link"
-                >
-                  Admin Dashboard
-                </NavLink>
-                <NavLink
-                  to="/admin/manage-qualifications"
-                  icon={GraduationCap}
-                  className="nav__overlay-link"
-                >
-                  Manage Qualifications
-                </NavLink>
-                <NavLink
-                  to="/admin/manage-universities"
-                  icon={Building2}
-                  className="nav__overlay-link"
-                >
-                  Universities & Faculties
-                </NavLink>
-
-                <NavLink to="/admin/reports" icon={FileText}>
-                  Reports
-                </NavLink>
-
-                <div className="nav__overlay-divider" />
-                <button
-                  type="button"
-                  className="nav__overlay-logout"
-                  onClick={handleLogout}
-                >
-                  <LogOut size={18} strokeWidth={2} />
+                  {logOut ? (
+                    <SmallLoader />
+                  ) : (
+                    <LogOut size={18} strokeWidth={2} />
+                  )}
                   {logOut ? "Logging out..." : "Logout"}
                 </button>
               </>

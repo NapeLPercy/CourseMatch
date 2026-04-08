@@ -193,7 +193,7 @@
 /* Desktop header row */
 .dash__table-header {
   display: grid;
-  grid-template-columns: 1fr 90px 110px 100px;
+  grid-template-columns: 1fr 90px 80px 100px;
   align-items: center;
   padding: 14px 22px;
   background: var(--off-white);
@@ -207,6 +207,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-gray);
+ 
 }
 
 /* Data rows */
@@ -260,9 +261,11 @@
   color: var(--text-dark);
 }
 
-/* Mark badges */
+/* Base badge */
 .dash__badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
@@ -271,48 +274,80 @@
   white-space: nowrap;
 }
 
+/* ===== MARK TIER BADGES ===== */
+
+/* Excellent (green) */
 .dash__badge--excellent {
   background: rgba(34, 197, 94, 0.1);
   color: #15803d;
 }
 
+/* Good (blue) */
 .dash__badge--good {
   background: rgba(37, 99, 235, 0.1);
   color: var(--medium-blue);
 }
 
+/* Average (yellow) */
 .dash__badge--average {
   background: rgba(234, 179, 8, 0.1);
   color: #a16207;
 }
 
+/* Low (red) */
 .dash__badge--low {
   background: rgba(248, 113, 113, 0.1);
   color: #dc2626;
 }
 
-/* Endorsement pill */
-.dash__pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.76rem;
-  font-weight: 500;
-  padding: 4px 10px;
-  border-radius: 20px;
-  white-space: nowrap;
-}
 
-.dash__pill--yes {
+/* ===== ENDORSEMENT / PERFORMANCE LABEL BADGES ===== */
+
+/* Distinction */
+.dash__badge--distinction {
   background: rgba(34, 197, 94, 0.1);
   color: #15803d;
 }
 
-.dash__pill--no {
-  color: var(--text-gray);
-  opacity: 0.5;
+/* Strong */
+.dash__badge--strong {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--medium-blue);
 }
+
+/* Solid */
+.dash__badge--solid {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--medium-blue);
+}
+
+/* Developing */
+.dash__badge--developing {
+  background: rgba(234, 179, 8, 0.1);
+  color: #a16207;
+}
+
+/* Emerging */
+.dash__badge--emerging {
+  background: rgba(234, 179, 8, 0.08);
+  color: #a16207;
+}
+
+/* Needs Support */
+.dash__badge--needs-support {
+  background: rgba(248, 113, 113, 0.1);
+  color: #dc2626;
+}
+
+
+/* Optional separator if you combine values */
+.dash__badge-separator {
+  opacity: 0.6;
+  font-weight: 600;
+  margin: 0 2px;
+}
+
+
 
 /* Edit button */
 .dash__edit {
@@ -330,6 +365,12 @@
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   white-space: nowrap;
+
+}
+@media (min-width: 601px) {
+  .dash__edit {
+      margin-left: 80px;
+  }
 }
 
 .dash__edit:hover {

@@ -1,11 +1,9 @@
 const dotenv = require("dotenv");
 dotenv.config();
-const AdminDashboard = require("../models/AdminDashboard");//"../models/AdminDashboard"
+const AdminDashboard = require("../models/AdminDashboard");
 
 exports.getAdminDashboard = async (req, res) => {
   try {
-    // If you already protect routes with authorize("ADMIN"), you can remove this check.
-    // If your authenticate middleware sets req.user (with role), use that.
     const userId = req.userId;
 
     if (!userId) {

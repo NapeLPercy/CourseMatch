@@ -2,16 +2,11 @@ import React, { useState } from "react";
 import "../../styles/EditmarkModal.css";
 
 export default function EditmarkModal({ subject, onSave, onClose }) {
-  /* ------------------------------------------------ */
-  // Local state
-  /* ------------------------------------------------ */
   const [mark, setMark] = useState(String(subject.Mark));
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
-  /* ------------------------------------------------ */
   // Validation
-  /* ------------------------------------------------ */
   const validate = (value) => {
     const num = Number(value);
 
@@ -21,13 +16,11 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
     return ""; // valid
   };
 
-  /* ------------------------------------------------ */
   // Handlers
-  /* ------------------------------------------------ */
   const handleChange = (e) => {
     const val = e.target.value;
     setMark(val);
-    setError(validate(val)); // live feedback as user types
+    setError(validate(val));
   };
 
   const handleSave = async () => {
@@ -39,28 +32,21 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
 
     setSaving(true);
 
-    // hand the actual API call off to the parent via onSave
-    // parent decides the endpoint, method, payload shape, etc.
     await onSave({
       Subject_Id: subject.Subject_Id,
       Mark: Number(mark),
     });
-
-    // if onSave didn't throw, we're done —
-    // parent is responsible for closing the modal after success
     setSaving(false);
   };
 
-  /* ------------------------------------------------ */
   // Render
-  /* ------------------------------------------------ */
   const isInvalid = error.length > 0;
 
   return (
     <div className="emd-overlay" onClick={onClose}>
       {/* sheet – stop clicks propagating to the overlay */}
       <div className="emd-sheet" onClick={(e) => e.stopPropagation()}>
-        {/* close ✕ */}
+        {/* close */}
         <button className="emd-close" onClick={onClose} aria-label="Close">
           ✕
         </button>

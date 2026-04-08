@@ -1,6 +1,5 @@
 import "../../styles/AddCourse.css";
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import {
   GraduationCap,
@@ -15,8 +14,13 @@ import {
 } from "lucide-react";
 
 import { adminSubjectsData } from "../../Utils/subjects";
+import { getAllUniversities } from "../../services/universityService";
+import { addCourse } from "../../services/courseService";
+import SubmitError from "../ui/SubmitError";
+import SubmitSuccess from "../ui/SubmitSuccess";
+import SmallLoader from "../ui/SmallLoader";
 
-/* ─── Helpers ───────────────────────────────────────────────── */
+/*  Helpers  */
 function clampMark(n) {
   if (Number.isNaN(n)) return "";
   if (n < 0) return 0;
@@ -24,7 +28,7 @@ function clampMark(n) {
   return n;
 }
 
-/* ─── Main component ────────────────────────────────────────── */
+/*  Main component  */
 export default function AdminAddQualification() {
   // University & faculty
   const [universities, setUniversities] = useState([]);
@@ -35,6 +39,10 @@ export default function AdminAddQualification() {
   const [selectedFacultyId, setSelectedFacultyId] = useState(
     universities[0]?.faculties[0]?.faculty_id ?? "",
   );
+
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Qualification fields
   const [code, setCode] = useState("");
@@ -160,26 +168,34 @@ export default function AdminAddQualification() {
   }, []);
 
   const fetchUniversities = async () => {
-    const API_BASE = process.env.REACT_APP_API_BASE;
-    const token = JSON.parse(sessionStorage.getItem("token"));
     try {
-      const res = await axios.get(`${API_BASE}/api/university/get-all`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const { data } = await getAllUniversities();
 
-      const universitiesData = res.data.universities;
+      if (!data.success) {
+        setError("Failed to fetch universities");
+        return;
+      }
+      const universitiesData = data.universities;
       setUniversities(universitiesData);
       setSelectedUniAbbrev(universitiesData[0].abbreviation);
       setSelectedFacultyId(universitiesData[0].faculties[0].faculty_id);
+
+      setSuccess("Successfully fetched universities");
     } catch (error) {
-      console.log(error.message || "Failed to fetch universities");
+      setError("Failed to fetch universities");
+    } finally {
+      setTimeout(() => {
+        setError(null);
+        setSuccess(null);
+      }, 5000);
     }
   };
   //Handle course submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    const payload = {
+    const qualification = {
       fac_id: Number(selectedFacultyId),
       code: code.trim(),
       name: qName.trim(),
@@ -193,25 +209,24 @@ export default function AdminAddQualification() {
     };
 
     try {
-      const API_BASE = process.env.REACT_APP_API_BASE;
-      const token = JSON.parse(sessionStorage.getItem("token"));
+      const { data } = await addCourse(qualification);
 
-      const res = await axios.post(
-        `${API_BASE}/api/qualification/add-course`,
-        { qualification: payload },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (res.data.success) {
-        alert(res.data.message);
-        handleReset();
+      if (!data.success) {
+        setError("Failed to add qualification");
       }
+
+      setLoading(false);
+      setSuccess("Successfully submitted qualification data");
+      setTimeout(() => {
+        handleReset();
+      }, 6000);
     } catch (error) {
       alert(error.message || "Failed to submit courses");
+    } finally {
+      setTimeout(() => {
+        setError(null);
+        setSuccess(null);
+      }, 5000);
     }
   };
 
@@ -227,19 +242,6 @@ export default function AdminAddQualification() {
   /* ── Render ── */
   return (
     <div className="aaq">
-      {/* Header */}
-      <header className="aaq__header">
-        <div className="aaq__header-icon">
-          <GraduationCap size={24} strokeWidth={1.6} />
-        </div>
-        <div className="aaq__header-text">
-          <h1 className="aaq__title">Add Qualification</h1>
-          <p className="aaq__subtitle">
-            Create a new qualification with prerequisites and requirements.
-          </p>
-        </div>
-      </header>
-
       {/* Two-column grid */}
       <div className="aaq__grid">
         {/* LEFT: University + Faculty */}
@@ -517,6 +519,10 @@ export default function AdminAddQualification() {
 
           {/* Actions */}
           <div className="aaq__actions">
+            {error && <SubmitError error={error} />}
+
+            {success && <SubmitSuccess success={success} />}
+
             <button
               type="button"
               className="aaq__btn aaq__btn--ghost"
@@ -529,10 +535,19 @@ export default function AdminAddQualification() {
             <button
               type="submit"
               className="aaq__btn aaq__btn--primary"
-              disabled={!canSubmit}
+              disabled={!canSubmit || loading}
             >
-              <Save size={16} strokeWidth={2.2} />
-              Save Qualification
+              {loading ? (
+                <>
+                  <SmallLoader />
+                  <span className="aaq__btn-text">Processing...</span>
+                </>
+              ) : (
+                <>
+                  <Save size={16} strokeWidth={2.2} />
+                  <span className="aaq__btn-text">Save Qualification</span>
+                </>
+              )}
             </button>
           </div>
         </form>

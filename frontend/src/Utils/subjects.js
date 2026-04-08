@@ -41,7 +41,7 @@ export const adminSubjectsData = [
   "iSiZulu",
 ];
 
-//subjects from student
+//subjects from logged in student
 export const studentSubjectsData = [
   "Accounting",
   "Afrikaans FAL",
@@ -86,3 +86,72 @@ export const studentSubjectsData = [
   "Xhosa HL",
   "iSiZulu HL",
 ];
+
+/*Used for guests */
+export const SUBJECT_CATEGORIES = {
+  MATHEMATICS: [
+    "Mathematics",
+    "Mathematical Literacy",
+    "Technical Mathematics",
+  ],
+
+  LIFE_ORIENTATION: [
+    "Life Orientation",
+  ],
+
+  HOME_LANGUAGES: [
+    "Afrikaans HL",
+    "English HL",
+    "Ndebele HL",
+    "Northern Sotho HL",
+    "Southern Sotho HL",
+    "Swazi HL",
+    "Tsonga HL",
+    "Tswana HL",
+    "Venda HL",
+    "Xhosa HL",
+    "iSiZulu HL",
+  ],
+
+  FIRST_ADDITIONAL_LANGUAGES: [
+    "Afrikaans FAL",
+    "English FAL",
+  ],
+
+  ELECTIVES: [
+    "Accounting",
+    "Agricultural Management Practices",
+    "Agricultural Sciences",
+    "Agricultural Technology",
+    "Business Studies",
+    "Civil Technology",
+    "Computer Applications Technology",
+    "Consumer Studies",
+    "Dance Studies",
+    "Design",
+    "Dramatic Arts",
+    "Economics",
+    "Electrical Technology",
+    "Engineering Graphics & Design",
+    "Geography",
+    "History",
+    "Hospitality Studies",
+    "Information Technology",
+    "Life Sciences",
+    "Mechanical Technology",
+    "Music",
+    "Physical Science",
+    "Religion Studies",
+    "Tourism",
+    "Visual Arts",
+  ],
+};
+
+
+export const SUBJECT_RULES = {
+  MATHEMATICS: { min: 1, max: 1 },
+  LIFE_ORIENTATION: { min: 1, max: 1 },
+  HOME_LANGUAGES: { min: 1 },
+  FIRST_ADDITIONAL_LANGUAGES: { min: 1 },
+  ELECTIVES: { min: 3 },
+};

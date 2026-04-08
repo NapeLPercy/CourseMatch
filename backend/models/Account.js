@@ -1,24 +1,54 @@
-class Account {
-  constructor(email, password) {
-   this.email = email;
-    this.password = password;
-  }
+const db = require("../config/db");
 
-  getEmail() {
-    return this.email;
-  }
+module.exports = {
+  //Patch a user role, used during onboarding
+  updateAccountRole: async (conn, { userId, role }) => {
+    const sql = `UPDATE account SET role = ? WHERE user_id = ?`;
 
-  setEmail(email) {
-    this.email = email;
-  }
+    return new Promise((resolve, reject) => {
+      conn.query(sql, [role, userId], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
 
-  getPassword() {
-    return this.password;
-  }
+  //Checks whether or not an email is registered
+  checkAccountByEmail: async (email) => {
+    const sql = `SELECT id FROM account WHERE email = ?`;
 
-  setPassword(password) {
-    this.password = password;
-  }
-}
+    return new Promise((resolve, reject) => {
+      db.query(sql, [email], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
 
-module.exports = Account;
+  //Login user
+  login: async (email) => {
+    const sql = `SELECT id,role,user_id, email, password FROM account WHERE email = ?`;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [email], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
+
+  // Add user account, email uniqueness already confirmed
+  addAccount: async (conn, { accountId, email, hashedPassword, userId }) => {
+    const sql = `INSERT INTO account (id, email, password, user_id) VALUES (?, ?, ?, ?)`;
+    return new Promise((resolve, reject) => {
+      conn.query(
+        sql,
+        [accountId, email, hashedPassword, userId],
+        (err, result) => {
+          if (err) return reject(err);
+          resolve(result);
+        },
+      );
+    });
+  },
+};

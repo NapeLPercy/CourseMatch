@@ -6,9 +6,9 @@ export default function computeTutAPS(subjects) {
   let totalAPS = 0;
 
   subjects.forEach((sub) => {
-    const level = getSubjectLevel(sub.Mark);
+    const level = getSubjectLevel(sub.mark);
     
-    if (sub.Name.toLowerCase() === "life orientation") return;
+    if (sub.name.toLowerCase() === "life orientation") return;
 
     if (level === 1) return;
 

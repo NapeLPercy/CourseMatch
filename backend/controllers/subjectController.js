@@ -1,57 +1,35 @@
 const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
+const { getSubjects, addSubjects } = require("../services/subjectService");
 
-const studentModel = require("../models/Student");
-const subjectModel = require("../models/Subject");
-const SubjectSanitizer = require("../services/SubjectSanitizer");
-const MatrixEndorsement = require("../services/MatrixEndorsement");
-
-//Add subjects
+/*Add subjects*/
 exports.addSubjects = async (req, res) => {
   try {
     const { subjects } = req.body;
     const userId = req.userId;
-    const studentId = uuidv4();
+    const studentId = req.studentId;
 
-    if (!subjects || !userId) {
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: "You are not authorized" });
+    }
+
+    if (!subjects) {
       return res.status(400).json({
         success: false,
-        message: "Missing required fields",
+        message: "Subjects are required",
       });
     }
 
-    //clean subjects
-    const sanitizedSubjects = new SubjectSanitizer(subjects).sanitize();
 
-    //compute matric endorsement
-    let endorsement = new MatrixEndorsement(sanitizedSubjects).determine();
+    await addSubjects(subjects, studentId, userId);
 
-    //Insert student
-    await studentModel.createStudent(studentId, endorsement, userId);
-
-    //Prepare subject values
-    const subjectValues = subjects.map((s) => [
-      uuidv4(),
-      s.name,
-      s.mark,
-      s.endorsementSubject,
-      studentId,
-    ]);
-
-    //Insert all subjects
-    await subjectModel.insertSubjects(subjectValues);
-
-        /*After adding subjects and student info, I collect student so that
-      the logged in user can see thier subject(depended on on studentId)*/
-
-    const studentData = await studentModel.getStudentInfo(userId);
-    
     return res.status(201).json({
       success: true,
       message: "Subjects added successfully",
-      student: studentData[0],
-      endorsementSubjects: sanitizedSubjects,
+      subjects: subjects,
     });
   } catch (error) {
     console.error("Add subjects error:", error);
@@ -65,15 +43,23 @@ exports.addSubjects = async (req, res) => {
 // Get subjects for a student
 exports.getSubjects = async (req, res) => {
   try {
-    const { studentId } = req.params;
-    const userId = req.userId;
+    const { userId, studentId } = req;
 
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: "You are not authorized" });
+    }
+
+    if (!studentId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Student id is required" });
+    }
     //delegate to subject model
-    const subjects = await subjectModel.getSubjectsByStudentIdForUser(
-      studentId,
-      userId,
-    );
+    const subjects = await getSubjects(studentId);
 
+    console.log("here are my subjects");
     return res.status(200).json({
       subjects: subjects,
       success: true,
@@ -92,8 +78,14 @@ exports.updateMark = async (req, res) => {
   try {
     const { subjectId } = req.params;
     const { Mark } = req.body;
+    const { userId } = req.user;
 
-    console.log(subjectId, Mark);
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: "You are not authorized" });
+    }
+
     if (Mark === undefined || Mark === null) {
       return res.status(400).json({ message: "Mark is required" });
     }
@@ -104,7 +96,7 @@ exports.updateMark = async (req, res) => {
       return res.status(400).json({ message: "Mark must be 0-100" });
     }
 
-    const updated = await subjectModel.updateMark(subjectId, markNum);
+    await updateMark(subjectId, markNum);
 
     return res.status(200).json({
       message: "Mark updated",

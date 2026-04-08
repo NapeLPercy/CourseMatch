@@ -2,9 +2,13 @@ const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const courseModel = require("../models/Qualification");
+const {
+  addCourse,
+  getAllCourses,
+  deleteCourse,
+} = require("../services/courseService");
 
-//Add subjects
+// add qualification
 exports.addQualification = async (req, res) => {
   try {
     const { qualification } = req.body;
@@ -16,8 +20,8 @@ exports.addQualification = async (req, res) => {
         message: "Missing required fields",
       });
     }
-    //Insert qualifications
-    await courseModel.insertQualificationWithPrereqs(qualification);
+
+    await addCourse(qualification);
 
     return res.status(201).json({
       success: true,
@@ -35,17 +39,16 @@ exports.addQualification = async (req, res) => {
 // Get all qualifications and thier faculty
 exports.getAllQualifications = async (req, res) => {
   try {
-     const {userId, role} = req;
+    const { userId, role } = req;
 
-     if (!userId || !role) {
+    if (!userId || !role) {
       return res.status(400).json({
         success: false,
         message: "Missing required fields",
       });
     }
 
-    //delegate to qualification model
-    const qualifications = await courseModel.getAllQualificationsWithPrereqs();
+    const qualifications = await getAllCourses();
 
     return res.status(200).json({
       qualifications: qualifications,
@@ -73,9 +76,7 @@ exports.deleteQualification = async (req, res) => {
       });
     }
 
-    const result = await courseModel.deleteQualification(
-      code.trim(),
-    );
+    const result = await deleteCourse(code.trim());
 
     return res.status(200).json({
       success: true,

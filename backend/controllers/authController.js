@@ -1,116 +1,87 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const db = require("../config/db");
 const dotenv = require("dotenv");
-
-const { v4: uuidv4 } = require("uuid");
 dotenv.config();
+const {
+  checkAccount,
+  addAccount,
+  login,
+  generateToken,
+  validatePassword,
+} = require("../services/accountService");
 
+/* 1 Check if account exist
+2 register email */
 exports.register = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log("abut to create an account");
   try {
-    // Check if email already exists in account table
-    db.query(
-      "SELECT id FROM account WHERE email = ?",
-      [email],
-      async (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        if (results.length > 0)
-          return res.status(400).json({ error: "Email already registered" });
+    const results = await checkAccount(email);
+    console.log(results, "After check email");
 
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
+    if (results.length > 0) {
+      return res.json({ success: false, message: "Email already registered" });
+    }
 
-        // Insert into user table first
-        const userId = uuidv4();
-        const sqlUser = "INSERT INTO user (id) VALUES (?)";
-        db.query(sqlUser, [userId], (err, result) => {
-          if (err) return res.status(500).json({ error: err.message });
+    await addAccount(email, password);
 
-          // 4️⃣ Insert into account table, linking to userId
-          const accountId = uuidv4();
-          const sqlAccount =
-            "INSERT INTO account (id, email, password, user_id) VALUES (?, ?, ?, ?)";
-          db.query(
-            sqlAccount,
-            [accountId, email, hashedPassword, userId],
-            (err, result) => {
-              if (err) return res.status(500).json({ error: err.message });
-
-              res.status(201).json({ message: "User registered successfully" });
-            },
-          );
-        });
-      },
-    );
+    return res
+      .status(201)
+      .json({ success: true, message: "Successfuly registered" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
+/* 1 Check if account exist
+2 Validate password
+3 Generate token */
 exports.login = async (req, res) => {
   const { email, password } = req.body;
-  console.log("About to login", email, password);
 
   try {
-    // Check account existence
-    db.query(
-      "SELECT id,role,user_id, email, password FROM account WHERE email = ?",
-      [email],
-      async (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        if (results.length === 0)
-          return res.status(400).json({ error: "User not found" });
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required",
+      });
+    }
 
-        const account = results[0];
+    const results = await login(email);
 
-        // Verify password
-        const isMatch = await bcrypt.compare(password, account.password);
-        if (!isMatch)
-          return res.status(400).json({ error: "Invalid credentials" });
+    if (results.length === 0) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
 
-        // Generate JWT
-        const token = jwt.sign(
-          {
-            userId: account.user_id,
-            accountId: account.id,
-            role: account.role,
-            email: account.email,
-          },
-          process.env.JWT_SECRET,
-          { expiresIn: process.env.JWT_EXPIRES_IN },
-        );
+    const account = results[0];
+    const isMatch = await validatePassword(password, account.password);
 
-        // Fetch student info linked to this account
-        const studentSql =
-          "SELECT student_id AS studentId, endorsement FROM student WHERE user_id = ?";
-        db.query(studentSql, [account.user_id], (err, studentResults) => {
-          if (err) return res.status(500).json({ error: err.message });
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
 
-          // If student record found, include it
-          const studentData =
-            studentResults.length > 0 ? studentResults[0] : null;
+    const token = generateToken(account);
 
-          // Construct final response object
-          const userData = {
-            userId: account.user_id,
-            accountId: account.id,
-            email: account.email,
-            role: account.role,
-            student: studentData,
-          };
+    const userData = {
+      userId: account.user_id,
+      role: account.role,
+    };
 
-          res.status(200).json({
-            message: "Login successful",
-            token,
-            user: userData,
-          });
-        });
-      },
-    );
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token,
+      user: userData,
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({
+      success: false,
+      message: "Server error during login",
+    });
   }
 };

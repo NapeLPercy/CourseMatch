@@ -1,77 +1,52 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ViewSubjects from "./ViewSubjects";
-import "../../styles/ViewSubjects.css"; /* shared loading class */
+import Skeleton from "../ui/Skeleton";
+import ErrorState from "../ui/ErrorState";
+import { getSubjects } from "../../services/subjectService";
+import "../../styles/ViewSubjects.css";
 
 export default function ViewSubjectsPage() {
-  /* ------------------------------------------------ */
-  // State
-  /* ------------------------------------------------ */
-  const [studentId, setStudentId] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  /* ------------------------------------------------ */
-  // Pull studentId from session on mount
-  /* ------------------------------------------------ */
   useEffect(() => {
-    const stored = sessionStorage.getItem("student");
-    if (!stored) return;
-
-    try {
-      const student = JSON.parse(stored);
-      if (student?.studentId) {
-        setStudentId(student.studentId);
-      }
-    } catch (e) {
-      console.error("Failed to parse student from sessionStorage:", e);
-    }
+    fetchSubjects();
   }, []);
 
-  /* ------------------------------------------------ */
-  // Fetch subjects once studentId is available
-  /* ------------------------------------------------ */
-  useEffect(() => {
-    if (!studentId) {
-      setLoading(false);
-      return;
-    }
-    fetchSubjects();
-  }, [studentId]);
-
   const fetchSubjects = async () => {
-    const API_BASE = process.env.REACT_APP_API_BASE;
-    const token = JSON.parse(sessionStorage.getItem("token"));
     try {
       setLoading(true);
-      const res = await axios.get(`${API_BASE}/api/subjects/${studentId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setSubjects(res.data.subjects);
+      setError(null);
+      const { data } = await getSubjects();
+      setSubjects(data.subjects || []);
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      console.error("Error fetching subjects:", err);
+      setError("Failed to load your subjects" || err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  //handle save subject mark after update
   const handleSave = async ({ Subject_Id, Mark }) => {
     const API_BASE = process.env.REACT_APP_API_BASE;
     const token = JSON.parse(sessionStorage.getItem("token"));
+
     try {
       const response = await axios.put(
         `${API_BASE}/api/subjects/${Subject_Id}`,
         { Mark },
-        {headers: {Authorization: `Bearer ${token}`}}
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      let data = response.data;
+      const data = response.data;
       if (data.success) {
+        // Update local state
         setSubjects((prev) =>
-          prev.map((s) => (s.Subject_Id === Subject_Id ? { ...s, Mark } : s)),
+          prev.map((s) =>
+            s.subject_id === Subject_Id ? { ...s, mark: Mark } : s
+          )
         );
         alert(data.message);
       }
@@ -79,42 +54,44 @@ export default function ViewSubjectsPage() {
       if (err.response) {
         alert(err.response.data.message);
       } else {
-        alert("Network error:", err.message);
+        alert("Network error: " + err.message);
       }
     }
   };
 
-  /* ------------------------------------------------ */
   // Loading state
-  /* ------------------------------------------------ */
   if (loading) {
     return (
-      <div className="vs-wrapper">
-        <p className="vs-loading">
-          <span className="dot" />
-          <span className="dot" />
-          <span className="dot" />
-          Loading student subjects …
-        </p>
+      <div className="vs">
+        <header className="vs__header">
+          <div className="vs__header-text">
+            <h1 className="vs__title">My Subjects</h1>
+            <p className="vs__subtitle">
+              View and manage the subjects you've submitted for course matching
+            </p>
+          </div>
+        </header>
+        <Skeleton />
       </div>
     );
   }
 
-  /* ------------------------------------------------ */
   // Error state
-  /* ------------------------------------------------ */
   if (error) {
     return (
-      <div className="vs-wrapper">
-        <p className="vs-loading" style={{ color: "#dc2626" }}>
-          {error}
-        </p>
+      <div className="vs">
+        <header className="vs__header">
+          <div className="vs__header-text">
+            <h1 className="vs__title">My Subjects</h1>
+            <p className="vs__subtitle">
+              View and manage the subjects you've submitted for course matching
+            </p>
+          </div>
+        </header>
+        <ErrorState message={error} onRetry={fetchSubjects} />
       </div>
     );
   }
 
-  /* ------------------------------------------------ */
-  // Render child
-  /* ------------------------------------------------ */
   return <ViewSubjects subjects={subjects} onSave={handleSave} />;
 }
