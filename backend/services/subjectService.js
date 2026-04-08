@@ -5,7 +5,7 @@ dotenv.config();
 const subjectModel = require("../models/Subject");
 const { insertStudentEndorsement } = require("../services/studentService");
 const SubjectsSanitizer = require("../services/subjectsSanitizer");
-const MatrixEndorsement = require("../services/matrixEndorsement");
+const MatricEndorsement = require("../services/matrixEndorsement");
 
 /* 1 Clean subjects
 2 Compute matric endorsement for 7 clean subjects
@@ -49,7 +49,7 @@ async function addSubjects(subjects, studentId, userId) {
 //Compute endorsement and 7 aps subjects
 function computeEndorsementAndAPSSubjects(subjects) {
   const sanitizedSubjects = new SubjectsSanitizer(subjects).sanitize();
-  const endorsement = new MatrixEndorsement(sanitizedSubjects).determine();
+  const endorsement = new MatricEndorsement(sanitizedSubjects).determine();
   return { sanitizedSubjects, endorsement };
 }
 // Get student's subjects list
