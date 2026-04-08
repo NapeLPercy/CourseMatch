@@ -1,4 +1,4 @@
-const { getAllCourses } = require("../services/courseService");
+const { getAllCourses } = require("./courseService");
 
 // Get all qualifications, when a guest is computing aps
 async function guestGetAllQualifications() {

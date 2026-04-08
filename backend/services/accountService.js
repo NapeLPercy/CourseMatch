@@ -5,7 +5,7 @@ dotenv.config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const accountModel = require("../models/Account");
-const { addUser } = require("../services/userService");
+const { addUser } = require("./userService");
 
 //update a user role during onboarding
 async function updateAccountRole(conn, data) {

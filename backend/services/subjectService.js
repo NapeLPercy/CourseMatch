@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
 const subjectModel = require("../models/Subject");
-const { insertStudentEndorsement } = require("../services/studentService");
+const { insertStudentEndorsement } = require("./studentService");
 const SubjectsSanitizer = require("./subjectsSanitizer");
 const MatricEndorsement = require("./matrixEndorsement");
 

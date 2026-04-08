@@ -3,8 +3,8 @@ const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
 const parentModel = require("../models/Parent");
-const { addUserProfile } = require("../services/userService");
-const { updateAccountRole } = require("../services/accountService");
+const { addUserProfile } = require("./userService");
+const { updateAccountRole } = require("./accountService");
 
 /* 1 Add user generic data
 2 Add parent specifc data
