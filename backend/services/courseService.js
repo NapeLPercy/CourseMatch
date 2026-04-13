@@ -15,4 +15,6 @@ async function deleteCourse(code) {
   return await courseModel.deleteQualification(code);
 }
 
+
+
 module.exports = { addCourse, getAllCourses, deleteCourse };

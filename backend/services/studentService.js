@@ -81,6 +81,12 @@ async function getStudentId(userId) {
   return await studentModel.getStudentId(userId);
 }
 
+
+//user tries to view courses they were matched to
+async function getMatchedCourses(userId){
+  return await studentModel.getMyMatchedCourses(userId);
+}
+
 module.exports = {
   addStudentProfile,
   addStudentCompleteProfile,
@@ -89,4 +95,5 @@ module.exports = {
   getStudentBasicProfile,
   getStudentCompleteProfile,
   getStudentId,
+  getMatchedCourses,
 };

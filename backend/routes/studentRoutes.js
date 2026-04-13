@@ -31,4 +31,11 @@ router.get(
   studentController.getProfile,
 );
 
+router.get(
+  "/matched",
+  authenticate,
+  authorize("STUDENT"),
+  studentController.getMyMatchedQualifications,
+);
+
 module.exports = router;

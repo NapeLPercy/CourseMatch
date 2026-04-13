@@ -77,7 +77,7 @@ export default function AddSubjects() {
       const { data } = await addStudentSubjects(payload);
 
       if (!data.success) {
-        setErrors(["Subjects submission failed"]);
+        setErrors([data.message] || ["Subjects submission failed"]);
         return;
       }
 
@@ -87,10 +87,14 @@ export default function AddSubjects() {
         reset();
       }, 3000);
     } catch (err) {
-      setErrors([err.response?.data?.error || "Submission failed. Try again."]);
+      setErrors([
+        err.response?.data?.message || "Submission failed. Try again.",
+      ]);
     } finally {
       setLoading(false);
-      setSubmitted(false);
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 3000);
     }
   };
 
@@ -244,7 +248,7 @@ export default function AddSubjects() {
       )}
 
       {/* SUBMIT ERROR*/}
-      {submitted && <SubmitSuccess success="Aps successfuly computed" />}
+      {submitted && <SubmitSuccess success="Subjects submitted successfuly" />}
 
       {/* Row actions */}
       <div className="as__actions">

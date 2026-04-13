@@ -39,7 +39,7 @@ import AdminDashboard from "./components/data-display/AdminDashboard";
 import AdminManageUniversities from "./components/data-display/AdminManageUniversities";
 import NotAuthorized from "./pages/NotAuthorized";
 import RoleRoute from "./routes/RoleRoute";
-
+import StudentMatchedCourses from "./components/data-display/StudentMatchedCourses";
 //cookies
 import CookieModal from "./components/data-display/CookieModal";
 import RouteTracking from "./routes/RouteTracking";
@@ -75,10 +75,9 @@ function App() {
 
               {/* Shows nav only */}
               <Route element={<NavLayout />}>
+                {/*GUEST */}
 
-              {/*GUEST */}
-
-              <Route path="/aps-calculator" element={<GuestCalculateAPS/>}/>
+                <Route path="/aps-calculator" element={<GuestCalculateAPS />} />
 
                 {/* Logged-in routes (STUDENT) */}
                 <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
@@ -97,6 +96,11 @@ function App() {
                   <Route
                     path="/view-courses"
                     element={<StudentViewUniversities />}
+                  />
+
+                  <Route
+                    path="/my-courses"
+                    element={<StudentMatchedCourses />}
                   />
                   <Route
                     path="/view-courses/:courseSlug"

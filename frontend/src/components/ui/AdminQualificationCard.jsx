@@ -11,6 +11,7 @@ import {
   Award,
   Clock,
   Hash,
+  Trophy,
 } from "lucide-react";
 import "../../styles/AdminViewQualification.css";
 import ConfirmationModal from "../data-display/ConfirmationModal";
@@ -26,48 +27,55 @@ export default function AdminQualificationCard({ qual, index, afterDelete }) {
   };
 
   const handleDelete = () => {
-    setModalMessage(<>You are about to delete <strong>{qual.name}</strong> from qualifications list</>);
+    setModalMessage(
+      <>
+        You are about to delete <strong>{qual.name}</strong> from qualifications
+        list
+      </>,
+    );
     setIsModalOpen(true);
   };
 
-
-  const confirmDelete=()=>{
+  const confirmDelete = () => {
     deleteQualification(qual.code);
     afterDelete(qual.code);
-  }
+  };
 
-  const cancelDelete=()=>{
+  const cancelDelete = () => {
     setIsModalOpen(false);
     setModalMessage(null);
-  }
+  };
 
   const deleteQualification = async (code) => {
     const API_BASE = process.env.REACT_APP_API_BASE;
     const token = JSON.parse(sessionStorage.getItem("token"));
-  try {
-    // The 'await' keyword pauses execution until the promise is resolved
-    const response = await axios.delete(`${API_BASE}/api/qualification/${code}`,{
-      headers: {Authorization: `Bearer ${token}`}
-    });
-    
-  console.log("Data received:", response.data);
-  const data = response.data;
-  alert(data.message);
-  setIsModalOpen(false)
-  setModalMessage(null);
-  } catch (error) {
-    console.error("An error occurred during the request:");
-    
-    if (error.response) {
-      console.error("Server response data:", error.response.data);
-      console.error("Server response status:", error.response.status);
-    } else if (error.request) {
-      console.error("No response received:", error.request);
-    } else {
-      console.error("Error message:", error.message);
+    try {
+      // The 'await' keyword pauses execution until the promise is resolved
+      const response = await axios.delete(
+        `${API_BASE}/api/qualification/${code}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      console.log("Data received:", response.data);
+      const data = response.data;
+      alert(data.message);
+      setIsModalOpen(false);
+      setModalMessage(null);
+    } catch (error) {
+      console.error("An error occurred during the request:");
+
+      if (error.response) {
+        console.error("Server response data:", error.response.data);
+        console.error("Server response status:", error.response.status);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+      } else {
+        console.error("Error message:", error.message);
+      }
     }
-  }
-};
+  };
 
   return (
     <div className="avq__card" style={{ animationDelay: `${index * 0.05}s` }}>
@@ -124,6 +132,16 @@ export default function AdminQualificationCard({ qual, index, afterDelete }) {
             <span className="avq__detail-label">Code:</span>
             <span className="avq__detail-value">{qual.code}</span>
           </div>
+
+          {qual.nqf && (
+            <div className="avq__detail">
+              <Trophy size={13} strokeWidth={2} className="avq__detail-icon" />
+              <span className="avq__detail-label">NQF:</span>
+              <span className="avq__detail-value">
+                {qual.nqf}
+              </span>
+            </div>
+          )}
 
           {qual.minimum_aps && (
             <div className="avq__detail">

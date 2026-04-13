@@ -104,7 +104,7 @@ export const NAV_CONFIG = {
         icon: GraduationCap,
         dropdown: [
           {
-            path: "/matched-courses",
+            path: "/my-courses",
             label: "Matched Courses",
             // new → needs icon
             icon: ClipboardList,

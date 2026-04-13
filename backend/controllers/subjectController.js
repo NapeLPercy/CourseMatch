@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
 const { getSubjects, addSubjects } = require("../services/subjectService");
+const { subjectsExist } = require("../models/Subject");
 
 /*Add subjects*/
 exports.addSubjects = async (req, res) => {
@@ -23,8 +24,14 @@ exports.addSubjects = async (req, res) => {
       });
     }
 
+    const result = await addSubjects(subjects, studentId, userId);
 
-    await addSubjects(subjects, studentId, userId);
+    if (result?.subjectsExists) {
+      return res.status(409).json({
+        success: false,
+        message: "You already added your Subjects",
+      });
+    }
 
     return res.status(201).json({
       success: true,

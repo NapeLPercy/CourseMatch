@@ -48,6 +48,7 @@ export default function AdminAddQualification() {
   const [code, setCode] = useState("");
   const [qName, setQName] = useState("");
   const [minAps, setMinAps] = useState("");
+  const [nqf, setNqf] = useState("");
   const [minEndorsement, setMinEndorsement] = useState("");
   const [minDuration, setMinDuration] = useState("");
 
@@ -140,6 +141,13 @@ export default function AdminAddQualification() {
     if (!selectedFacultyId) errs.push("Faculty is required.");
     if (!code.trim()) errs.push("Qualification code is required.");
     if (!qName.trim()) errs.push("Qualification name is required.");
+    if (!minAps.trim()) errs.push("Minimum APS is required.");
+    if (!nqf.trim()) errs.push("NQF is required.");
+    if (!minDuration.trim()) errs.push("Minimum duration is required.");
+    if (!minEndorsement.trim()) errs.push("Minimum endorsement is required.");
+
+    if (nqf !== "" && Number.isNaN(Number(nqf)))
+      errs.push("NQF must be a number.");
 
     if (minAps !== "" && Number.isNaN(Number(minAps)))
       errs.push("Min APS must be a number.");
@@ -154,8 +162,10 @@ export default function AdminAddQualification() {
     selectedUniAbbrev,
     selectedFacultyId,
     code,
+    nqf,
     qName,
     minAps,
+    minEndorsement,
     minDuration,
     prereqs.length,
     prereqErrors,
@@ -198,6 +208,7 @@ export default function AdminAddQualification() {
     const qualification = {
       fac_id: Number(selectedFacultyId),
       code: code.trim(),
+      nqf: nqf.trim(),
       name: qName.trim(),
       minaps: minAps === "" ? null : Number(minAps),
       min_endorsement: minEndorsement.trim() || null,
@@ -233,6 +244,7 @@ export default function AdminAddQualification() {
   const handleReset = () => {
     setCode("");
     setQName("");
+    setNqf("");
     setMinAps("");
     setMinEndorsement("");
     setMinDuration("");
@@ -335,7 +347,7 @@ export default function AdminAddQualification() {
 
             <div className="aaq__field">
               <label htmlFor="aaq-aps" className="aaq__label">
-                Min APS
+                Min APS *
               </label>
               <input
                 id="aaq-aps"
@@ -348,26 +360,42 @@ export default function AdminAddQualification() {
             </div>
           </div>
 
-          {/* Name */}
-          <div className="aaq__field">
-            <label htmlFor="aaq-name" className="aaq__label">
-              Name *
-            </label>
-            <input
-              id="aaq-name"
-              type="text"
-              value={qName}
-              onChange={(e) => setQName(e.target.value)}
-              placeholder="e.g., BSc Computer Science"
-              className="aaq__input"
-            />
+          {/* Name and NQF */}
+          <div className="aaq__row">
+            <div className="aaq__field">
+              <label htmlFor="aaq-duration" className="aaq__label">
+                NQF level *
+              </label>
+              <input
+                id="aaq-duration"
+                type="text"
+                value={nqf}
+                onChange={(e) => setNqf(e.target.value)}
+                placeholder="e.g., 7"
+                className="aaq__input"
+              />
+            </div>
+
+            <div className="aaq__field">
+              <label htmlFor="aaq-name" className="aaq__label">
+                Name *
+              </label>
+              <input
+                id="aaq-name"
+                type="text"
+                value={qName}
+                onChange={(e) => setQName(e.target.value)}
+                placeholder="e.g., BSc Computer Science"
+                className="aaq__input"
+              />
+            </div>
           </div>
 
           {/* Endorsement + Duration */}
           <div className="aaq__row">
             <div className="aaq__field">
               <label htmlFor="aaq-endorse" className="aaq__label">
-                Min Endorsement
+                Min Endorsement *
               </label>
               <select
                 id="aaq-endorse"
@@ -375,7 +403,7 @@ export default function AdminAddQualification() {
                 onChange={(e) => setMinEndorsement(e.target.value)}
                 className="aaq__select"
               >
-                <option value="">(optional)</option>
+                <option value="">Select endorsement</option>
                 <option value="Bachelor">Bachelor</option>
                 <option value="Diploma">Diploma</option>
                 <option value="Higher Certificate">Higher Certificate</option>
@@ -384,7 +412,7 @@ export default function AdminAddQualification() {
 
             <div className="aaq__field">
               <label htmlFor="aaq-duration" className="aaq__label">
-                Min Duration (years)
+                Min Duration (years/months) *
               </label>
               <input
                 id="aaq-duration"

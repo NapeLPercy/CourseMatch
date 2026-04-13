@@ -51,7 +51,7 @@ export default function ManageQualifications() {
       <div className="mc__content">
         {activeTab === "add" && <AdminAddQualification />}
 
-        {activeTab === "edit" && <AdminViewQualifications />}
+        {activeTab === "edit" && <AdminViewQualifications/>}
       </div>
     </div>
   );

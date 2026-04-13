@@ -37,6 +37,7 @@ export default function Nav() {
 
   // Pages where navbar must be colored immediately
   const forceColoredRoutes = [
+    "/my-courses",
     "/tutors/home",
     "/aps-calculator",
     "/view-courses",

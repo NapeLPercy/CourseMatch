@@ -6,6 +6,7 @@ const {
   getStudentProfile,
   getStudentBasicProfile,
   addStudentCompleteProfile,
+  getMatchedCourses,
 } = require("../services/studentService");
 const { generateToken } = require("../services/accountService");
 
@@ -83,7 +84,6 @@ exports.completeProfile = async (req, res) => {
       success: true,
       message: "Profile saved successfully",
     });
-
   } catch (error) {
     console.error("Save profile error:", error);
     return res
@@ -95,7 +95,6 @@ exports.completeProfile = async (req, res) => {
 // Student add basic profile info
 exports.createBasicProfile = async (req, res) => {
   try {
-    
     const userId = req.userId;
     const { studentData } = req.body;
 
@@ -128,6 +127,36 @@ exports.createBasicProfile = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Server error",
+    });
+  }
+};
+
+//get my matched courses
+
+// Get all qualifications and thier faculty
+exports.getMyMatchedQualifications = async (req, res) => {
+  try {
+    const { userId, role } = req;
+
+    if (!userId || !role) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+      });
+    }
+
+    const matchedQualifications = await getMatchedCourses(userId);
+
+    return res.status(200).json({
+      matchedData: matchedQualifications,
+      success: true,
+      message: "Matched Qualifications successfuly fetched!",
+    });
+  } catch (error) {
+    console.error("Get qualifications error:", error);
+    return res.status(500).json({
+      message: "Error fetching qualifications",
+      success: false,
     });
   }
 };

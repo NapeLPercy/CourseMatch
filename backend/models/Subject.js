@@ -16,6 +16,23 @@ module.exports = {
     });
   },
 
+  // Check if recommendations exist
+  subjectsExist: async (studentId) => {
+    const sql = `
+      SELECT 1 
+      FROM subject
+      WHERE student_id = ?
+      LIMIT 1
+    `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [studentId], (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows.length > 0);
+      });
+    });
+  },
+
   //Get student's subjects
   getSubjectsByStudentIdForUser: async (studentId) => {
     const sql = `SELECT subject_id AS id, name, mark, endorsement_subject FROM subject WHERE student_id = ?

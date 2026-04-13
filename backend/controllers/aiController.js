@@ -49,7 +49,6 @@ exports.getAIRecommendations = async (req, res) => {
       qualifiedCourses,
     });
 
-    console.log("results", results);
     return res.status(200).json({
       success: true,
       results: results,

@@ -30,6 +30,13 @@ async function addSubjects(subjects, studentId, userId) {
       studentId,
     ]);
 
+    //check if subjectsexists
+
+    const exist = await subjectModel.subjectsExist(studentId);
+    if (exist) {
+      return { subjectsExists: true };
+    }
+
     await subjectModel.insertSubjects(subjectValues);
 
     let { endorsement } = computeEndorsementAndAPSSubjects(subjects);
@@ -37,7 +44,6 @@ async function addSubjects(subjects, studentId, userId) {
     await insertStudentEndorsement(endorsement, userId);
 
     await conn.promise().commit();
-
   } catch (error) {
     await conn.promise().rollback();
     throw error;
