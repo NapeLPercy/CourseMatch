@@ -37,12 +37,11 @@ export const NAV_CONFIG = {
         icon: Calculator,
       },
       { path: "/about", label: "About Us", icon: Info },
-
+      { path: "/blogs", label: "Blog", icon: FileText },
       {
         label: "Resources",
         icon: FileText,
         dropdown: [
-          // { path: "/blogs", label: "Blogs", icon: FileText },
           {
             path: "/terms-and-conditions",
             label: "Terms & Conditions",
@@ -233,6 +232,11 @@ export const NAV_CONFIG = {
         path: "/admin/manage-universities",
         label: "Universities & Faculties",
         icon: Building2,
+      },
+      {
+        path: "/admin/manage-blogs",
+        label: "Manage blogs",
+        icon: FileText,
       },
       {
         path: "/admin/reports",

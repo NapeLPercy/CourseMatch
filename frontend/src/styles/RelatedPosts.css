@@ -1,0 +1,130 @@
+/* ── RelatedPosts.css ── */
+
+.rp {
+  margin-top: 52px;
+  padding-top: 28px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.rp__heading {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 20px;
+}
+
+/* ── Grid ── */
+.rp__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+/* ── Card ── */
+.rp__card {
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  animation: rp-cardIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--index, 0) * 0.06s);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rp__card:hover {
+  transform: translateY(-3px);
+}
+
+.rp__card:hover .rp__cover-img {
+  transform: scale(1.05);
+}
+
+@keyframes rp-cardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Cover ── */
+.rp__cover-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.rp__cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* strong bottom scrim so text is always readable */
+.rp__cover-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10, 15, 30, 0.82) 0%,
+    rgba(10, 15, 30, 0.2) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ── Overlay text — sits at bottom of image ── */
+.rp__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 12px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rp__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rp__reads {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .rp__grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 500px) {
+  .rp__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

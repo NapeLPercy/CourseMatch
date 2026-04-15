@@ -14,6 +14,8 @@ const adminDashboardRoutes = require("./routes/dashboardRoutes");
 const parentRoutes = require("./routes/parentRoutes");
 const tutorRoutes = require("./routes/tutorRoutes");
 const guestRoutes = require("./routes/guestRoutes");
+const blogRoutes = require("./routes/blogRoutes");
+
 dotenv.config();
 const app = express();
 
@@ -33,7 +35,7 @@ app.use(
     credentials: true,
   }),
 );
-
+app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 
 // health
@@ -53,6 +55,8 @@ app.use("/api/admin", adminDashboardRoutes);
 app.use("/api/parent", parentRoutes);
 app.use("/api/tutor", tutorRoutes);
 app.use("/api/guest", guestRoutes);
+app.use("/api/blogs", blogRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 

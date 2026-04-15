@@ -1,0 +1,382 @@
+/* ── BlogList.css ── */
+
+.bl {
+  padding: 100px 24px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+/* ── Hero ── */
+.bl__hero {
+  text-align: center;
+  margin-bottom: 44px;
+}
+
+.bl__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: #1e3a8a;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+
+.bl__subtitle {
+  font-size: 1rem;
+  color: #64748b;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ── Controls ── */
+.bl__controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+/* Search */
+.bl__search-wrap {
+  flex: 1;
+  position: relative;
+}
+
+.bl__search-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.bl__search {
+  width: 100%;
+  padding: 11px 14px 11px 40px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: #1e293b;
+  outline: none;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bl__search:focus {
+  background: #e8f0fe;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18);
+}
+
+/* Filter */
+.bl__filter-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.bl__filter-icon {
+  position: absolute;
+  left: 13px;
+  color: #94a3b8;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bl__filter {
+  padding: 11px 14px 11px 36px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: #1e293b;
+  outline: none;
+  cursor: pointer;
+  min-width: 180px;
+  appearance: none;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bl__filter:focus {
+  background: #e8f0fe;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18);
+}
+
+/* ── Results label ── */
+.bl__results-label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-bottom: 24px;
+  letter-spacing: 0.01em;
+}
+
+.bl__results-label span {
+  font-weight: 600;
+  color: #475569;
+}
+
+/* ── Grid ── */
+.bl__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* ── Card ── */
+.bl__card {
+  background: transparent;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: bl-cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--index, 0) * 0.07s);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.bl__card:hover {
+  transform: translateY(-4px);
+}
+
+.bl__card:hover .bl__cover-img {
+  transform: scale(1.04);
+}
+
+.bl__card:hover .bl__read-more {
+  gap: 7px;
+  color: #1e3a8a;
+}
+
+@keyframes bl-cardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Cover ── */
+.bl__cover-wrap {
+  position: relative;
+  width: 100%;
+  /* Oval-ish: tall rounded rectangle */
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+}
+
+.bl__cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* subtle dark scrim at bottom so badge contrast on light images */
+.bl__cover-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(0, 0, 0, 0.28) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+/* Topic badge — top left over the image */
+.bl__topic-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #1e3a8a;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  line-height: 1;
+}
+
+/* ── Card body ── */
+.bl__card-body {
+  padding: 16px 4px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.bl__card-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.bl__card-excerpt {
+  font-size: 0.86rem;
+  color: #64748b;
+  line-height: 1.65;
+  margin: 0;
+  flex: 1;
+}
+
+/* ── Card footer ── */
+.bl__card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  margin-top: 4px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.bl__author {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.bl__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.bl__author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bl__author-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1;
+}
+
+.bl__meta-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  line-height: 1;
+}
+
+.bl__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  display: inline-block;
+}
+
+/* ── Read more — ghost text link ── */
+.bl__read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #2563eb;
+  cursor: pointer;
+  font-family: inherit;
+  transition: gap 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.bl__read-more:hover {
+  gap: 8px;
+  color: #1e3a8a;
+}
+
+/* ── Empty ── */
+.bl__empty {
+  text-align: center;
+  padding: 72px 20px;
+  color: #94a3b8;
+  grid-column: 1 / -1;
+}
+
+.bl__empty svg {
+  opacity: 0.35;
+  margin-bottom: 14px;
+}
+
+.bl__empty h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #334155;
+  margin: 0 0 6px;
+}
+
+.bl__empty p {
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .bl__grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 700px) {
+  .bl {
+    padding: 88px 20px 60px;
+  }
+
+  .bl__controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bl__filter {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .bl__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .bl__card-footer {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
