@@ -30,7 +30,7 @@ export default function ShareMenu({ post }) {
   }
 
   function handleTwitter() {
-    const text = `${post.title}\n${url}\n${image}`;
+    const text = `${post.title}\n${url}`;
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
       "_blank",
