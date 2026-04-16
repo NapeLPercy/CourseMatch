@@ -1,0 +1,215 @@
+/* ── Testimonials.css ── */
+:root {
+  --primary-blue: #1e3a8a;
+  --medium-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --pale-blue: #dbeafe;
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #475569;
+  --shadow: rgba(30, 58, 138, 0.1);
+}
+ 
+.ts {
+  padding: 80px 0;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  overflow: hidden;
+   background: var(--off-white);/*linear-gradient(180deg, var(--off-white) 0%, var(--white) 100%);*/
+
+}
+
+/* ── Header ── */
+.ts__header {
+  text-align: center;
+  padding: 0 24px;
+  margin-bottom: 48px;
+}
+
+.ts__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 10px;
+}
+
+.ts__subtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+  max-width: 460px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* ── Track wrapper ── */
+.ts__track-wrap {
+  position: relative;
+  overflow: hidden;
+  /* let cards breathe top/bottom */
+  padding: 8px 0 16px;
+}
+
+/* Fade masks on left and right edges */
+.ts__fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ts__fade--left {
+  left: 0;
+  background: linear-gradient(to right, var(--page-bg, #f8fafc), transparent);
+}
+
+.ts__fade--right {
+  right: 0;
+  background: linear-gradient(to left, var(--page-bg, #f8fafc), transparent);
+}
+
+/* ── Scrolling track ── */
+.ts__track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  animation: ts-scroll 35s linear infinite;
+  /* pause on hover — desktop only, handled via media query below */
+}
+
+@keyframes ts-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+  /* -50% because we duplicated the list, so 50% = one full loop */
+}
+
+/* ── Card ── */
+.ts__card {
+  background: #fff;
+  border: 1px solid var(--pale-blue);
+  border-radius: 18px;
+  padding: 22px 20px;
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 2px 12px rgba(30, 58, 138, 0.05);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.ts__card:hover {
+  box-shadow: 0 6px 24px rgba(30, 58, 138, 0.1);
+  transform: translateY(-3px);
+}
+
+/* ── Card top row ── */
+.ts__card-top {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.ts__avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+
+.ts__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ts__name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.ts__role {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  line-height: 1;
+}
+
+/* ── Stars ── */
+.ts__stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #eab308;
+}
+
+.ts__star--full {
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 0;
+}
+
+.ts__star--half {
+  color: #eab308;
+  stroke: #eab308;
+}
+
+.ts__star--empty {
+  color: #e2e8f0;
+}
+
+/* ── Message ── */
+.ts__message {
+  font-size: 0.855rem;
+  color: #475569;
+  line-height: 1.7;
+  margin: 0;
+  flex: 1;
+}
+
+/* ── Desktop: pause scroll on hover ── */
+@media (hover: hover) and (pointer: fine) {
+  .ts__track-wrap:hover .ts__track {
+    animation-play-state: paused;
+  }
+}
+
+/* ── Mobile: disable auto-scroll, enable touch swipe ── */
+@media (max-width: 768px) {
+  .ts__track {
+    animation: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    /* hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    width: 100%;
+    padding: 0 24px;
+    box-sizing: border-box;
+  }
+
+  .ts__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ts__card {
+    scroll-snap-align: start;
+  }
+
+  /* tighten fade on mobile */
+  .ts__fade {
+    width: 40px;
+  }
+}

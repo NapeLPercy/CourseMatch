@@ -14,80 +14,70 @@
 }
 
 /*  Controls row (sort bar)  */
+
+
+/* ── Controls row ── */
 .rec-controls {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+  gap: 10px;
+  flex-wrap: nowrap; /* always side by side */
+  margin-bottom: 30px;
 }
 
-.rec-controls__label {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-gray);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
+/* ── Select ── */
 .rec-controls__select {
-  appearance: none;
-  -webkit-appearance: none;
-  background: var(--white);
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 7px 34px 7px 12px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: 9px 14px;
+  background: var(--off-white);
+  border: 2px solid var(--pale-blue);
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-family: inherit;
   color: var(--text-dark);
-  cursor: pointer;
   outline: none;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-
-  /* custom chevron via background-image */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23475569'/%3E%3C/svg%3E");
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 10px center;
+  background-position: right 12px center;
+  padding-right: 34px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .rec-controls__select:focus {
-  border-color: var(--medium-blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: var(--light-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
-/*download btn*/
+
+/* ── Download button ── */
 .download-pdf-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: rgba(37, 99, 235, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(37, 99, 235, 0.25);
-  border-radius: 12px;
-  padding: 12px 24px;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.9rem;
+  gap: 6px;
+  padding: 9px 18px;
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
   font-weight: 600;
-  color: #2563eb;
+  font-family: inherit;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(30, 58, 138, 0.1);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .download-pdf-btn:hover {
-  background: rgba(37, 99, 235, 0.15);
-  border-color: rgba(37, 99, 235, 0.4);
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(30, 58, 138, 0.15);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
 }
 
 .download-pdf-btn:active {
-  transform: translateY(0);
+  transform: scale(0.97);
 }
+
+
 /* Course list */
 .rec-list {
   list-style: none;
@@ -302,8 +292,13 @@
     font-size: 0.8rem;
   }
 
-  .rec-controls {
-    flex-direction: column;
-    align-items: flex-start;
+    .rec-controls {
+    width: 100%;
+  }
+
+  .rec-controls__select {
+    flex: 1;
   }
 }
+
+

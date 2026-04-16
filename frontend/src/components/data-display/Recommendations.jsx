@@ -107,8 +107,6 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
 
   const renderControls = () => (
     <div className="rec-controls">
-      <span className="rec-controls__label">Sort by Fit Score</span>
-
       <select
         className="rec-controls__select"
         value={sortOrder}

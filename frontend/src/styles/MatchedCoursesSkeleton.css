@@ -1,0 +1,280 @@
+/* COURSE LIST SKELETON — CourseMatch */
+
+.cls {
+  width: 100%;
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 56px 32px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ── SHIMMER BASE ─────────────────────────── */
+.cls__skel {
+  background: linear-gradient(
+    90deg,
+    #e2e8f0 0%,
+    #f1f5f9 50%,
+    #e2e8f0 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: clsShimmer 1.6s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.08s);
+}
+
+@keyframes clsShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── HEADER ──────────────────────────────── */
+.cls__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.cls__header-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  flex-shrink: 0;
+}
+
+.cls__header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.cls__eyebrow {
+  width: 140px;
+  height: 22px;
+  border-radius: 20px;
+}
+
+.cls__title {
+  width: 280px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.cls__subtitle {
+  width: 420px;
+  max-width: 100%;
+  height: 16px;
+  border-radius: 6px;
+}
+
+/* ── CONTROLS ────────────────────────────── */
+.cls__controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cls__search {
+  flex: 1;
+  min-width: 220px;
+  height: 42px;
+  border-radius: 10px;
+}
+
+.cls__select {
+  width: 160px;
+  height: 42px;
+  border-radius: 10px;
+}
+
+/* ── META ────────────────────────────────── */
+.cls__meta {
+  width: 120px;
+  height: 14px;
+  border-radius: 6px;
+}
+
+/* ── GRID ────────────────────────────────── */
+.cls__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+/* ── CARD ────────────────────────────────── */
+.cls__card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: clsFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.07s);
+}
+
+@keyframes clsFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── CARD HEAD ───────────────────────────── */
+.cls__card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px 20px 0;
+}
+
+.cls__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.cls__card-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cls__uni {
+  height: 13px;
+  width: 75%;
+  border-radius: 5px;
+}
+
+.cls__faculty {
+  height: 11px;
+  width: 55%;
+  border-radius: 5px;
+}
+
+.cls__fit {
+  width: 42px;
+  height: 22px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+/* ── CARD BODY ───────────────────────────── */
+.cls__card-body {
+  padding: 14px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.cls__course-name {
+  height: 16px;
+  width: 90%;
+  border-radius: 6px;
+}
+
+.cls__course-name--short {
+  width: 60%;
+}
+
+.cls__tags {
+  display: flex;
+  gap: 6px;
+}
+
+.cls__tag {
+  width: 72px;
+  height: 22px;
+  border-radius: 6px;
+}
+
+/* Reason block */
+.cls__reason {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border-left: 3px solid #e2e8f0;
+  border-radius: 0 8px 8px 0;
+}
+
+.cls__reason-line {
+  height: 12px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.cls__reason-line--short {
+  width: 65%;
+}
+
+/* ── ACTIONS ─────────────────────────────── */
+.cls__card-actions {
+  display: flex;
+  border-top: 1px solid #e2e8f0;
+  padding: 14px 20px;
+  gap: 10px;
+}
+
+.cls__action {
+  flex: 1;
+  height: 32px;
+  border-radius: 8px;
+}
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 768px) {
+  .cls {
+    padding: 36px 20px 60px;
+    gap: 22px;
+  }
+
+  .cls__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cls__controls {
+    flex-direction: column;
+  }
+
+  .cls__search,
+  .cls__select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .cls__subtitle {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .cls {
+    padding: 24px 14px 48px;
+  }
+
+  .cls__header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cls__title {
+    width: 200px;
+  }
+
+  .cls__card-head {
+    padding: 16px 16px 0;
+  }
+
+  .cls__card-body {
+    padding: 12px 16px 14px;
+  }
+
+  .cls__card-actions {
+    padding: 12px 16px;
+  }
+}

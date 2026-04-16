@@ -20,7 +20,7 @@
 .faq {
   position: relative;
   min-height: 100vh;
-  background: linear-gradient(180deg, var(--off-white) 0%, var(--white) 100%);
+  background:  var(--off-white);/*linear-gradient(180deg, var(--off-white) 0%, var(--white) 100%);*/
   padding: 20px 24px 80px;
   overflow: hidden;
 }

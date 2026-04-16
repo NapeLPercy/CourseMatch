@@ -12,7 +12,7 @@ import { getMyMatches } from "../../services/studentService";
 import ErrorState from "../ui/ErrorState";
 import EmptyState from "../ui/EmptyState";
 import "../../styles/StudentMatchedCourses.css";
-
+import MatchedCoursesSkeleton from "../ui/MatchedCoursesSkeleton";
 export default function QualifiedCoursesPage() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,12 +80,7 @@ export default function QualifiedCoursesPage() {
   };
 
   if (loading) {
-    return (
-      <div className="qcp__loading-wrap">
-        <div className="qcp__spinner" />
-        <p>Finding your matches…</p>
-      </div>
-    );
+    return <MatchedCoursesSkeleton />;
   }
 
   if (error) {
@@ -169,9 +164,7 @@ export default function QualifiedCoursesPage() {
           <div key={course.id} className="qcp__card" style={{ "--i": i }}>
             {/* Card header */}
             <div className="qcp__card-head">
-              <div className="qcp__avatar">
-                {course.abbreaviation}
-              </div>
+              <div className="qcp__avatar">{course.abbreaviation}</div>
               <div className="qcp__card-meta">
                 <span className="qcp__uni-name">{course.university_name}</span>
                 <span className="qcp__faculty">{course.faculty_name}</span>

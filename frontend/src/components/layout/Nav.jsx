@@ -123,8 +123,9 @@ export default function Nav() {
   const handleLogout = () => {
     setLogOut(true);
     setTimeout(() => {
+       navigate("/");
       logout();
-      navigate("/");
+     
       setLogOut(false);
     }, 3000);
   };

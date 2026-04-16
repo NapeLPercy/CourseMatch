@@ -21,18 +21,18 @@ export default function RoleRoute({ allowedRoles = [] }) {
 
   if (authLoading) return null;
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/" replace />;
 
   const role = String(user.role || "").toUpperCase();
 
-  // 🚨 NEW: handle users with no role (onboarding)
+  // NEW: handle users with no role (onboarding)
   if (!role) {
     return <Navigate to="/not-authorized" replace />;
   }
 
   const ok = allowedRoles.map((r) => String(r).toUpperCase()).includes(role);
 
-  // 🚨 NEW: instead of "not-authorized", redirect smartly
+  // NEW: instead of "not-authorized", redirect smartly
   if (!ok) {
     return <Navigate to={getDashboardRoute(role)} replace />;
   }
