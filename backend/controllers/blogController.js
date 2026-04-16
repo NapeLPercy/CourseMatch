@@ -3,6 +3,7 @@ const {
   getAllBlogs,
   adminGetAllBlogs,
   getBlogById,
+  getBlogShareById,
   deleteBlog,
   updateBlogStatus,
 } = require("../services/blogService");
@@ -184,3 +185,27 @@ exports.updateBlog = async (req, res) => {
     });
   }
 };
+
+//for blog sharing
+exports.getBlogSharePage = async (req, res) => {
+
+  const blog = await getBlogShareById(req.params.id);
+
+  if (!blog) return res.status(404).send("Not found");
+
+  return res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta property="og:title" content="${blog.title}" />
+        <meta property="og:description" content="${blog.excerpt}" />
+        <meta property="og:image" content="${blog.coverImageUrl}" />
+        <meta property="og:url" content="https://coursematch-ui.onrender.com/post/${blog.id}" />
+        <meta property="og:type" content="article" />
+      </head>
+      <body></body>
+    </html>
+  `);
+};
+
+

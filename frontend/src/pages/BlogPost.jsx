@@ -45,6 +45,8 @@ export default function BlogPost() {
     setLoading(true);
     try {
       const { data } = await getBlogById(postId);
+
+      console.log(data,"here its back");
       setPost(data.blog);
       setRelatedPosts(data.blog.related);
     } catch (error) {
@@ -103,7 +105,7 @@ export default function BlogPost() {
             </div>
 
             {/* Share */}
-            <ShareMenu title={post.title} />
+            <ShareMenu post={post} />
           </div>
 
           <div className="bp__divider" />

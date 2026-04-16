@@ -36,4 +36,8 @@ router.patch(
 //guest
 router.get("/all", blogController.getAllBlogs);
 router.get("/:id", blogController.getBlogById);
+
+//for sharing
+router.get("/post/:id", blogController.getBlogSharePage);
+
 module.exports = router;

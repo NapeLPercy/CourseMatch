@@ -10,6 +10,10 @@ async function getBlogById(id) {
   return await blogModel.getBlogById(id);
 }
 
+async function getBlogShareById(id) {
+  return await blogModel.getBlogShareById(id);
+}
+
 async function getAllBlogs() {
   return await blogModel.getAllBlogs();
 }
@@ -33,4 +37,5 @@ module.exports = {
   adminGetAllBlogs,
   deleteBlog,
   updateBlogStatus,
+  getBlogShareById
 };

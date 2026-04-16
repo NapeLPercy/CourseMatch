@@ -170,7 +170,35 @@ module.exports = {
       })),
     };
   },
+  //for social media bots
+  getBlogShareById: async (id) => {
+    const postSql = `
+    SELECT 
+      id,
+      title,
+      excerpt,
+      cover_image,
+      published_at
+    FROM blog_post
+    WHERE id = ?
+      AND status = 'PUBLISHED'
+    LIMIT 1
+  `;
 
+    const post = await query(postSql, [id]);
+
+    if (!post) return null;
+
+    return {
+      id: post.id,
+      title: post.title,
+      excerpt: post.excerpt,
+      coverImageUrl: post.cover_image
+        ? `${process.env.BASE_URL}${post.cover_image}`
+        : null,
+      publishedAt: post.published_at,
+    };
+  },
   //CREATE BLOG
   createBlog: async (data) => {
     const connection = await new Promise((resolve, reject) => {
@@ -235,13 +263,13 @@ module.exports = {
   },
 
   updateBlogStatus: async (id, status) => {
-  const allowed = ["DRAFT", "PUBLISHED"];
+    const allowed = ["DRAFT", "PUBLISHED"];
 
-  if (!allowed.includes(status)) {
-    throw new Error("Invalid status");
-  }
+    if (!allowed.includes(status)) {
+      throw new Error("Invalid status");
+    }
 
-  const sql = `
+    const sql = `
     UPDATE blog_post
     SET status = ?, 
         published_at = CASE 
@@ -251,59 +279,55 @@ module.exports = {
     WHERE id = ?
   `;
 
-  return new Promise((resolve, reject) => {
-    db.query(sql, [status, status, id], (err, result) => {
-      if (err) return reject(err);
-      resolve(result.affectedRows > 0);
+    return new Promise((resolve, reject) => {
+      db.query(sql, [status, status, id], (err, result) => {
+        if (err) return reject(err);
+        resolve(result.affectedRows > 0);
+      });
     });
-  });
-},
+  },
 
-deleteBlog: async (id) => {
-  const connection = await new Promise((resolve, reject) => {
-    db.getConnection((err, conn) => {
-      if (err) return reject(err);
-      resolve(conn);
+  deleteBlog: async (id) => {
+    const connection = await new Promise((resolve, reject) => {
+      db.getConnection((err, conn) => {
+        if (err) return reject(err);
+        resolve(conn);
+      });
     });
-  });
 
-  try {
-    // 🔥 start transaction
-    await new Promise((res, rej) =>
-      connection.beginTransaction((err) => (err ? rej(err) : res()))
-    );
+    try {
+      // 🔥 start transaction
+      await new Promise((res, rej) =>
+        connection.beginTransaction((err) => (err ? rej(err) : res())),
+      );
 
-    // 🔹 delete blocks first (FK safety)
-    await new Promise((res, rej) =>
-      connection.query(
-        "DELETE FROM blog_block WHERE post_id = ?",
-        [id],
-        (err) => (err ? rej(err) : res())
-      )
-    );
+      // 🔹 delete blocks first (FK safety)
+      await new Promise((res, rej) =>
+        connection.query(
+          "DELETE FROM blog_block WHERE post_id = ?",
+          [id],
+          (err) => (err ? rej(err) : res()),
+        ),
+      );
 
-    // 🔹 delete post
-    await new Promise((res, rej) =>
-      connection.query(
-        "DELETE FROM blog_post WHERE id = ?",
-        [id],
-        (err) => (err ? rej(err) : res())
-      )
-    );
+      // 🔹 delete post
+      await new Promise((res, rej) =>
+        connection.query("DELETE FROM blog_post WHERE id = ?", [id], (err) =>
+          err ? rej(err) : res(),
+        ),
+      );
 
-    // 🔥 commit
-    await new Promise((res, rej) =>
-      connection.commit((err) => (err ? rej(err) : res()))
-    );
+      // 🔥 commit
+      await new Promise((res, rej) =>
+        connection.commit((err) => (err ? rej(err) : res())),
+      );
 
-    return true;
-
-  } catch (err) {
-    await new Promise((res) => connection.rollback(() => res()));
-    throw err;
-
-  } finally {
-    connection.release();
-  }
-},
+      return true;
+    } catch (err) {
+      await new Promise((res) => connection.rollback(() => res()));
+      throw err;
+    } finally {
+      connection.release();
+    }
+  },
 };
