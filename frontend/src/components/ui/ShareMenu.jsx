@@ -14,7 +14,7 @@ export default function ShareMenu({ post }) {
 
   const url =
     typeof window !== "undefined"
-      ? `${window.location.origin}/post/${post.id}`
+      ? `${window.location.origin}/post/${post?.id}`
       : "";
 
   const image = post?.coverImageUrl || "";
