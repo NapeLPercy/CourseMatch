@@ -8,7 +8,8 @@ import { getBlogById } from "../services/blogService";
 import { useParams } from "react-router-dom";
 import { formatTimestamp } from "../Utils/datetime";
 import BlogPostSkeleton from "../components/ui/BlogPostSkeleton";
-
+import BlogNotFound from "../components/ui/BlogNotFound";
+import ErrorState from "../components/ui/ErrorState";
 function getInitials(name) {
   if (!name) return;
   return name
@@ -30,6 +31,9 @@ export default function BlogPost() {
   const [post, setPost] = useState({});
   const [relatedPosts, setRelatedPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [error, setError] = useState(null);
+
   // const sorted = [...post?.blocks].sort((a, b) => a.position - b.position);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -43,20 +47,29 @@ export default function BlogPost() {
 
   const getPostAndRelatedPosts = async (postId) => {
     setLoading(true);
+    setError(null);
+    setNotFound(false);
     try {
       const { data } = await getBlogById(postId);
-
-      console.log(data,"here its back");
+      if (!data.success) {
+        //blognot found
+        setNotFound(true);
+        return;
+      }
       setPost(data.blog);
       setRelatedPosts(data.blog.related);
     } catch (error) {
-      console.log(error);
+      setError("Server error, could not fetch blog post");
     } finally {
       setLoading(false);
     }
   };
 
   if (loading) return <BlogPostSkeleton />;
+  if (notFound) return <BlogNotFound />;
+  if (error)
+    return <ErrorState message={error} onRetry={getPostAndRelatedPosts} />;
+  
   return (
     <div className="bp">
       {/* Back nav */}

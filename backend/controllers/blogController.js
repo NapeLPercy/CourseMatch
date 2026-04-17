@@ -90,7 +90,7 @@ exports.getBlogById = async (req, res) => {
     const blog = await getBlogById(id);
 
     if (!blog) {
-      return res.status(404).json({ message: "Blog not found" });
+      return res.json({success:false, message: "Blog not found" });
     }
 
     res
