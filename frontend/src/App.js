@@ -52,6 +52,7 @@ import TutorHome from "./pages/TutorHome";
 import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
 import ManageBlogs from "./components/data-display/ManageBlogs";
+import DeepDive from "./components/data-display/DeepDive";
 function App() {
   return (
     <UserProvider>
@@ -114,6 +115,11 @@ function App() {
                     path="/student/manage-my-profile"
                     element={<ManageMyProfile />}
                   />
+
+                  <Route
+                    path="/student/course-deep-dive"
+                    element={<DeepDive />}
+                  />
                 </Route>
 
                 {/* Logged-in routes (PARENT) */}
@@ -149,10 +155,7 @@ function App() {
                     element={<AdminViewQualification />}
                   />
 
-                  <Route
-                    path="/admin/manage-blogs"
-                    element={<ManageBlogs/>}
-                  />
+                  <Route path="/admin/manage-blogs" element={<ManageBlogs />} />
                 </Route>
               </Route>
 

@@ -13,6 +13,8 @@ import ErrorState from "../ui/ErrorState";
 import EmptyState from "../ui/EmptyState";
 import "../../styles/StudentMatchedCourses.css";
 import MatchedCoursesSkeleton from "../ui/MatchedCoursesSkeleton";
+import { useNavigate } from "react-router-dom";
+
 export default function QualifiedCoursesPage() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +23,8 @@ export default function QualifiedCoursesPage() {
   const [university, setUniversity] = useState("all");
   const [sort, setSort] = useState("fit_desc");
   const [bookmarked, setBookmarked] = useState(new Set());
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMyMatchedCourses();
@@ -70,7 +74,7 @@ export default function QualifiedCoursesPage() {
   };
 
   const handleDeepDive = (course) => {
-    console.log("deep dive:", course);
+    navigate("/student/course-deep-dive", { state: {course} });
   };
 
   const fitLabel = (score) => {
@@ -179,6 +183,9 @@ export default function QualifiedCoursesPage() {
               <h3 className="qcp__course-name">{course.qualification_name}</h3>
 
               <div className="qcp__tags">
+                <span className="qcp__tag qcp__tag--aps">
+                  NQF {course.nqf}
+                </span>
                 <span className="qcp__tag qcp__tag--code">
                   {course.course_code}
                 </span>

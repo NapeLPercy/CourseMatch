@@ -1,0 +1,263 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { getOrCreateDeepDive } from "../../services/aiService";
+import { useSubjects } from "../../context/SubjectContext";
+import ErrorState from "../ui/ErrorState";
+import {
+  ArrowLeft,
+  Sparkles,
+  TrendingUp,
+  Building2,
+  Lightbulb,
+  AlertTriangle,
+  Star,
+  Briefcase,
+  GraduationCap,
+  BookOpen,
+  ChevronRight,
+} from "lucide-react";
+import "../../styles/DeepDive.css";
+
+function DeepDiveSkeleton() {
+  return (
+    <div className="dd">
+      <div className="dd__back-btn dd__skel" style={{ width: 90, height: 36, borderRadius: 10 }} />
+
+      <div className="dd__hero dd__hero--skel">
+        <div className="dd__skel" style={{ width: 56, height: 56, borderRadius: 14, flexShrink: 0 }} />
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
+          <div className="dd__skel" style={{ width: "55%", height: 14, borderRadius: 6 }} />
+          <div className="dd__skel" style={{ width: "80%", height: 28, borderRadius: 8 }} />
+          <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+            <div className="dd__skel" style={{ width: 80, height: 22, borderRadius: 20 }} />
+            <div className="dd__skel" style={{ width: 80, height: 22, borderRadius: 20 }} />
+            <div className="dd__skel" style={{ width: 80, height: 22, borderRadius: 20 }} />
+          </div>
+        </div>
+      </div>
+
+      <div className="dd__skel" style={{ width: "100%", height: 80, borderRadius: 14 }} />
+
+      <div className="dd__grid">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="dd__card dd__card--skel" style={{ "--i": i }}>
+            <div className="dd__skel" style={{ width: 36, height: 36, borderRadius: 10 }} />
+            <div className="dd__skel" style={{ width: "60%", height: 14, borderRadius: 6, marginTop: 12 }} />
+            <div className="dd__skel" style={{ width: "90%", height: 11, borderRadius: 5, marginTop: 8 }} />
+            <div className="dd__skel" style={{ width: "75%", height: 11, borderRadius: 5, marginTop: 6 }} />
+            <div className="dd__skel" style={{ width: "50%", height: 11, borderRadius: 5, marginTop: 6 }} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function DeepDive() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const course = location.state?.course;
+  const { getSubjects } = useSubjects();
+
+  const [deepDive, setDeepDive] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    computeDeepDive();
+  }, []);
+
+  const computeDeepDive = async () => {
+    if (!course) { setLoading(false); return; }
+    setLoading(true);
+    setError(false);
+    try {
+      const { data } = await getOrCreateDeepDive(getSubjects(), course);
+      console.log(data);
+      setDeepDive(data.results);
+    } catch (err) {
+      console.log(err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <DeepDiveSkeleton />;
+
+  if (error) return (
+    <div className="dd">
+      <button className="dd__back-btn" onClick={() => navigate(-1)}>
+        <ArrowLeft size={16} strokeWidth={2.5} />
+        Back
+      </button>
+      <ErrorState
+        message="We couldn't load the deep dive. Please try again."
+        onRetry={computeDeepDive}
+      />
+    </div>
+  );
+
+  if (!deepDive || !course) return null;
+
+  const {
+    summary,
+    challenges,
+    salary,
+    careerPaths = [],
+    companies = [],
+    alternatives = [],
+    howToExcel = [],
+  } = deepDive;
+
+  return (
+    <div className="dd">
+
+      {/* Back */}
+      <button className="dd__back-btn" onClick={() => navigate(-1)}>
+        <ArrowLeft size={16} strokeWidth={2.5} />
+        Back
+      </button>
+
+      {/* Hero — course info header */}
+      <div className="dd__hero">
+        <div className="dd__hero-icon">
+          <GraduationCap size={26} strokeWidth={1.8} />
+        </div>
+        <div className="dd__hero-text">
+          <span className="dd__hero-eyebrow">
+            <Sparkles size={12} strokeWidth={2} />
+            Deep dive · {course.university_name}
+          </span>
+          <h1 className="dd__hero-title">{course.qualification_name}</h1>
+          <div className="dd__hero-tags">
+            <span className="dd__htag dd__htag--blue">
+              <BookOpen size={11} strokeWidth={2.5} />
+              {course.faculty_name}
+            </span>
+            <span className="dd__htag dd__htag--green">
+              APS {course.minimum_aps}
+            </span>
+            <span className="dd__htag dd__htag--purple">
+              NQF {course.nqf}
+            </span>
+            <span className="dd__htag dd__htag--fit">
+              {course.fit_score}% fit
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Summary banner */}
+      <div className="dd__summary">
+        <p>{summary}</p>
+      </div>
+
+      {/* Main grid */}
+      <div className="dd__grid">
+
+        {/* Salary */}
+        <div className="dd__card dd__card--salary" style={{ "--i": 0 }}>
+          <div className="dd__card-icon dd__card-icon--green">
+            <TrendingUp size={18} strokeWidth={2} />
+          </div>
+          <h3 className="dd__card-title">Salary outlook</h3>
+          <div className="dd__salary-tiers">
+            <div className="dd__salary-tier">
+              <span className="dd__salary-label">Entry level</span>
+              <span className="dd__salary-value">{salary?.entry}</span>
+            </div>
+            <div className="dd__salary-bar">
+              <div className="dd__salary-bar-fill dd__salary-bar-fill--entry" />
+            </div>
+            <div className="dd__salary-tier">
+              <span className="dd__salary-label">Mid career</span>
+              <span className="dd__salary-value dd__salary-value--mid">{salary?.mid}</span>
+            </div>
+            <div className="dd__salary-bar">
+              <div className="dd__salary-bar-fill dd__salary-bar-fill--mid" />
+            </div>
+            <div className="dd__salary-tier">
+              <span className="dd__salary-label">Senior</span>
+              <span className="dd__salary-value dd__salary-value--senior">{salary?.senior}</span>
+            </div>
+            <div className="dd__salary-bar">
+              <div className="dd__salary-bar-fill dd__salary-bar-fill--senior" />
+            </div>
+          </div>
+        </div>
+
+        {/* Career paths */}
+        <div className="dd__card dd__card--careers" style={{ "--i": 1 }}>
+          <div className="dd__card-icon dd__card-icon--blue">
+            <Briefcase size={18} strokeWidth={2} />
+          </div>
+          <h3 className="dd__card-title">Career paths</h3>
+          <div className="dd__career-list">
+            {careerPaths.map((cp, i) => (
+              <div key={i} className="dd__career-item">
+                <div className="dd__career-dot" />
+                <div>
+                  <p className="dd__career-title">{cp.title}</p>
+                  <p className="dd__career-desc">{cp.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* How to excel */}
+        <div className="dd__card" style={{ "--i": 2 }}>
+          <div className="dd__card-icon dd__card-icon--amber">
+            <Star size={18} strokeWidth={2} />
+          </div>
+          <h3 className="dd__card-title">How to excel</h3>
+          <ul className="dd__list">
+            {howToExcel.map((tip, i) => (
+              <li key={i} className="dd__list-item">
+                <ChevronRight size={13} strokeWidth={2.5} className="dd__list-arrow" />
+                {tip}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Challenges */}
+        <div className="dd__card" style={{ "--i": 3 }}>
+          <div className="dd__card-icon dd__card-icon--red">
+            <AlertTriangle size={18} strokeWidth={2} />
+          </div>
+          <h3 className="dd__card-title">Challenges to watch</h3>
+          <p className="dd__challenges">{challenges}</p>
+        </div>
+
+        {/* Companies */}
+        <div className="dd__card" style={{ "--i": 4 }}>
+          <div className="dd__card-icon dd__card-icon--teal">
+            <Building2 size={18} strokeWidth={2} />
+          </div>
+          <h3 className="dd__card-title">Top employers</h3>
+          <div className="dd__companies">
+            {companies.map((c, i) => (
+              <span key={i} className="dd__company-pill">{c}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* Alternatives */}
+        <div className="dd__card" style={{ "--i": 5 }}>
+          <div className="dd__card-icon dd__card-icon--purple">
+            <Lightbulb size={18} strokeWidth={2} />
+          </div>
+          <h3 className="dd__card-title">Alternative fields</h3>
+          <div className="dd__alternatives">
+            {alternatives.map((alt, i) => (
+              <span key={i} className="dd__alt-pill">{alt}</span>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}

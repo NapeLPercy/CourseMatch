@@ -5,5 +5,6 @@ const authenticate = require("../middleware/AuthenticationMiddleware");
 const authorize = require("../middleware/AuthorizationMiddleware");
 
 router.post("/ai-recommendations",authenticate,authorize("STUDENT"), aiController.getAIRecommendations);
+router.post("/deep-dive",authenticate,authorize("STUDENT"), aiController.getAIDeepDive);
 
 module.exports = router;

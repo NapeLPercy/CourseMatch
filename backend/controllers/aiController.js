@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const aiRecommendationService = require("../services/aiRecommendationService");
+const { getOrCreateDeepDive } = require("../services/aiCourseDeepDiveService");
 const { getStudentCompleteProfile } = require("../services/studentService");
 
 /*fetch or create AI scoring + explanation*/
@@ -33,7 +34,7 @@ exports.getAIRecommendations = async (req, res) => {
     }
 
     const profile = await getStudentCompleteProfile(userId);
-    console.log("profile data", profile);
+
     if (!profile || !profile.dream_job) {
       return res.status(400).json({
         success: false,
@@ -58,6 +59,55 @@ exports.getAIRecommendations = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Server error generating AI fit results",
+    });
+  }
+};
+
+//fetch or create deep dive data
+exports.getAIDeepDive = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { subjects, qualification } = req.body;
+
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Not authenticated" });
+    }
+
+    if (!qualification) {
+      return res.status(400).json({
+        success: false,
+        message: "Qualification data is required.",
+      });
+    }
+
+    if (!subjects || subjects.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No subjects found.",
+      });
+    }
+
+    const profile = await getStudentCompleteProfile(userId);
+
+    
+    const results = await getOrCreateDeepDive({
+      userId,
+      qualification,
+      studentProfile: profile,
+      subjects,
+    });
+
+    return res.status(200).json({
+      success: true,
+      results: results,
+    });
+  } catch (error) {
+    console.error("AI deep dive error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error generating AI deep dive results",
     });
   }
 };
