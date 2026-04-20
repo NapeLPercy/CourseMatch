@@ -74,7 +74,7 @@ export default function QualifiedCoursesPage() {
   };
 
   const handleDeepDive = (course) => {
-    navigate("/student/course-deep-dive", { state: {course} });
+    navigate("/student/course-deep-dive", { state: { course } });
   };
 
   const fitLabel = (score) => {
@@ -104,69 +104,75 @@ export default function QualifiedCoursesPage() {
           <GraduationCap size={28} strokeWidth={1.8} />
         </div>
         <div>
-          <div className="qcp__header-eyebrow">
-            <Sparkles size={13} strokeWidth={2} />
-            AI recommended courses
-          </div>
-          <h1 className="qcp__header-title">Your qualified courses</h1>
+          <h1 className="qcp__header-title">Your AI-recommended courses</h1>
           <p className="qcp__header-sub">
-            These are your AI-recommended qualifications based on your subjects,
-            APS score, Matrix endorsement, and personality profile.
+            These courses are recommended based on your subjects, APS score,
+            matric endorsement, and personality profile.
           </p>
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="qcp__controls">
-        <input
-          className="qcp__search"
-          type="text"
-          placeholder="Search courses, universities, faculty…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      {/* EMPTY: no courses at all */}
+      {!loading && courses.length === 0 && (
+        <EmptyState message="You don’t have any AI-recommended courses yet. Head to “Get Matches” to generate your personalized recommendations" />
+      )}
 
-        <div className="qcp__selects">
-          <select
-            className="qcp__select"
-            value={university}
-            onChange={(e) => setUniversity(e.target.value)}
-          >
-            <option value="all">All universities</option>
-            {universities.map((u) => (
-              <option key={u} value={u}>
-                {u}
-              </option>
-            ))}
-          </select>
+      {/* CONTROLS ONLY IF COURSES EXIST */}
+      {courses.length > 0 && (
+        <>
+          {/* Controls */}
+          <div className="qcp__controls">
+            <input
+              className="qcp__search"
+              type="text"
+              placeholder="Search courses, universities, faculty…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
 
-          <select
-            className="qcp__select"
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-          >
-            <option value="fit_desc">Best fit first</option>
-            <option value="aps_desc">APS: high → low</option>
-            <option value="aps_asc">APS: low → high</option>
-          </select>
-        </div>
-      </div>
+            <div className="qcp__selects">
+              <select
+                className="qcp__select"
+                value={university}
+                onChange={(e) => setUniversity(e.target.value)}
+              >
+                <option value="all">All universities</option>
+                {universities.map((u) => (
+                  <option key={u} value={u}>
+                    {u}
+                  </option>
+                ))}
+              </select>
 
-      {/* Meta */}
-      <p className="qcp__meta">
-        {filtered.length} qualification{filtered.length !== 1 ? "s" : ""} found
-      </p>
+              <select
+                className="qcp__select"
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+              >
+                <option value="fit_desc">Best fit first</option>
+                <option value="aps_desc">APS: high → low</option>
+                <option value="aps_asc">APS: low → high</option>
+              </select>
+            </div>
+          </div>
 
-      {/* Empty */}
-      {filtered.length === 0 && !loading && (
-        <EmptyState message="No courses match your current search or filters." />
+          {/* Meta */}
+          <p className="qcp__meta">
+            {filtered.length} qualification{filtered.length !== 1 ? "s" : ""}{" "}
+            found
+          </p>
+
+          {/* EMPTY: filters/search remove all */}
+          {!loading && filtered.length === 0 && (
+            <EmptyState message="No courses match your current search or filters." />
+          )}
+        </>
       )}
 
       {/* Grid */}
       <div className="qcp__grid">
         {filtered.map((course, i) => (
           <div key={course.id} className="qcp__card" style={{ "--i": i }}>
-            {/* Card header */}
             <div className="qcp__card-head">
               <div className="qcp__avatar">{course.abbreaviation}</div>
               <div className="qcp__card-meta">
@@ -178,14 +184,11 @@ export default function QualifiedCoursesPage() {
               </span>
             </div>
 
-            {/* Course info */}
             <div className="qcp__card-body">
               <h3 className="qcp__course-name">{course.qualification_name}</h3>
 
               <div className="qcp__tags">
-                <span className="qcp__tag qcp__tag--aps">
-                  NQF {course.nqf}
-                </span>
+                <span className="qcp__tag qcp__tag--aps">NQF {course.nqf}</span>
                 <span className="qcp__tag qcp__tag--code">
                   {course.course_code}
                 </span>
@@ -194,11 +197,9 @@ export default function QualifiedCoursesPage() {
                 </span>
               </div>
 
-              {/* Reason — always visible */}
               <p className="qcp__reason">{course.reason}</p>
             </div>
 
-            {/* Actions — each half width */}
             <div className="qcp__actions">
               <button
                 className="qcp__action-btn"
@@ -208,7 +209,9 @@ export default function QualifiedCoursesPage() {
                 Deep dive
               </button>
               <button
-                className={`qcp__action-btn ${bookmarked.has(course.id) ? "qcp__action-btn--saved" : ""}`}
+                className={`qcp__action-btn ${
+                  bookmarked.has(course.id) ? "qcp__action-btn--saved" : ""
+                }`}
                 onClick={() => toggleBookmark(course.id)}
               >
                 {bookmarked.has(course.id) ? (

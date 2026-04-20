@@ -49,7 +49,15 @@
   display: flex;
   align-items: flex-start;
   gap: 18px;
+  
+  padding: 28px 32px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 2px 16px rgba(30, 58, 138, 0.05);
 }
+
+
 
 .qcp__header-icon {
   width: 58px;
@@ -76,22 +84,7 @@
   }
 }
 
-.qcp__header-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--medium-blue);
-  background: var(--pale-blue);
-  border: 1px solid rgba(37, 99, 235, 0.18);
-  padding: 4px 10px;
-  border-radius: 20px;
-  margin-bottom: 8px;
-}
+
 
 .qcp__header-title {
   font-family: "Playfair Display", Georgia, serif;
@@ -223,8 +216,7 @@
 .qcp__card:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 24px rgba(30, 58, 138, 0.1);
-  border-color: var(--light-blue);
-  
+  border-color: #dbeafe;
 }
 
 /* ── CARD HEAD ───────────────────────────── */

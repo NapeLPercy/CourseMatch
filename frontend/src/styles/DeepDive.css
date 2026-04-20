@@ -3,7 +3,7 @@
 .dd {
   width: 100%;
   max-width: 1300px;
-  margin: 80px auto;
+  margin: 40px auto 0;
   padding: 48px 40px 80px;
   display: flex;
   flex-direction: column;
@@ -72,16 +72,7 @@
   min-width: 0;
 }
 
-.dd__hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: #2563eb;
-}
+
 
 .dd__hero-title {
   font-family: "Playfair Display", Georgia, serif;

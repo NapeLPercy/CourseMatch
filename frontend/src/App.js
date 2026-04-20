@@ -104,7 +104,7 @@ function App() {
                   />
 
                   <Route
-                    path="/my-courses"
+                    path="/student/ai-recommended-courses"
                     element={<StudentMatchedCourses />}
                   />
                   <Route

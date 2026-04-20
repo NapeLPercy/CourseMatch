@@ -102,17 +102,18 @@ export const NAV_CONFIG = {
         label: "Courses",
         icon: GraduationCap,
         dropdown: [
+           {
+            path: "/view-courses",
+            label: "Get AI-Recommendations",
+            icon: GraduationCap,
+          },
           {
-            path: "/my-courses",
-            label: "Matched Courses",
+            path: "/student/ai-recommended-courses",
+            label: "AI-Recommended Courses",
             // new → needs icon
             icon: ClipboardList,
           },
-          {
-            path: "/view-courses",
-            label: "Get Matches",
-            icon: GraduationCap,
-          },
+         
         ],
       },
 

@@ -41,7 +41,7 @@ export default function Nav() {
     "/admin/manage-blogs",
     "/blog/",
     "/blogs",
-    "/my-courses",
+    "/student/ai-recommended-courses",
     "/tutors/home",
     "/aps-calculator",
     "/view-courses",
