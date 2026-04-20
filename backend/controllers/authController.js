@@ -8,6 +8,7 @@ const {
   generateToken,
   validatePassword,
 } = require("../services/accountService");
+const {requestPasswordReset, resetPassword} = require("../services/passwordResetService");
 
 /* 1 Check if account exist
 2 register email */
@@ -85,3 +86,62 @@ exports.login = async (req, res) => {
     });
   }
 };
+
+
+// 1 Send reset link
+exports.requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({
+      success: false,
+      message: "Email is required"
+    });
+  }
+
+  try {
+    const result = await requestPasswordReset(email);
+
+    // Always success
+    return res.status(200).json({
+      success: true,
+      message: result.message,
+      link:result?.link
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+};
+
+
+// 2 Reset password
+exports.resetPassword = async (req, res) => {
+  const { token, password } = req.body;
+
+  if (!token || !password) {
+    return res.status(400).json({
+      success: false,
+      message: "Token and new password are required"
+    });
+  }
+
+  try {
+    const result = await resetPassword(token, password);
+
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+
+    return res.status(200).json(result);
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+};   

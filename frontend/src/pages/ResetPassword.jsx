@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { Lock, Eye, EyeOff, CheckCircle2, X, AlertCircle } from "lucide-react";
 import AuthCard from "../components/layout/AuthCard";
 import ".././styles/ResetPassword.css";
+import { resetPassword } from "../services/accountService";
 
 export default function ResetPassword() {
-  const { token } = useParams(); // e.g. route: /reset-password/:token
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ password: "", confirmPassword: "" });
@@ -43,22 +45,16 @@ export default function ResetPassword() {
     }
 
     setLoading(true);
-
-    const API_BASE = process.env.REACT_APP_API_BASE;
-
     try {
-      const response = await axios.post(`${API_BASE}/api/auth/reset-password`, {
-        token,
-        password: form.password,
-      });
+      const { data } = await resetPassword(token, form.password);
 
-      console.log("Server response:", response.data);
+      if (!data.success) {
+        setError("Error occured, try again!");
+      }
       setSuccess(true);
     } catch (err) {
-      console.error("Reset password error:", err.response?.data || err.message);
       setError(
-        err.response?.data?.error ||
-          "Failed to reset password. Please try again or request a new reset link."
+        "Failed to reset password. Please try again or request a new reset link.",
       );
     } finally {
       setLoading(false);
@@ -96,7 +92,11 @@ export default function ResetPassword() {
         {error && (
           <div className="rp__error">
             <div className="rp__error-header">
-              <AlertCircle size={15} strokeWidth={2} className="rp__error-icon" />
+              <AlertCircle
+                size={15}
+                strokeWidth={2}
+                className="rp__error-icon"
+              />
               <span>{error}</span>
               <button
                 type="button"
@@ -134,7 +134,11 @@ export default function ResetPassword() {
               onClick={() => setShowPassword((s) => !s)}
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? <EyeOff size={16} strokeWidth={2} /> : <Eye size={16} strokeWidth={2} />}
+              {showPassword ? (
+                <EyeOff size={16} strokeWidth={2} />
+              ) : (
+                <Eye size={16} strokeWidth={2} />
+              )}
             </button>
           </div>
         </div>
@@ -163,7 +167,11 @@ export default function ResetPassword() {
               onClick={() => setShowConfirm((s) => !s)}
               aria-label={showConfirm ? "Hide password" : "Show password"}
             >
-              {showConfirm ? <EyeOff size={16} strokeWidth={2} /> : <Eye size={16} strokeWidth={2} />}
+              {showConfirm ? (
+                <EyeOff size={16} strokeWidth={2} />
+              ) : (
+                <Eye size={16} strokeWidth={2} />
+              )}
             </button>
           </div>
         </div>

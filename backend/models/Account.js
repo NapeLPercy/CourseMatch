@@ -13,6 +13,17 @@ module.exports = {
     });
   },
 
+  updatePassword: async (accountId, newPassword) => {
+    const sql = `UPDATE account SET  password = ? WHERE id = ?`;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [newPassword, accountId], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
+
   //Checks whether or not an email is registered
   checkAccountByEmail: async (email) => {
     const sql = `SELECT id FROM account WHERE email = ?`;
@@ -49,6 +60,73 @@ module.exports = {
           resolve(result);
         },
       );
+    });
+  },
+
+  //password reset
+
+  // Insert token (data comes from service)
+  createResetToken: async (data) => {
+    const sql = `
+      INSERT INTO password_reset_token 
+      (id, account_id, token_hash, expires_at)
+      VALUES (?, ?, ?, ?)
+    `;
+
+    const values = [data.id, data.account_id, data.token_hash, data.expires_at];
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, values, (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
+
+  // Get token by hash
+  getByTokenHash: async (token_hash) => {
+    const sql = `
+      SELECT * 
+      FROM password_reset_token 
+      WHERE token_hash = ?
+      LIMIT 1
+    `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [token_hash], (err, result) => {
+        if (err) return reject(err);
+        resolve(result[0] || null);
+      });
+    });
+  },
+
+  // Delete token by hash
+  deleteByTokenHash: async (token_hash) => {
+    const sql = `
+      DELETE FROM password_reset_token 
+      WHERE token_hash = ?
+    `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [token_hash], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
+
+  // Delete tokens by account (optional, for cleanup or overwrite)
+  deleteByAccountId: async (account_id) => {
+    const sql = `
+      DELETE FROM password_reset_token 
+      WHERE account_id = ?
+    `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [account_id], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
     });
   },
 };

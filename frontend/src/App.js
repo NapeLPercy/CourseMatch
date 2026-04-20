@@ -23,8 +23,8 @@ import StudentViewUniversities from "./components/data-display/StudentViewUniver
 import UniversityCourses from "./components/data-display/UnivesityCourses";
 
 //auth
+import RequestReset from "./pages/RequestReset";
 import ResetPassword from "./pages/ResetPassword";
-import ForgotPassword from "./pages/ForgotPassword";
 
 import Chat from "./components/layout/Chat";
 import MainLayout from "./components/layout/MainLayout";
@@ -168,7 +168,7 @@ function App() {
               <Route element={<AuthLayout />}>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Account />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/request-reset" element={<RequestReset />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
               </Route>
 

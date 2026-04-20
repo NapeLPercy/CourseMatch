@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 import { Mail, Send, CheckCircle2, X, AlertCircle } from "lucide-react";
 import AuthCard from "../components/layout/AuthCard";
 import ".././styles/ForgotPassword.css";
+import { requestResetPassword } from "../services/accountService";
+import { sendResetEmail } from "../Utils/emailManager";
 
-export default function ForgotPassword() {
+export default function RequestReset() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,21 +31,19 @@ export default function ForgotPassword() {
 
     setLoading(true);
 
-    const API_BASE = process.env.REACT_APP_API_BASE;
-
     try {
-      const response = await axios.post(`${API_BASE}/api/auth/forgot-password`, {
-        email,
-      });
+      const { data } = await requestResetPassword(email);
 
-      console.log("Server response:", response.data);
+      if (data?.link) {
+        await sendResetEmail({
+          link: data?.link,
+          email: email,
+        });
+      }
+
       setSuccess(true);
     } catch (err) {
-      console.error("Forgot password error:", err.response?.data || err.message);
-      setError(
-        err.response?.data?.error ||
-          "Failed to send reset link. Please try again."
-      );
+      setError("Failed to send reset link. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -83,7 +83,11 @@ export default function ForgotPassword() {
         {error && (
           <div className="fp__error">
             <div className="fp__error-header">
-              <AlertCircle size={15} strokeWidth={2} className="fp__error-icon" />
+              <AlertCircle
+                size={15}
+                strokeWidth={2}
+                className="fp__error-icon"
+              />
               <span>{error}</span>
               <button
                 type="button"
