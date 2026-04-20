@@ -8,7 +8,8 @@ import renderCourseList from "../ui/CourseList";
 import "../../styles/UniversityCourses.css";
 import { getUniversityCourses } from "../../services/universityService";
 import ErrorState from "../ui/ErrorState";
-import Skeleton from "../ui/Skeleton";
+import UniversityCoursesSkeleton from "../ui/UniversityCoursesSkeleton";
+import { BookOpen, GraduationCap, Sparkles, Award } from "lucide-react";
 
 export default function UniversityCourses() {
   let { courseSlug } = useParams();
@@ -29,7 +30,7 @@ export default function UniversityCourses() {
 
   const [computingQualified, setComputingQualified] = useState(false);
   const [computingRecommendations, setComputingRecommendations] = useState(
-    () => activeTab === "recommendations",
+    () => activeTab === "recommendations"
   );
 
   function getInitialTab() {
@@ -52,19 +53,12 @@ export default function UniversityCourses() {
     fetchCourses();
   }, [universitySlug]);
 
-  //feych qualifications
   const fetchCourses = async () => {
     setError(null);
     setLoading(true);
-
     try {
       const { data } = await getUniversityCourses(universitySlug);
-
-      if (!data.success) {
-        setError(data.message || "Failed to fetch courses");
-        return;
-      }
-
+      if (!data.success) { setError(data.message || "Failed to fetch courses"); return; }
       setCourses(data.courses);
       updateQualifications(data.courses);
     } catch (err) {
@@ -74,131 +68,106 @@ export default function UniversityCourses() {
     }
   };
 
-  //compute qualified courses
   const computeQualifiedCourses = () => {
     setComputingQualified(true);
-
     const { endorsement } = getSessionData();
-    const courseFilter = new CourseFilter(
-      getSubjects(),
-      qualifications,
-      endorsement,
-      universitySlug,
-    );
-
+    const courseFilter = new CourseFilter(getSubjects(), qualifications, endorsement, universitySlug);
     const results = courseFilter.getQualifiedCourses();
-
     const { aps } = getSessionData();
     setTimeout(() => {
       setQualifiedCourses(results);
       setAps(aps);
       setUnlockedCount(results.length);
       setComputingQualified(false);
-
       sessionStorage.setItem("qualified-courses", JSON.stringify(results));
     }, 1000);
   };
 
-  // Auto trigger when switching tab
   useEffect(() => {
-    if (
-      activeTab === "qualified" &&
-      qualifiedCourses.length === 0 &&
-      courses.length > 0
-    ) {
+    if (activeTab === "qualified" && qualifiedCourses.length === 0 && courses.length > 0) {
       computeQualifiedCourses();
     }
   }, [activeTab, courses]);
 
-  //ui helpers
   const renderContent = () => {
     if (activeTab === "full") {
-      return renderCourseList(
-        courses,
-        "No courses available for this university yet.",
-      );
+      return renderCourseList(courses, "No courses available for this university yet.");
     }
-
     if (activeTab === "qualified") {
-      if (computingQualified) return <Skeleton />;
-
-      let outputText;
-
-      if (getSubjects().length === 0) {
-        outputText =
-          "You haven’t added your subjects yet, so we can’t match you to any courses. Add your subjects to see your eligible options.";
-      } else {
-        outputText =
-          "Based on your current results, you don’t meet the minimum requirements for any courses at this institution. Try exploring other institutions or updating your results.";
-      }
-
+      if (computingQualified) return <UniversityCoursesSkeleton />;
+      const outputText = getSubjects().length === 0
+        ? "You haven't added your subjects yet, so we can't match you to any courses. Add your subjects to see your eligible options."
+        : "Based on your current results, you don't meet the minimum requirements for any courses at this institution.";
       return renderCourseList(qualifiedCourses, outputText);
     }
-
     if (activeTab === "recommendations") {
       return computingRecommendations ? (
-        <Skeleton />
+        <UniversityCoursesSkeleton />
       ) : (
-        <div className="uni-recommendations-wrapper">
-          <Recommendations
-            setAps={setAps}
-            setUnlockedCount={setUnlockedCount}
-            uniSlug={universitySlug}
-          />
+        <div className="uc__recommendations-wrap">
+          <Recommendations setAps={setAps} setUnlockedCount={setUnlockedCount} uniSlug={universitySlug} />
         </div>
       );
     }
   };
 
   const tabs = [
-    { id: "full", label: "Full Courses" },
-    { id: "qualified", label: "Qualified Courses" },
-    { id: "recommendations", label: "AI Recommendations" },
+    { id: "full",            label: "All courses",       icon: BookOpen   },
+    { id: "qualified",       label: "I qualify",         icon: GraduationCap },
+    { id: "recommendations", label: "AI picks",          icon: Sparkles   },
   ];
 
   const { visitedUni } = getSessionData();
 
   return (
-    <div className="uni-courses-wrapper">
+    <div className="uc">
+
       {/* HEADER */}
-      <header className="uni-courses-header">
-        <h1>{visitedUni?.name} Courses</h1>
-
-        {aps && getSubjects().length > 0 && (
-          <p className="uni-courses-aps">
-            Your APS for {universitySlug}: <strong>{aps}</strong>
-          </p>
-        )}
-
-        {unlockedCount > 0 && getSubjects().length > 0 && (
-          <p className="uni-courses-unlocked">
-            You qualify for <strong>{unlockedCount}</strong> qualification
-            {unlockedCount !== 1 ? "s" : ""}
-          </p>
-        )}
-      </header>
+      <div className="uc__header">
+        <div className="uc__header-icon">
+          <Award size={26} strokeWidth={1.8} />
+        </div>
+        <div className="uc__header-text">
+          <h1 className="uc__title">{visitedUni?.name} courses</h1>
+          <div className="uc__header-pills">
+            {aps && getSubjects().length > 0 && (
+              <span className="uc__pill uc__pill--blue">
+                Your APS: <strong>{aps}</strong>
+              </span>
+            )}
+            {unlockedCount > 0 && getSubjects().length > 0 && (
+              <span className="uc__pill uc__pill--green">
+                <GraduationCap size={12} strokeWidth={2.5} />
+                You qualify for <strong>{unlockedCount}</strong> qualification{unlockedCount !== 1 ? "s" : ""}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* TABS */}
-      <nav className="uni-tab-bar" role="tablist">
-        {tabs.map((tab) => (
+      <nav className="uc__tabs" role="tablist">
+        {tabs.map(({ id, label, icon: Icon }) => (
           <button
-            key={tab.id}
+            key={id}
             role="tab"
-            aria-selected={activeTab === tab.id}
-            className={`uni-tab-btn${activeTab === tab.id ? " active" : ""}`}
-            onClick={() => setActiveTab(tab.id)}
+            aria-selected={activeTab === id}
+            className={`uc__tab ${activeTab === id ? "uc__tab--active" : ""}`}
+            onClick={() => setActiveTab(id)}
           >
-            {tab.label}
+            <Icon size={15} strokeWidth={2} />
+            {label}
           </button>
         ))}
       </nav>
 
       {/* CONTENT */}
-      <div className="uni-content-area" role="tabpanel">
-        {loading && <Skeleton />}
+      <div className="uc__content" role="tabpanel">
+        {loading && <UniversityCoursesSkeleton />}
         {error && <ErrorState message={error} onRetry={fetchCourses} />}
         {!loading && !error && renderContent()}
       </div>
+
     </div>
   );
 }

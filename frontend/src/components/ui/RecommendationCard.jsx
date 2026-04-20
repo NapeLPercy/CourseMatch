@@ -3,7 +3,7 @@ export default function renderRecommendationCard(course) {
     <li className="rec-card" key={course.qualificationCode}>
       {/* fit score badge - sits to the left */}
       <div className="rec-card__score-badge">
-        <span className="rec-card__score-badge__value">{course.fitScore}</span>
+        <span className="rec-card__score-badge__value">{course.fitScore}%</span>
         <span className="rec-card__score-badge__label">fit</span>
       </div>
 

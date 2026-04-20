@@ -6,7 +6,7 @@ import { generateRecommendationsPdf } from "../../Utils/recommendationsPDF";
 import renderRecommendationCard from "../ui/RecommendationCard";
 import ErrorState from "../ui/ErrorState";
 import CourseFilter from "../../Utils/courseFilters/CourseFilter";
-import Skeleton from "../ui/Skeleton";
+import UniversityCoursesSkeleton from "../ui/UniversityCoursesSkeleton";
 import EmptyState from "../ui/EmptyState";
 import { getOrCreateAIRecommedations } from "../../services/aiService";
 
@@ -159,7 +159,7 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
     );
   };
   
-  if (loading) return <Skeleton />;
+  if (loading) return <UniversityCoursesSkeleton />;
 
   if (recommendedCourses.length === 0) {
     return renderEmpty();
