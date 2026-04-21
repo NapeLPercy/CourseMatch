@@ -29,13 +29,12 @@ export default function StudentViewUniversities() {
           <GraduationCap size={28} strokeWidth={1.8} />
         </div>
         <div className="vc__header-text">
-          <span className="vc__eyebrow">South African Universities</span>
           <h1 className="vc__title">
-            Find your <span className="vc__title-accent">university</span>
+            Find your university
           </h1>
           <p className="vc__subtitle">
-            Choose a university below to see which courses you qualify for —
-            based on your subjects and marks.
+            Choose a university below to see which courses are suitable for you —
+            based on your subjects and goals.
           </p>
         </div>
       </header>

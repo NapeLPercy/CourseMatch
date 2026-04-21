@@ -11,7 +11,7 @@ function calculateApsForUniversity(subjects, universitySlug) {
       aps = computeUjAPS(subjects);
       break;
     default:
-      alert("This university does not exist");
+     // alert("This university does not exist");
       break;
   }
 

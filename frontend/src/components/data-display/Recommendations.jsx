@@ -34,7 +34,10 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
     const results = courseFilter.getQualifiedCourses();
 
     // Update parent
-    setAps(sessionStorage.getItem("aps"));
+    const rawAps = sessionStorage.getItem("aps");
+    const parsedAps = rawAps && rawAps !== "null" ? Number(rawAps) : null;
+
+    setAps(parsedAps);
     setUnlockedCount(results.length);
 
     return results;
@@ -90,13 +93,11 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
     }
   };
 
-  
   const sortedCourses = useMemo(() => {
     return [...recommendedCourses].sort((a, b) =>
       sortOrder === "asc" ? a.fitScore - b.fitScore : b.fitScore - a.fitScore,
     );
   }, [recommendedCourses, sortOrder]);
-
 
   const handleDownloadPdf = () => {
     generateRecommendationsPdf(recommendedCourses, {
@@ -158,7 +159,7 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
       <EmptyState message="We couldn’t generate recommendations right now. Please try again." />
     );
   };
-  
+
   if (loading) return <UniversityCoursesSkeleton />;
 
   if (recommendedCourses.length === 0) {
