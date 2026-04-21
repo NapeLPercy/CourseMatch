@@ -1,4 +1,5 @@
 import "../styles/Testimonials.css";
+import { ChevronDown } from "lucide-react";
 
 const TESTIMONIALS = [
   {
@@ -83,7 +84,7 @@ function Stars({ rating }) {
           height="15"
         >
           <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-        </svg>
+        </svg>,
       );
     } else if (rating >= i - 0.5) {
       // half star
@@ -107,7 +108,7 @@ function Stars({ rating }) {
             stroke="currentColor"
             strokeWidth="1.5"
           />
-        </svg>
+        </svg>,
       );
     } else {
       // empty star
@@ -125,7 +126,7 @@ function Stars({ rating }) {
             stroke="currentColor"
             strokeWidth="1.5"
           />
-        </svg>
+        </svg>,
       );
     }
   }
@@ -156,10 +157,18 @@ export default function Testimonials() {
   return (
     <section className="ts">
       <div className="ts__header">
-        <h2 className="ts__title">What learners are saying</h2>
+        <span className="hiw__eyebrow">
+          <span className="hiw__eyebrow-line" />
+          Testimonials
+          <span className="hiw__eyebrow-line" />
+        </span>
+
+        <h2 className="hiw__title">Words from other users</h2>
         <p className="ts__subtitle">
-          Real feedback from matric students who used CourseMatch to plan their future.
+          Real feedback from matric students who used CourseMatch to plan their
+          future.
         </p>
+        <ChevronDown className="hiw__scroll-cue" size={22} strokeWidth={1.5} />
       </div>
 
       {/* outer clip */}

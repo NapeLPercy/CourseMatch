@@ -114,9 +114,6 @@ export default function HowItWorks() {
 
   return (
     <section className="hiw" id="hiw-section">
-      {/* Ambient geometry */}
-      <div className="hiw__geo hiw__geo--1" aria-hidden="true" />
-      <div className="hiw__geo hiw__geo--2" aria-hidden="true" />
 
       {/* Section header */}
       <div
@@ -129,8 +126,7 @@ export default function HowItWorks() {
           <span className="hiw__eyebrow-line" />
         </span>
         <h2 className="hiw__title">
-          Three steps to<br />
-          <span className="hiw__title-accent">clarity.</span>
+          Three steps to clarity.
         </h2>
         <p className="hiw__subtitle">
           No hidden fees, no endless scrolling through university websites. CourseMatch

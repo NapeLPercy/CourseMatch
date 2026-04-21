@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, HelpCircle, MessageCircle } from "lucide-react";
+import { ChevronDown, MessageCircle } from "lucide-react";
 import "../../styles/FAQ.css";
 import { FAQS } from "../../Utils/textData/faqs";
 
@@ -37,14 +37,22 @@ export default function FAQ() {
       <div className="faq__container">
         {/* Header */}
         <div className="faq__header">
-          <div className="faq__header-icon">
-            <HelpCircle size={28} strokeWidth={1.6} />
-          </div>
-          <h2 className="faq__title">Frequently Asked Questions</h2>
+          <span className="hiw__eyebrow">
+            <span className="hiw__eyebrow-line" />
+            Frequently asked questions
+            <span className="hiw__eyebrow-line" />
+          </span>
+
+          <h2 className="faq__title">Your questions, answered</h2>
           <p className="faq__subtitle">
             Find quick answers to common questions about CourseMatch. Can't find
             what you're looking for? We're here to help.
           </p>
+          <ChevronDown
+            className="hiw__scroll-cue"
+            size={22}
+            strokeWidth={1.5}
+          />
         </div>
 
         {/* FAQ List */}
@@ -76,7 +84,7 @@ export default function FAQ() {
               className="faq__cta-btn"
               onClick={() => {
                 navigate("/contact-us");
-               // window.scrollTo(0, 0);
+                // window.scrollTo(0, 0);
               }}
             >
               Contact Us

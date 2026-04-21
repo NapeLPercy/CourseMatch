@@ -41,7 +41,7 @@ export default function Hero() {
             {/* Top badge */}
             <div className="intro__badge">
               <span className="intro__badge-dot" />
-              AI-ASSISTED Course Matching
+              AI-Powered Course Matching
             </div>
 
             {/* Headline */}

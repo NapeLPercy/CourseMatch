@@ -12,7 +12,7 @@
 }
  
 .ts {
-  padding: 80px 0;
+  padding: 50px 0 0;
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   overflow: hidden;
    background: var(--off-white);/*linear-gradient(180deg, var(--off-white) 0%, var(--white) 100%);*/
@@ -212,4 +212,8 @@
   .ts__fade {
     width: 40px;
   }
+
+  .ts {
+  padding: 20px 0 0;
+}
 }

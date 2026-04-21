@@ -21,7 +21,7 @@
   position: relative;
   min-height: 100vh;
   background:  var(--off-white);/*linear-gradient(180deg, var(--off-white) 0%, var(--white) 100%);*/
-  padding: 20px 24px 80px;
+  padding: 60px 24px 80px;
   overflow: hidden;
 }
 
@@ -44,24 +44,6 @@
   gap: 16px;
 }
 
-.faq__header-icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.14));
-  border: 1px solid rgba(37, 99, 235, 0.14);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--medium-blue);
-  margin-bottom: 8px;
-  animation: iconPop 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes iconPop {
-  0%   { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
 
 .faq__title {
   font-family: "Playfair Display", Georgia, serif;
@@ -272,7 +254,7 @@
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 700px) {
   .faq {
-    padding: 10px 20px 60px;
+    padding: 70px 20px 60px;
   }
 
   .faq__container {
