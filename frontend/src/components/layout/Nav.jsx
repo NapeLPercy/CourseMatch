@@ -37,7 +37,6 @@ export default function Nav() {
 
   // Pages where navbar must be colored immediately
   const forceColoredRoutes = [
-    "/",
     "/student/course-deep-dive",
     "/admin/manage-blogs",
     "/blog/",
