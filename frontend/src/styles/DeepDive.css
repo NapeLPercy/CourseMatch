@@ -12,6 +12,10 @@
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
 }
 
+#date__el{
+  margin-left: 10px;
+}
+
 /* ── BACK BUTTON ─────────────────────────── */
 .dd__back-btn {
   display: inline-flex;

@@ -521,7 +521,7 @@
     max-width: 100%;
   }
 }
-
+/*
 @media (min-width: 1201px) {
   .qcp__grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -530,4 +530,4 @@
   .qcp__card {
     max-width: 100%;
   }
-}
+}*/
