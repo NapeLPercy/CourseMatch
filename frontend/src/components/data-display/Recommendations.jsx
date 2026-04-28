@@ -22,6 +22,8 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
   const subjects = getSubjects();
 
   const qualifiedCourses = useMemo(() => {
+    if(qualifications.length===0 || subjects.length===0)return;
+
     const endorsement = JSON.parse(sessionStorage.getItem("endorsement"));
 
     const courseFilter = new CourseFilter(

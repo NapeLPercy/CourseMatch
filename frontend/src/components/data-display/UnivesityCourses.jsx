@@ -74,6 +74,7 @@ export default function UniversityCourses() {
     const courseFilter = new CourseFilter(getSubjects(), qualifications, endorsement, universitySlug);
     const results = courseFilter.getQualifiedCourses();
     const { aps } = getSessionData();
+    console.log("This is the aps",aps);
     setTimeout(() => {
       setQualifiedCourses(results);
       setAps(aps);
