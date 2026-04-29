@@ -90,7 +90,7 @@ exports.getBlogById = async (req, res) => {
     const blog = await getBlogById(id);
 
     if (!blog) {
-      return res.json({success:false, message: "Blog not found" });
+      return res.json({ success: false, message: "Blog not found" });
     }
 
     res
@@ -190,22 +190,32 @@ exports.updateBlog = async (req, res) => {
 exports.getBlogSharePage = async (req, res) => {
 
   const blog = await getBlogShareById(req.params.id);
-
   if (!blog) return res.status(404).send("Not found");
 
-  return res.send(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta property="og:title" content="${blog.title}" />
-        <meta property="og:description" content="${blog.excerpt}" />
-        <meta property="og:image" content="${blog.coverImageUrl}" />
-        <meta property="og:url" content="https://coursematch-ui.onrender.com/post/${blog.id}" />
-        <meta property="og:type" content="article" />
-      </head>
-      <body></body>
-    </html>
-  `);
+  const ua = req.headers["user-agent"] || "";
+  const isBot = /facebookexternalhit|whatsapp|twitterbot|linkedinbot|slackbot|telegrambot|discordbot/i.test(ua);
+
+  const serverUrl = process.env.BASE_URL;
+  const frontendUrl = process.env.UI_URL;
+
+  const imageUrl = blog.coverImageUrl;
+
+  if (isBot) {
+    return res.send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <meta property="og:title" content="${blog.title}" />
+          <meta property="og:description" content="${blog.excerpt}" />
+          <meta property="og:image" content="${imageUrl}" />
+          <meta property="og:url" content="${serverUrl}/api/blogs/post/${blog.id}" />
+          <meta property="og:type" content="article" />
+        </head>
+        <body></body>
+      </html>
+    `);
+  }
+
+  return res.redirect(`${frontendUrl}/blog/${blog.id}`);
 };
-
-

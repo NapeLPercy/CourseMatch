@@ -170,34 +170,39 @@ module.exports = {
       })),
     };
   },
-  //for social media bots
-  getBlogShareById: async (id) => {
-    const postSql = `
-    SELECT 
-      id,
-      title,
-      excerpt,
-      cover_image,
-      published_at
-    FROM blog_post
-    WHERE id = ?
-      AND status = 'PUBLISHED'
-    LIMIT 1
-  `;
+  getBlogShareById: (id) => {
+    return new Promise((resolve, reject) => {
+      const postSql = `
+      SELECT 
+        id,
+        title,
+        excerpt,
+        cover_image,
+        published_at
+      FROM blog_post
+      WHERE id = ?
+        AND status = 'PUBLISHED'
+      LIMIT 1
+    `;
 
-    const post = await query(postSql, [id]);
+      db.query(postSql, [id], (err, results) => {
+        if (err) return reject(err);
 
-    if (!post) return null;
+        const post = results[0];
 
-    return {
-      id: post.id,
-      title: post.title,
-      excerpt: post.excerpt,
-      coverImageUrl: post.cover_image
-        ? `${process.env.BASE_URL}${post.cover_image}`
-        : null,
-      publishedAt: post.published_at,
-    };
+        if (!post) return resolve(null);
+
+        resolve({
+          id: post.id,
+          title: post.title,
+          excerpt: post.excerpt,
+          coverImageUrl: post.cover_image
+            ? `${process.env.BASE_URL}${post.cover_image}`
+            : null,
+          publishedAt: post.published_at,
+        });
+      });
+    });
   },
   //CREATE BLOG
   createBlog: async (data) => {

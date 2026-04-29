@@ -11,10 +11,10 @@ import {
 export default function ShareMenu({ post }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-
+  const serverUrl = process.env.REACT_APP_API_BASE; //url to server
   const url =
     typeof window !== "undefined"
-      ? `${window.location.origin}/post/${post?.id}`
+      ? `${serverUrl}/api/blogs/post/${post?.id}`
       : "";
 
   const image = post?.coverImageUrl || "";
@@ -39,18 +39,15 @@ export default function ShareMenu({ post }) {
   }
 
   function handleFacebook() {
-    const shareText = `${post.title}\n${url}`;
     window.open(
-      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        url,
-      )}&quote=${encodeURIComponent(shareText)}`,
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
       "_blank",
     );
     setOpen(false);
   }
 
   function handleWhatsApp() {
-    const message = `${post.title}\n${url}\n${image}`;
+    const message = `${post.title}\n${url}`; // remove image
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
     setOpen(false);
   }
