@@ -73,7 +73,7 @@ export default function CookieModal() {
         </div>
 
         <div className="cm__bar-actions">
-          <button className="cm__btn cm__btn--ghost" onClick={rejectAll}>
+          <button className="cm__btn cm__btn--ghost" onClick={acceptAll}>
             Reject all
           </button>
           <button className="cm__btn cm__btn--primary" onClick={acceptAll}>

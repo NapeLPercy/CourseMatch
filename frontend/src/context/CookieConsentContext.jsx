@@ -10,7 +10,7 @@ import { loadGA } from "../Utils/cookies/googleAnalytics";
 
 const STORAGE_KEY = "cookie_consent_v1";
 const GA_ID = "G-P2PPEL5EB2";
-const META_PIXELS_ID = "1667665897733463";
+const META_PIXELS_ID = "1615500676395431";
 /**
  * consent.status:
  * - "unknown"   -> no choice yet (show modal)
