@@ -53,6 +53,7 @@ import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
 import ManageBlogs from "./components/data-display/ManageBlogs";
 import DeepDive from "./components/data-display/DeepDive";
+import AdminManageAccounts from "./components/data-display/AdminManageAccounts";
 function App() {
   return (
     <UserProvider>
@@ -145,6 +146,11 @@ function App() {
                   <Route
                     path="/admin/manage-universities"
                     element={<AdminManageUniversities />}
+                  />
+
+                   <Route
+                    path="/admin/manage-accounts"
+                    element={<AdminManageAccounts />}
                   />
                   <Route
                     path="/admin/add-qualification"

@@ -7,8 +7,12 @@ const {
   login,
   generateToken,
   validatePassword,
+  getAdminAccounts,
 } = require("../services/accountService");
-const {requestPasswordReset, resetPassword} = require("../services/passwordResetService");
+const {
+  requestPasswordReset,
+  resetPassword,
+} = require("../services/passwordResetService");
 
 /* 1 Check if account exist
 2 register email */
@@ -87,7 +91,6 @@ exports.login = async (req, res) => {
   }
 };
 
-
 // 1 Send reset link
 exports.requestPasswordReset = async (req, res) => {
   const { email } = req.body;
@@ -95,7 +98,7 @@ exports.requestPasswordReset = async (req, res) => {
   if (!email) {
     return res.status(400).json({
       success: false,
-      message: "Email is required"
+      message: "Email is required",
     });
   }
 
@@ -106,17 +109,15 @@ exports.requestPasswordReset = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: result.message,
-      link:result?.link
+      link: result?.link,
     });
-
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: err.message
+      message: err.message,
     });
   }
 };
-
 
 // 2 Reset password
 exports.resetPassword = async (req, res) => {
@@ -125,7 +126,7 @@ exports.resetPassword = async (req, res) => {
   if (!token || !password) {
     return res.status(400).json({
       success: false,
-      message: "Token and new password are required"
+      message: "Token and new password are required",
     });
   }
 
@@ -137,11 +138,26 @@ exports.resetPassword = async (req, res) => {
     }
 
     return res.status(200).json(result);
-
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: err.message
+      message: err.message,
     });
   }
-};   
+};
+
+exports.getAdminAccounts = async (req, res) => {
+  try {
+    const result = await getAdminAccounts();
+
+    return res
+      .status(200)
+      .json({ result, success: true, message: "Accounts successfully fetched"});
+  } catch (err) {
+    console.error("Admin accounts error:", err);
+
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};

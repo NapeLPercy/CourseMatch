@@ -39,6 +39,7 @@ export default function Nav() {
   const forceColoredRoutes = [
     "/student/course-deep-dive",
     "/admin/manage-blogs",
+    "/admin/manage-accounts",
     "/blog/",
     "/blogs",
     "/student/ai-recommended-courses",

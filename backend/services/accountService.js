@@ -75,6 +75,40 @@ function generateToken(account) {
     { expiresIn: process.env.JWT_EXPIRES_IN },
   );
 }
+
+//admin fetch all accounts
+const getAdminAccounts = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const accounts = await accountModel.getAllAccounts();
+
+      const enriched = await Promise.all(
+        accounts.map(async (acc) => {
+          const profile = await accountModel.getStudentProfileByUserId(acc.user_id);
+
+          const hasProfile = !!(profile && profile.dream_job);
+
+          let hasSubjects = false;
+
+          if (profile) {
+            hasSubjects = await accountModel.checkSubjectsExistByStudentId(profile.id);
+          }
+
+          return {
+            ...acc,
+            hasProfile: hasProfile,
+            hasSubjects: hasSubjects,
+          };
+        }),
+      );
+
+      resolve(enriched);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 module.exports = {
   updateAccountRole,
   checkAccount,
@@ -82,4 +116,5 @@ module.exports = {
   login,
   validatePassword,
   generateToken,
+  getAdminAccounts,
 };

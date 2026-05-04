@@ -221,22 +221,28 @@ export const NAV_CONFIG = {
     main: [
       {
         path: "/admin/dashboard",
-        label: "Admin Dashboard",
+        label: "Dashboard",
         icon: TrendingUpDown,
       },
       {
         path: "/admin/manage-qualifications",
-        label: "Manage Qualifications",
+        label: "Qualifications",
         icon: GraduationCap,
       },
       {
         path: "/admin/manage-universities",
-        label: "Universities & Faculties",
+        label: "Universities",
         icon: Building2,
       },
+       {
+        path: "/admin/manage-accounts",
+        label: "Accounts",
+        icon: Users,
+      },
+      
       {
         path: "/admin/manage-blogs",
-        label: "Manage blogs",
+        label: "Blogs",
         icon: FileText,
       },
       {

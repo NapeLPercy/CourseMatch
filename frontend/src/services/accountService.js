@@ -19,3 +19,10 @@ export async function resetPassword(token, password) {
   const res = await api.post(`/api/auth/reset`, { token, password });
   return res;
 }
+
+
+export async function getAllAccounts() {
+  const res = await api.get(`/api/auth/accounts`);
+  return res;
+}
+

@@ -129,4 +129,50 @@ module.exports = {
       });
     });
   },
+  //admin views all account(3 bellow methods)
+
+  getAllAccounts: async () => {
+    const sql = `
+    SELECT id, user_id, created_at, email
+    FROM account WHERE role = 'STUDENT'
+  `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [], (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows);
+      });
+    });
+  },
+
+  getStudentProfileByUserId: async (userId) => {
+    const sql = `
+    SELECT id, dream_job
+    FROM student_profile
+    WHERE user_id = ?
+    LIMIT 1
+  `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [userId], (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows[0] || null);
+      });
+    });
+  },
+  checkSubjectsExistByStudentId: async (studentId) => {
+    const sql = `
+    SELECT 1
+    FROM subject
+    WHERE student_id = ?
+    LIMIT 1
+  `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [studentId], (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows.length > 0);
+      });
+    });
+  },
 };
