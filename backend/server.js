@@ -21,10 +21,11 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://coursematch-ui.onrender.com",
+  "https://coursematch-ui.onrender.com", 
+"https://www.coursematchapp.co.za", 
+"https://coursematchapp.co.za", 
   "http://192.168.43.69:3000",
 ];
-
 app.use(
   cors({
     origin: function (origin, callback) {
