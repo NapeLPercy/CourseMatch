@@ -3,7 +3,8 @@ import { Search, CheckCircle2, XCircle, Calendar, Mail } from "lucide-react";
 import "../../styles/AdminViewUsers.css";
 import { getAllAccounts } from "../../services/accountService";
 import { formatTimestamp } from "../../Utils/datetime";
-
+import ErrorState from "../ui/ErrorState";
+import  AdminUserListSkeleton from "../ui/AdminViewUsersSkeleton";
 function getInitials(email) {
   return email.slice(0, 2).toUpperCase();
 }
@@ -25,14 +26,19 @@ export default function AdminUserList() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [users, setUsers] = useState([]);
-
+  const[loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const fetchUsers = async () => {
+    setError(null);
+    setLoading(true);
     try {
       const { data } = await getAllAccounts();
       console.log(data);
       setUsers(data.result);
     } catch {
+      setError("Failed to load users data");
     } finally {
+      setLoading(false);
     }
   };
 
@@ -55,6 +61,8 @@ export default function AdminUserList() {
     });
   }, [users, search, filter]);
 
+  if(loading) return < AdminUserListSkeleton/>
+  if(error) return <ErrorState message={error} onRetry={fetchUsers}/>
   return (
     <div className="aul">
       {/* Controls */}
@@ -93,7 +101,7 @@ export default function AdminUserList() {
       </p>
 
       {/* Table */}
-      {filtered.length === 0 ? (
+      {(filtered.length === 0) ? (
         <div className="aul__empty">
           <Search size={36} strokeWidth={1.5} />
           <p>No users match your search.</p>

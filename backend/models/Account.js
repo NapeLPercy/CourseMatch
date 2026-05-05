@@ -2,9 +2,8 @@ const db = require("../config/db");
 
 module.exports = {
   //Patch a user role, used during onboarding
-  updateAccountRole: async (conn, { userId, role }) => {
+  updateAccountRole: async (conn=db, { userId, role }) => {
     const sql = `UPDATE account SET role = ? WHERE user_id = ?`;
-
     return new Promise((resolve, reject) => {
       conn.query(sql, [role, userId], (err, result) => {
         if (err) return reject(err);

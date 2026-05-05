@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Users, Plus, List, X } from "lucide-react";
 import AdminAddUniversity from "../forms/AdminAddUniversity";
 import AdminUserList from "./AdminViewUsers";
+import AddUser from "../forms/AdminAddUser";
 import "../../styles/AdminManageUniversities.css";
 
 export default function AdminManageAccounts() {
@@ -16,9 +17,7 @@ export default function AdminManageAccounts() {
         </div>
         <div className="mu__header-text">
           <h1 className="mu__title">Manage Users</h1>
-          <p className="mu__subtitle">
-            Add new users or manage existing ones.
-          </p>
+          <p className="mu__subtitle">Add new users or manage existing ones.</p>
         </div>
       </header>
 
@@ -49,7 +48,7 @@ export default function AdminManageAccounts() {
 
       {/* Tab content */}
       <div className="mu__content">
-        {activeTab === "add" && <AdminAddUniversity />}
+        {activeTab === "add" && <AddUser />}
         {activeTab === "view" && <AdminUserList />}
       </div>
     </div>

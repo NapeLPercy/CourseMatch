@@ -1,0 +1,145 @@
+/* ── AddUser.css ── */
+
+.au {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+  
+  background: var(--white);
+  border: 1px solid var(--pale-blue);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(30, 58, 138, 0.06);
+}
+
+
+/* ── Field ── */
+.au__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.au__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.au__required {
+  color: #dc2626;
+  font-size: 0.75rem;
+}
+
+/* Input + select shared */
+.au__input {
+  padding: 10px 14px;
+  background: #f8fafc;
+  border: 2px solid var(--pale-blue);
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.au__input:focus {
+  border-color: var(--light-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.au__input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Error border */
+.au__field--error .au__input {
+  border-color: #fca5a5;
+  background: #fff5f5;
+}
+
+/* Select */
+.au__select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+/* Error message */
+.au__error {
+  font-size: 0.75rem;
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Actions ── */
+.au__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.au__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+.au__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.au__btn--primary {
+  background: linear-gradient(135deg, var(--medium-blue), var(--light-blue));
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.au__btn--primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+
+.au__btn--ghost {
+  background: #f1f5f9;
+  color: var(--text-gray);
+}
+
+.au__btn--ghost:hover:not(:disabled) {
+  background: #e2e8f0;
+  color: var(--text-dark);
+}
+
+/* Spinner */
+.au__spinner {
+  animation: au-spin 0.8s linear infinite;
+}
+
+@keyframes au-spin {
+  to { transform: rotate(360deg); }
+}

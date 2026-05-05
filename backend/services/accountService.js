@@ -45,6 +45,7 @@ async function addAccount(email, password) {
     });
 
     await conn.promise().commit();
+    return userId;
   } catch (error) {
     await conn.promise().rollback();
     throw error;
@@ -84,14 +85,18 @@ const getAdminAccounts = () => {
 
       const enriched = await Promise.all(
         accounts.map(async (acc) => {
-          const profile = await accountModel.getStudentProfileByUserId(acc.user_id);
+          const profile = await accountModel.getStudentProfileByUserId(
+            acc.user_id,
+          );
 
           const hasProfile = !!(profile && profile.dream_job);
 
           let hasSubjects = false;
 
           if (profile) {
-            hasSubjects = await accountModel.checkSubjectsExistByStudentId(profile.id);
+            hasSubjects = await accountModel.checkSubjectsExistByStudentId(
+              profile.id,
+            );
           }
 
           return {

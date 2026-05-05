@@ -8,4 +8,6 @@ router.post("/login", authController.login);
 router.post("/request-reset", authController.requestPasswordReset);
 router.post("/reset", authController.resetPassword);
 router.get("/accounts", authController.getAdminAccounts);
+
+router.post("/add", authController.adminAddAccount);
 module.exports = router;

@@ -26,3 +26,10 @@ export async function getAllAccounts() {
   return res;
 }
 
+export async function addUserAccount(data) {
+  console.log("here it is",data);
+  
+  const res = await api.post(`/api/auth/add`,data);
+  return res;
+}
+

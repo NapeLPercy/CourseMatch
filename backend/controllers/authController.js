@@ -8,6 +8,7 @@ const {
   generateToken,
   validatePassword,
   getAdminAccounts,
+  updateAccountRole,
 } = require("../services/accountService");
 const {
   requestPasswordReset,
@@ -21,7 +22,6 @@ exports.register = async (req, res) => {
 
   try {
     const results = await checkAccount(email);
-    console.log(results, "After check email");
 
     if (results.length > 0) {
       return res.json({ success: false, message: "Email already registered" });
@@ -152,12 +152,45 @@ exports.getAdminAccounts = async (req, res) => {
 
     return res
       .status(200)
-      .json({ result, success: true, message: "Accounts successfully fetched"});
+      .json({
+        result,
+        success: true,
+        message: "Accounts successfully fetched",
+      });
   } catch (err) {
     console.error("Admin accounts error:", err);
 
     return res.status(500).json({
       message: "Internal server error",
     });
+  }
+};
+
+//admin add user
+exports.adminAddAccount = async (req, res) => {
+  const { email, role } = req.body;
+
+  console.log(email, role);
+
+  try {
+    const results = await checkAccount(email);
+
+    if (results.length > 0) {
+      return res.json({ success: false, message: "Email already registered" });
+    }
+
+    const password = "Rosina^*20";//will generate a random password and then send it to user
+
+    const result = await addAccount(email, password);
+
+    if (result.userId) {
+      await updateAccountRole(undefined,{ "userId":result.userId, role });
+    }
+
+    return res
+      .status(201)
+      .json({ success: true, message: "Successfuly registered" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
