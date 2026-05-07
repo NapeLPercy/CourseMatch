@@ -22,7 +22,7 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
   const subjects = getSubjects();
 
   const qualifiedCourses = useMemo(() => {
-    if(qualifications.length===0 || subjects.length===0)return;
+    if(qualifications.length===0 || subjects.length===0)return [];
 
     const endorsement = JSON.parse(sessionStorage.getItem("endorsement"));
 
@@ -41,7 +41,6 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
 
     setAps(parsedAps);
     setUnlockedCount(results.length);
-
     return results;
   }, [qualifications, subjects, uniSlug]);
 
