@@ -32,6 +32,7 @@ export const adminSubjectsData = [
   "Religion Studies",
   "Southern Sotho",
   "Swazi",
+"Technical Mathematics",
   "Tourism",
   "Tsonga",
   "Tswana",
