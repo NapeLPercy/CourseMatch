@@ -1,33 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   GraduationCap,
   Building2,
   BookOpen,
-  Sparkles,
   ArrowRight,
-  Trophy,
   ChevronLeft,
-  Award,
+  Sparkles,
+  Trophy,
 } from "lucide-react";
 import "../../styles/GuestResultsSummary.css";
 import AddSubjects from "../forms/GuestCalculateAPS";
-
 import { Helmet } from "react-helmet-async";
+import { useAuth } from "../../context/AuthContext";
 
 export default function GuestResultsSummary({ data }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [back, setBack] = useState(false);
+  const ctaRef = useRef(null);
 
+  
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+  
   if (!data) return null;
+  if (back) return <AddSubjects />;
 
   const { courses = [], universityAPS = [], qualifiedUniversities = 0 } = data;
 
-  const backHandler = () => {
-    setBack(true);
-  };
 
-  if (back) return <AddSubjects />;
+  const scrollToCta = () =>
+    ctaRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
 
   return (
     <>
@@ -44,106 +49,133 @@ export default function GuestResultsSummary({ data }) {
       </Helmet>
 
       <div className="grs">
-        {/* Back button */}
-        <button className="grs__back" onClick={backHandler}>
-          <ChevronLeft size={18} strokeWidth={2.5} />
+        {/* Back */}
+        <button className="grs__back" onClick={() => setBack(true)}>
+          <ChevronLeft size={16} strokeWidth={2.5} />
           Back to Calculator
         </button>
 
-        {/* Main content - grows from center */}
-        <div className="grs__container">
-          {/* Trophy celebration */}
-          <div className="grs__celebration">
-            <h1 className="grs__title">Your APS Results Are In!</h1>
+        {/* Hero */}
+        <div className="grs__hero">
+          <div className="grs__hero-icon">
+            <Trophy size={28} strokeWidth={1.8} />
+          </div>
+          <div className="grs__hero-text">
+            <h1 className="grs__title">Your results are in!</h1>
             <p className="grs__subtitle">
-              Based on your subjects and marks, here's what you qualify for
+              Based on your subjects and marks, here's what you qualify for.
             </p>
           </div>
+        </div>
 
-          {/* Stats Overview */}
-          <div className="grs__stats">
-            <div className="grs__stat-card">
-              <div className="grs__stat-icon grs__stat-icon--blue">
-                <BookOpen size={20} strokeWidth={2} />
-              </div>
-              <div className="grs__stat-content">
-                <strong>{courses.length}</strong>
-                <span>Qualifications</span>
-              </div>
+        {/* Stats strip */}
+        <div className="grs__stats">
+          <div className="grs__stat">
+            <div className="grs__stat-icon grs__stat-icon--blue">
+              <BookOpen size={16} strokeWidth={2} />
             </div>
-
-            <div className="grs__stat-card">
-              <div className="grs__stat-icon grs__stat-icon--green">
-                <Building2 size={20} strokeWidth={2} />
-              </div>
-              <div className="grs__stat-content">
-                <strong>{qualifiedUniversities}</strong>
-                <span>
-                  {qualifiedUniversities === 1 ? "University" : "Universities"}
-                </span>
-              </div>
+            <div className="grs__stat-body">
+              <strong>{courses.length}</strong>
+              <span>Qualifications</span>
             </div>
           </div>
+          <div className="grs__stat-divider" />
+          <div className="grs__stat">
+            <div className="grs__stat-icon grs__stat-icon--green">
+              <Building2 size={16} strokeWidth={2} />
+            </div>
+            <div className="grs__stat-body">
+              <strong>{qualifiedUniversities}</strong>
+              <span>
+                {qualifiedUniversities === 1 ? "University" : "Universities"}
+              </span>
+            </div>
+          </div>
+        </div>
 
-          {/* University Cards Grid */}
-          <div className="grs__section">
-            <h2 className="grs__section-title">
-              <GraduationCap size={22} strokeWidth={2} />
-              Universities & Your APS
-            </h2>
+        {/* Section */}
+        <div className="grs__section">
+          <div className="grs__section-header">
+            <GraduationCap size={18} strokeWidth={2} />
+            <h2 className="grs__section-title">Universities & your APS</h2>
+          </div>
 
-            <div className="grs__grid">
-              {universityAPS.map((uni, index) => (
-                <div
-                  key={index}
-                  className="grs__card"
-                  style={{ "--index": index }}
-                >
-                  <div className="grs__card-header">
-                    <div className="grs__uni-badge">{uni.abbreviation}</div>
-                    <div className="grs__aps-badge">
-                      <span className="grs__aps-label">APS</span>
-                      <strong className="grs__aps-value">{uni.aps}</strong>
-                    </div>
+          <div className="grs__grid">
+            {universityAPS.map((uni, index) => (
+              <div
+                key={index}
+                className="grs__card"
+                style={{ "--index": index }}
+              >
+                {/* Card head */}
+                <div className="grs__card-head">
+                  <div className="grs__uni-avatar">{uni.abbreviation}</div>
+                  <div className="grs__aps-badge">
+                    <span className="grs__aps-label">APS</span>
+                    <strong className="grs__aps-value">{uni.aps}</strong>
                   </div>
+                </div>
 
+                {/* Info */}
+                <div className="grs__card-body">
                   <h3 className="grs__uni-name">{uni.name}</h3>
-
                   <div className="grs__course-count">
-                    <BookOpen size={14} strokeWidth={2} />
+                    <BookOpen size={13} strokeWidth={2} />
                     <span>
                       {uni.courseCount} qualification
                       {uni.courseCount !== 1 ? "s" : ""} available
                     </span>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Call to Action */}
-          <div className="grs__cta">
-            <div className="grs__cta-content">
-              <div className="grs__cta-text">
-                <h3 className="grs__cta-title">
-                  Ready to Explore Your Matches?
-                </h3>
-                <p className="grs__cta-desc">
-                  Register now to view detailed course information, AI-powered
-                  recommendations, and personalized insights based on your
-                  profile.
-                </p>
+                {/* Per-uni btn */}
+                {user ? (
+                  <button
+                    className="grs__uni-btn"
+                    onClick={() =>
+                      navigate(
+                        `/view-courses/${uni.abbreviation.toLowerCase()}`,
+                      )
+                    }
+                  >
+                    View courses
+                    <ArrowRight size={14} strokeWidth={2.5} />
+                  </button>
+                ) : (
+                  <button
+                    className="grs__uni-btn grs__uni-btn--ghost"
+                    onClick={scrollToCta}
+                  >
+                    View courses
+                    <ArrowRight size={14} strokeWidth={2.5} />
+                  </button>
+                )}
               </div>
-            </div>
-
-            <button
-              className="grs__cta-btn"
-              onClick={() => navigate("/register")}
-            >
-              <span>Create Free Account</span>
-              <ArrowRight size={18} strokeWidth={2.5} />
-            </button>
+            ))}
           </div>
+        </div>
+
+        {/* CTA */}
+        <div className="grs__cta" ref={ctaRef}>
+          <div className="grs__cta-text">
+            <h3 className="grs__cta-title">
+              {user
+                ? "Explore all your matches"
+                : "Ready to explore your matches?"}
+            </h3>
+            <p className="grs__cta-desc">
+              {user
+                ? "Browse the full list of universities and dive into every course you qualify for — all in one place."
+                : "Register now to view detailed course information, AI-powered recommendations, and personalized insights based on your profile."}
+            </p>
+          </div>
+          <button
+            className="grs__cta-btn"
+            onClick={() => navigate(user ? "/view-courses" : "/register")}
+          >
+            {user ? "Browse universities" : "Create free account"}
+            <ArrowRight size={18} strokeWidth={2.5} />
+          </button>
         </div>
       </div>
     </>
