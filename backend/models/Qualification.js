@@ -9,6 +9,7 @@ module.exports = {
       code,
       name,
       nqf,
+      mode_of_study,
       minaps,
       min_endorsement,
       min_duration,
@@ -30,8 +31,8 @@ module.exports = {
           try {
             const qualificationSql = `
               INSERT INTO qualification
-                (code, name, minimum_aps,nqf, minimum_endorsement, minimum_duration, faculty_id)
-              VALUES (?, ?, ?,?, ?, ?, ?)
+                (code, name, minimum_aps,nqf,mode_of_study, minimum_endorsement, minimum_duration, faculty_id)
+              VALUES (?, ?, ?,?,?, ?, ?, ?)
             `;
 
             await conn.query(qualificationSql, [
@@ -39,6 +40,7 @@ module.exports = {
               name,
               minaps,
               nqf,
+              mode_of_study,
               min_endorsement,
               min_duration,
               fac_id,

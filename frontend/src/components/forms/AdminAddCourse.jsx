@@ -48,6 +48,7 @@ export default function AdminAddQualification() {
   const [code, setCode] = useState("");
   const [qName, setQName] = useState("");
   const [minAps, setMinAps] = useState("");
+  const [modeOfStudy, setModeOfStudy] = useState("");
   const [nqf, setNqf] = useState("");
   const [minEndorsement, setMinEndorsement] = useState("");
   const [minDuration, setMinDuration] = useState("");
@@ -143,6 +144,7 @@ export default function AdminAddQualification() {
     if (!qName.trim()) errs.push("Qualification name is required.");
     if (!minAps.trim()) errs.push("Minimum APS is required.");
     if (!nqf.trim()) errs.push("NQF is required.");
+    if (!modeOfStudy.trim()) errs.push("Mode of study is required");
     if (!minDuration.trim()) errs.push("Minimum duration is required.");
     if (!minEndorsement.trim()) errs.push("Minimum endorsement is required.");
 
@@ -165,6 +167,7 @@ export default function AdminAddQualification() {
     nqf,
     qName,
     minAps,
+    modeOfStudy,
     minEndorsement,
     minDuration,
     prereqs.length,
@@ -210,6 +213,7 @@ export default function AdminAddQualification() {
       code: code.trim(),
       nqf: nqf.trim(),
       name: qName.trim(),
+      mode_of_study: modeOfStudy,
       minaps: minAps === "" ? null : Number(minAps),
       min_endorsement: minEndorsement.trim() || null,
       min_duration: minDuration === "" ? null : Number(minDuration),
@@ -226,18 +230,17 @@ export default function AdminAddQualification() {
         setError("Failed to add qualification");
       }
 
-      setLoading(false);
       setSuccess("Successfully submitted qualification data");
-      setTimeout(() => {
-        handleReset();
-      }, 6000);
+      handleReset();
     } catch (error) {
-      alert(error.message || "Failed to submit courses");
+      setError("Failed to submit courses");
+      setLoading(false);
     } finally {
       setTimeout(() => {
+        setLoading(false);
         setError(null);
         setSuccess(null);
-      }, 5000);
+      }, 2000);
     }
   };
 
@@ -407,6 +410,21 @@ export default function AdminAddQualification() {
                 <option value="Bachelor">Bachelor</option>
                 <option value="Diploma">Diploma</option>
                 <option value="Higher Certificate">Higher Certificate</option>
+              </select>
+            </div>
+
+            <div className="aaq__field">
+              <label htmlFor="aaq-endorse" className="aaq__label">
+                Mode of Study *
+              </label>
+              <select
+                id="aaq-endorse"
+                value={modeOfStudy}
+                onChange={(e) => setModeOfStudy(e.target.value)}
+                className="aaq__select"
+              >
+                <option value="On Campus">On Campus</option>
+                <option value="Online">Online</option>
               </select>
             </div>
 
