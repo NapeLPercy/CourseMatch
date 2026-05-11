@@ -10,6 +10,8 @@ import { formatTimestamp } from "../Utils/datetime";
 import BlogPostSkeleton from "../components/ui/BlogPostSkeleton";
 import BlogNotFound from "../components/ui/BlogNotFound";
 import ErrorState from "../components/ui/ErrorState";
+import { Helmet } from "react-helmet-async";
+
 function getInitials(name) {
   if (!name) return;
   return name
@@ -37,6 +39,7 @@ export default function BlogPost() {
   // const sorted = [...post?.blocks].sort((a, b) => a.position - b.position);
   const navigate = useNavigate();
   const { id } = useParams();
+  const url = `https://coursematchapp.co.za/blog/${id}`;
 
   useEffect(() => {
     getPostAndRelatedPosts(id);
@@ -69,76 +72,87 @@ export default function BlogPost() {
   if (notFound) return <BlogNotFound />;
   if (error)
     return <ErrorState message={error} onRetry={getPostAndRelatedPosts} />;
-  
+
   return (
-    <div className="bp">
-      {/* Back nav */}
-      <button className="bp__back" onClick={() => navigate("/blogs")}>
-        <ArrowLeft size={15} strokeWidth={2.5} />
-        Back to blog
-      </button>
-
-      {/* Cover */}
-      <div className="bp__cover-wrap">
-        <img
-          className="bp__cover-img"
-          src={post.coverImageUrl}
-          alt={post.title}
+    <>
+      <Helmet>
+        <title>{`${post?.title || "Blog Post"} | CourseMatch`}</title>
+        <meta
+          name="description"
+          content={post?.excerpt || "Read this article on CourseMatch."}
         />
-        <div className="bp__cover-scrim" />
-        <span className="bp__topic-badge">
-          <Tag size={10} strokeWidth={2.5} />
-          {post.topic}
-        </span>
-      </div>
 
-      {/* Article */}
-      <article className="bp__article">
-        {/* Header */}
-        <header className="bp__header">
-          <h1 className="bp__title">{post.title}</h1>
-          <p className="bp__excerpt">{post.excerpt}</p>
+        <link rel="canonical" href={url} />
+      </Helmet>{" "}
+      <div className="bp">
+        {/* Back nav */}
+        <button className="bp__back" onClick={() => navigate("/blogs")}>
+          <ArrowLeft size={15} strokeWidth={2.5} />
+          Back to blog
+        </button>
 
-          <div className="bp__meta-row">
-            {/* Author */}
-            <div className="bp__author">
-              <div className="bp__avatar">
-                {getInitials(post?.author?.name)}
+        {/* Cover */}
+        <div className="bp__cover-wrap">
+          <img
+            className="bp__cover-img"
+            src={post.coverImageUrl}
+            alt={post.title}
+          />
+          <div className="bp__cover-scrim" />
+          <span className="bp__topic-badge">
+            <Tag size={10} strokeWidth={2.5} />
+            {post.topic}
+          </span>
+        </div>
+
+        {/* Article */}
+        <article className="bp__article">
+          {/* Header */}
+          <header className="bp__header">
+            <h1 className="bp__title">{post.title}</h1>
+            <p className="bp__excerpt">{post.excerpt}</p>
+
+            <div className="bp__meta-row">
+              {/* Author */}
+              <div className="bp__author">
+                <div className="bp__avatar">
+                  {getInitials(post?.author?.name)}
+                </div>
+                <div className="bp__author-info">
+                  <span className="bp__author-name">{post?.author?.name}</span>
+                  <span className="bp__meta-sub">
+                    <Calendar size={11} strokeWidth={2} />
+                    {formatTimestamp(post.publishedAt)}
+                    <span className="bp__dot" />
+                    <Eye size={11} strokeWidth={2} />
+                    {post?.reads?.toLocaleString()} reads
+                  </span>
+                </div>
               </div>
-              <div className="bp__author-info">
-                <span className="bp__author-name">{post?.author?.name}</span>
-                <span className="bp__meta-sub">
-                  <Calendar size={11} strokeWidth={2} />
-                  {formatTimestamp(post.publishedAt)}
-                  <span className="bp__dot" />
-                  <Eye size={11} strokeWidth={2} />
-                  {post?.reads?.toLocaleString()} reads
-                </span>
-              </div>
+
+              {/* Share */}
+              <ShareMenu post={post} />
             </div>
 
-            {/* Share */}
-            <ShareMenu post={post} />
+            <div className="bp__divider" />
+          </header>
+
+          {/* Content blocks */}
+          <div className="bp__content">
+            {post?.blocks?.map((block) => (
+              <Block key={block.position} block={block} />
+            ))}
           </div>
 
-          <div className="bp__divider" />
-        </header>
+          {/* Footer share nudge */}
+          <div className="bp__footer">
+            <p className="bp__footer-label">Found this helpful?</p>
+            <ShareMenu title={post.title} />
+          </div>
 
-        {/* Content blocks */}
-        <div className="bp__content">
-          {post?.blocks?.map((block) => (
-            <Block key={block.position} block={block} />
-          ))}
-        </div>
-
-        {/* Footer share nudge */}
-        <div className="bp__footer">
-          <p className="bp__footer-label">Found this helpful?</p>
-          <ShareMenu title={post.title} />
-        </div>
-
-        <RelatedPosts posts={relatedPosts} />
-      </article>
-    </div>
+          <RelatedPosts posts={relatedPosts} />
+        </article>
+      </div>
+    </>
   );
 }

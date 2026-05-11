@@ -1,3 +1,12 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+Disallow: /admin/
+Disallow: /student/
+
+Disallow: /login
+Disallow: /register
+Disallow: /request-reset
+Disallow: /reset-password
+
+Sitemap: https://coursematchapp.co.za/sitemap.xml

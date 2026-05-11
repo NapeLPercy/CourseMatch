@@ -18,6 +18,7 @@ import ProgressBar from "../ui/ProgressBar";
 import { validate } from "../../Utils/subjectsValidater";
 import SubjectSelect from "../ui/SubjectSelect";
 
+import { Helmet } from "react-helmet-async";
 /* Main */
 export default function AddSubjects() {
   const { addSubjects, getSubjects } = useSubjects();
@@ -97,7 +98,7 @@ export default function AddSubjects() {
       setSubmitted(true);
       setResults(results);
       addSubjects(subjects);
-        setTimeout(() => {
+      setTimeout(() => {
         reset();
       }, 3000);
     } catch (err) {
@@ -119,171 +120,184 @@ export default function AddSubjects() {
   if (results) return <GuestResultsSummary data={results} />;
   /* ── Form ── */
   return (
-    <div className="as">
-      {/* Header */}
-      <div className="as__header">
-        <div className="as__header-left">
-          <div className="as__icon-wrap">
-            <BookOpen size={22} strokeWidth={1.6} />
-          </div>
-          <span className="as__eyebrow">Step 1</span>
-          <h1 className="as__title">Add Your Subjects</h1>
-          <p className="as__subtitle">
-            Enter your matric subjects and marks. You need between 7 and 15
-            subjects.
-          </p>
-        </div>
-
-        {/* Requirements checklist */}
-        <div className="as__requirements">
-          <span className="as__req-title">Requirements</span>
-          {[
-            {
-              label: "7–15 subjects",
-              met: subjects.length >= MIN && subjects.length <= MAX,
-            },
-            {
-              label: "Maths, Technical Math, or Maths Literacy",
-              met: subjects.some(
-                (s) =>
-                  s.name === "Mathematics" ||
-                  s.name === "Technical Mathematics" ||
-                  s.name === "Mathematical Literacy",
-              ),
-            },
-            {
-              label: "Life Orientation",
-              met: subjects.some((s) => s.name === "Life Orientation"),
-            },
-            {
-              label: "At least one FAL",
-              met: subjects.some((s) => s.name.endsWith("FAL")),
-            },
-            {
-              label: "At least one HL",
-              met: subjects.some((s) => s.name.endsWith("HL")),
-            },
-          ].map((r) => (
-            <div
-              key={r.label}
-              className={`as__req ${r.met ? "as__req--met" : ""}`}
-            >
-              <CheckCircle2
-                size={13}
-                strokeWidth={2.2}
-                className="as__req-icon"
-              />
-              {r.label}
+    <>
+      <Helmet>
+        <title>Calculate Your APS Score | CourseMatch</title>
+        <meta
+          name="description"
+          content="Enter your matric subjects and marks to calculate your APS score instantly."
+        />
+        <link
+          rel="canonical"
+          href="https://coursematchapp.co.za/aps-calculator"
+        />
+      </Helmet>
+      <div className="as">
+        {/* Header */}
+        <div className="as__header">
+          <div className="as__header-left">
+            <div className="as__icon-wrap">
+              <BookOpen size={22} strokeWidth={1.6} />
             </div>
-          ))}
-        </div>
-      </div>
+            <span className="as__eyebrow">Step 1</span>
+            <h1 className="as__title">Add Your Subjects</h1>
+            <p className="as__subtitle">
+              Enter your matric subjects and marks. You need between 7 and 15
+              subjects.
+            </p>
+          </div>
 
-      {/* Progress */}
-      <ProgressBar current={subjects.length} max={MAX} />
-
-      {/* Subject rows */}
-      <div className="as__rows">
-        {subjects.map((s, i) => {
-          return (
-            <div
-              key={i}
-              className="as__row"
-              style={{ animationDelay: `${i * 0.04}s` }}
-            >
-              {/* Row number */}
-              <span className="as__row-num">{i + 1}</span>
-
-              {/* Select */}
-              <SubjectSelect
-                value={s.name}
-                onChange={(val) => change(i, "name", val)}
-                takenNames={takenNames}
-              />
-
-              {/* Mark input + badge */}
-              <div className="as__mark-wrap">
-                <input
-                  type="number"
-                  className="as__mark-input"
-                  placeholder="Mark"
-                  min="0"
-                  max="100"
-                  value={s.mark}
-                  onChange={(e) => change(i, "mark", e.target.value)}
+          {/* Requirements checklist */}
+          <div className="as__requirements">
+            <span className="as__req-title">Requirements</span>
+            {[
+              {
+                label: "7–15 subjects",
+                met: subjects.length >= MIN && subjects.length <= MAX,
+              },
+              {
+                label: "Maths, Technical Math, or Maths Literacy",
+                met: subjects.some(
+                  (s) =>
+                    s.name === "Mathematics" ||
+                    s.name === "Technical Mathematics" ||
+                    s.name === "Mathematical Literacy",
+                ),
+              },
+              {
+                label: "Life Orientation",
+                met: subjects.some((s) => s.name === "Life Orientation"),
+              },
+              {
+                label: "At least one FAL",
+                met: subjects.some((s) => s.name.endsWith("FAL")),
+              },
+              {
+                label: "At least one HL",
+                met: subjects.some((s) => s.name.endsWith("HL")),
+              },
+            ].map((r) => (
+              <div
+                key={r.label}
+                className={`as__req ${r.met ? "as__req--met" : ""}`}
+              >
+                <CheckCircle2
+                  size={13}
+                  strokeWidth={2.2}
+                  className="as__req-icon"
                 />
+                {r.label}
               </div>
-
-              {/* Delete (only if more than 1 row) */}
-              {subjects.length > 1 && (
-                <button
-                  type="button"
-                  className="as__delete"
-                  onClick={() => deleteRow(i)}
-                  aria-label={`Remove row ${i + 1}`}
-                >
-                  <Trash2 size={15} strokeWidth={2} />
-                </button>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Error pills */}
-      {errors.length > 0 && (
-        <div className="as__errors">
-          <div className="as__errors-header">
-            <AlertCircle
-              size={15}
-              strokeWidth={2}
-              className="as__errors-icon"
-            />
-            <span>Please fix the following</span>
-            <button
-              type="button"
-              className="as__errors-dismiss"
-              onClick={() => setErrors([])}
-            >
-              <X size={13} strokeWidth={2.2} />
-            </button>
-          </div>
-          <ul className="as__errors-list">
-            {errors.map((e, i) => (
-              <li key={i} className="as__error-item">
-                <X size={11} strokeWidth={2.5} className="as__error-bullet" />{" "}
-                {e}
-              </li>
             ))}
-          </ul>
+          </div>
         </div>
-      )}
 
-      {/* submit success*/}
-      {submitted && <SubmitSuccess success="Aps successfuly computed" />}
+        {/* Progress */}
+        <ProgressBar current={subjects.length} max={MAX} />
 
-      {/* Row actions */}
-      <div className="as__actions">
-        {subjects.length < MAX && (
-          <button type="button" className="as__add-btn" onClick={addRow}>
-            <Plus size={15} strokeWidth={2.2} /> Add Another
-          </button>
+        {/* Subject rows */}
+        <div className="as__rows">
+          {subjects.map((s, i) => {
+            return (
+              <div
+                key={i}
+                className="as__row"
+                style={{ animationDelay: `${i * 0.04}s` }}
+              >
+                {/* Row number */}
+                <span className="as__row-num">{i + 1}</span>
+
+                {/* Select */}
+                <SubjectSelect
+                  value={s.name}
+                  onChange={(val) => change(i, "name", val)}
+                  takenNames={takenNames}
+                />
+
+                {/* Mark input + badge */}
+                <div className="as__mark-wrap">
+                  <input
+                    type="number"
+                    className="as__mark-input"
+                    placeholder="Mark"
+                    min="0"
+                    max="100"
+                    value={s.mark}
+                    onChange={(e) => change(i, "mark", e.target.value)}
+                  />
+                </div>
+
+                {/* Delete (only if more than 1 row) */}
+                {subjects.length > 1 && (
+                  <button
+                    type="button"
+                    className="as__delete"
+                    onClick={() => deleteRow(i)}
+                    aria-label={`Remove row ${i + 1}`}
+                  >
+                    <Trash2 size={15} strokeWidth={2} />
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Error pills */}
+        {errors.length > 0 && (
+          <div className="as__errors">
+            <div className="as__errors-header">
+              <AlertCircle
+                size={15}
+                strokeWidth={2}
+                className="as__errors-icon"
+              />
+              <span>Please fix the following</span>
+              <button
+                type="button"
+                className="as__errors-dismiss"
+                onClick={() => setErrors([])}
+              >
+                <X size={13} strokeWidth={2.2} />
+              </button>
+            </div>
+            <ul className="as__errors-list">
+              {errors.map((e, i) => (
+                <li key={i} className="as__error-item">
+                  <X size={11} strokeWidth={2.5} className="as__error-bullet" />{" "}
+                  {e}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
-        <button
-          type="button"
-          className="as__submit-btn"
-          onClick={guestComputeAPS}
-          disabled={loading}
-        >
-          {loading ? (
-            <span className="as__submit-spinner" />
-          ) : (
-            <Send size={16} strokeWidth={2.2} />
+        {/* submit success*/}
+        {submitted && <SubmitSuccess success="Aps successfuly computed" />}
+
+        {/* Row actions */}
+        <div className="as__actions">
+          {subjects.length < MAX && (
+            <button type="button" className="as__add-btn" onClick={addRow}>
+              <Plus size={15} strokeWidth={2.2} /> Add Another
+            </button>
           )}
-          {loading ? "Calculating..." : "Calculate APS"}
-        </button>
+
+          <button
+            type="button"
+            className="as__submit-btn"
+            onClick={guestComputeAPS}
+            disabled={loading}
+          >
+            {loading ? (
+              <span className="as__submit-spinner" />
+            ) : (
+              <Send size={16} strokeWidth={2.2} />
+            )}
+            {loading ? "Calculating..." : "Calculate APS"}
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

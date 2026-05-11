@@ -4,13 +4,16 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+import { HelmetProvider } from "react-helmet-async";
 import { CookieConsentProvider } from "./context/CookieConsentContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <CookieConsentProvider>
-    <App />
-  </CookieConsentProvider>,
+  <HelmetProvider>
+    <CookieConsentProvider>
+      <App />
+    </CookieConsentProvider>
+  </HelmetProvider>,
 );
 
 // If you want to start measuring performance in your app, pass a function
