@@ -104,7 +104,6 @@ exports.getAIDeepDive = async (req, res) => {
       results: results,
     });
   } catch (error) {
-    console.error("AI deep dive error:", error);
     return res.status(500).json({
       success: false,
       message: "Server error generating AI deep dive results",

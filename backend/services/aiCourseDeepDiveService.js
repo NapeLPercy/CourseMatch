@@ -47,7 +47,8 @@ const getOrCreateDeepDive = async ({
   };
 
 
-  const results = await aiCourseDeepDiveModel.createDeepDive(deepDive);
+  await aiCourseDeepDiveModel.createDeepDive(deepDive);
+  deepDive.createdAt= Date.now();
   return deepDive;
 };
 

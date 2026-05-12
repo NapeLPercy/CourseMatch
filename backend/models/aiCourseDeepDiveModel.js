@@ -14,8 +14,7 @@ const aiCourseDeepDiveModel = {
         how_to_excel,
         alternatives,
         user_id,
-        course_code,
-        created_at
+        course_code
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
