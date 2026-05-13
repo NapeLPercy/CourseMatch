@@ -20,16 +20,14 @@ export default function GuestResultsSummary({ data }) {
   const [back, setBack] = useState(false);
   const ctaRef = useRef(null);
 
-  
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-  
+
   if (!data) return null;
   if (back) return <AddSubjects />;
 
   const { courses = [], universityAPS = [], qualifiedUniversities = 0 } = data;
-
 
   const scrollToCta = () =>
     ctaRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -132,11 +130,18 @@ export default function GuestResultsSummary({ data }) {
                 {user ? (
                   <button
                     className="grs__uni-btn"
-                    onClick={() =>
+                    onClick={() => {
+                      sessionStorage.setItem(
+                        "visited-uni",
+                        JSON.stringify({
+                          name: uni.name,
+                          id: uni.abbreviation.toLowerCase(),
+                        }),
+                      );
                       navigate(
                         `/view-courses/${uni.abbreviation.toLowerCase()}`,
-                      )
-                    }
+                      );
+                    }}
                   >
                     View courses
                     <ArrowRight size={14} strokeWidth={2.5} />
