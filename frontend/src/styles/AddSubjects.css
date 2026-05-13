@@ -520,16 +520,6 @@
 }
 
 @media (max-width: 640px) {
-  .as__select-list {
-  padding: 6px;
-}
-
-.as__select-option {
-  padding: 10px 0px 10px 50px;
-  white-space: normal;
-  word-break: break-word;
-}
-
   .as {
     margin-top: 60px;
     padding: 32px 20px 60px;
@@ -552,6 +542,28 @@
   .as__req {
     font-size: 0.72rem;
     padding: 5px 10px;
+  }
+
+  .as__select-panel {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    top: auto;
+    z-index: 999;
+    margin-top: 6px;
+  }
+
+  .as__select-list {
+    padding: 6px;
+    max-height: 280px;
+  }
+
+  .as__select-option {
+    padding: 12px 14px;
+    white-space: normal;
+    word-break: break-word;
+    font-size: 0.88rem;
   }
 }
 
