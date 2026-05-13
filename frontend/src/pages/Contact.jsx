@@ -16,7 +16,7 @@ import { universitiesList } from "../Utils/universities";
 import { getCurrentDateTime } from "../Utils/datetime";
 import SubmitError from "../components/ui/SubmitError";
 import SubmitSuccess from "../components/ui/SubmitSuccess";
-
+import SEO from "../components/ui/SEO";
 /* ─── Validation ────────────────────────────────────────────── */
 function validate(fields) {
   const errors = {};
@@ -238,179 +238,198 @@ export default function Contact() {
 
   /* ── Form screen ── */
   return (
-    <section
-      ref={sectionRef}
-      className={`contact ${mounted ? "contact--mounted" : ""}`}
-    >
-      <div className="contact__glow" aria-hidden="true" />
-      <div className="contact__geo contact__geo--1" aria-hidden="true" />
-      <div className="contact__geo contact__geo--2" aria-hidden="true" />
+    <>
+      <SEO
+        title="Contact CourseMatch | Get Help & Support"
+        description="Contact CourseMatch for support, feedback, or partnership inquiries. We're here to help South African students."
+        url="https://coursematchapp.co.za/contact-us"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          name: "Contact CourseMatch",
+          description:
+            "Contact CourseMatch for support, feedback, or partnership inquiries.",
+          url: "https://coursematchapp.co.za/contact-us",
+        }}
+      />
+      <section
+        ref={sectionRef}
+        className={`contact ${mounted ? "contact--mounted" : ""}`}
+      >
+        <div className="contact__glow" aria-hidden="true" />
+        <div className="contact__geo contact__geo--1" aria-hidden="true" />
+        <div className="contact__geo contact__geo--2" aria-hidden="true" />
 
-      <div className="contact__inner">
-        {/* Header */}
-        <div className="contact__header">
-          <div className="contact__icon-wrap">
-            <Mail size={24} strokeWidth={1.6} />
-          </div>
-          <span className="contact__eyebrow">Get in touch</span>
-          <h2 className="contact__title">
-            We'd love to
-            <br />
-            <span className="contact__title-accent">hear from you.</span>
-          </h2>
-          <p className="contact__subtitle">
-            Have a question, suggestion, or just want to say hi? Fill in the
-            form below. Only the university field is required.
-          </p>
-        </div>
-        <div className="contact__form">
-          {/* Name — single field */}
-          <FieldWrapper error={errors.name}>
-            <label className="cf__label" htmlFor="cf-name">
-              <User size={13} strokeWidth={2} className="cf__label-icon" />
-              Full Name <span className="cf__required"></span>
-            </label>
-            <input
-              id="cf-name"
-              type="text"
-              className={`cf__input ${shakeField === "name" ? "cf__input--shake" : ""}`}
-              placeholder="First and last name"
-              value={fields.name}
-              onChange={change("name")}
-              autoComplete="name"
-            />
-          </FieldWrapper>
-
-          {/* Email — now required */}
-          <FieldWrapper error={errors.email}>
-            <label className="cf__label" htmlFor="cf-email">
-              <Mail size={13} strokeWidth={2} className="cf__label-icon" />
-              Email <span className="cf__required">*</span>
-            </label>
-            <input
-              id="cf-email"
-              type="text"
-              className={`cf__input ${shakeField === "email" ? "cf__input--shake" : ""}`}
-              placeholder="you@email.com"
-              value={fields.email}
-              onChange={change("email")}
-              autoComplete="email"
-            />
-          </FieldWrapper>
-
-          {/* Enquiry type — required, plain select */}
-          <FieldWrapper error={errors.enquiry}>
-            <label className="cf__label" htmlFor="cf-enquiry">
-              <MessageSquare
-                size={13}
-                strokeWidth={2}
-                className="cf__label-icon"
-              />
-              Enquiry Type <span className="cf__required">*</span>
-            </label>
-            <select
-              id="cf-enquiry"
-              className={`cf__input cf__input--select ${shakeField === "enquiry" ? "cf__input--shake" : ""}`}
-              value={fields.enquiry}
-              onChange={change("enquiry")}
-            >
-              <option value="">Select an enquiry type…</option>
-              <option value="General Enquiry">General Enquiry</option>
-              <option value="Technical Issue">Technical Issue</option>
-              <option value="Course Data Issue">Course Data Issue</option>
-              <option value="Partnership">Partnership</option>
-              <option value="Feature Request">Feature Request</option>
-              <option value="Other">Other</option>
-            </select>
-          </FieldWrapper>
-
-          {/* University — now optional, no searchable dropdown */}
-          <FieldWrapper error={errors.university}>
-            <label className="cf__label" htmlFor="cf-university">
-              <BookOpen size={13} strokeWidth={2} className="cf__label-icon" />
-              University{" "}
-              <span
-                style={{
-                  fontSize: "0.7rem",
-                  color: "var(--text-gray)",
-                  fontWeight: 400,
-                }}
-              >
-                (optional)
-              </span>
-            </label>
-            <div
-              className={
-                shakeField === "university"
-                  ? "cf__shake-wrap cf__shake-wrap--shake"
-                  : "cf__shake-wrap"
-              }
-            >
-              <UniversitySelect
-                value={fields.university}
-                onChange={(val) => {
-                  setFields((prev) => ({ ...prev, university: val }));
-                  if (errors.university)
-                    setErrors((prev) => {
-                      const n = { ...prev };
-                      delete n.university;
-                      return n;
-                    });
-                }}
-                error={!!errors.university}
-              />
+        <div className="contact__inner">
+          {/* Header */}
+          <div className="contact__header">
+            <div className="contact__icon-wrap">
+              <Mail size={24} strokeWidth={1.6} />
             </div>
-          </FieldWrapper>
-
-          {/* Message — now required */}
-          <FieldWrapper error={errors.message}>
-            <label className="cf__label" htmlFor="cf-message">
-              <MessageSquare
-                size={13}
-                strokeWidth={2}
-                className="cf__label-icon"
+            <span className="contact__eyebrow">Get in touch</span>
+            <h2 className="contact__title">
+              We'd love to
+              <br />
+              <span className="contact__title-accent">hear from you.</span>
+            </h2>
+            <p className="contact__subtitle">
+              Have a question, suggestion, or just want to say hi? Fill in the
+              form below. Only the university field is required.
+            </p>
+          </div>
+          <div className="contact__form">
+            {/* Name — single field */}
+            <FieldWrapper error={errors.name}>
+              <label className="cf__label" htmlFor="cf-name">
+                <User size={13} strokeWidth={2} className="cf__label-icon" />
+                Full Name <span className="cf__required"></span>
+              </label>
+              <input
+                id="cf-name"
+                type="text"
+                className={`cf__input ${shakeField === "name" ? "cf__input--shake" : ""}`}
+                placeholder="First and last name"
+                value={fields.name}
+                onChange={change("name")}
+                autoComplete="name"
               />
-              Message <span className="cf__required">*</span>
-            </label>
-            <textarea
-              id="cf-message"
-              className={`cf__input cf__input--textarea ${shakeField === "message" ? "cf__input--shake" : ""}`}
-              placeholder="Tell us what's on your mind…"
-              rows={4}
-              value={fields.message}
-              onChange={change("message")}
-            />
-          </FieldWrapper>
+            </FieldWrapper>
 
-          {/* Submit Error or Success*/}
-          {submitError && <SubmitError error={submitError} />}
-          {submitted && (
-            <SubmitSuccess
-              success="Message sent! 
+            {/* Email — now required */}
+            <FieldWrapper error={errors.email}>
+              <label className="cf__label" htmlFor="cf-email">
+                <Mail size={13} strokeWidth={2} className="cf__label-icon" />
+                Email <span className="cf__required">*</span>
+              </label>
+              <input
+                id="cf-email"
+                type="text"
+                className={`cf__input ${shakeField === "email" ? "cf__input--shake" : ""}`}
+                placeholder="you@email.com"
+                value={fields.email}
+                onChange={change("email")}
+                autoComplete="email"
+              />
+            </FieldWrapper>
+
+            {/* Enquiry type — required, plain select */}
+            <FieldWrapper error={errors.enquiry}>
+              <label className="cf__label" htmlFor="cf-enquiry">
+                <MessageSquare
+                  size={13}
+                  strokeWidth={2}
+                  className="cf__label-icon"
+                />
+                Enquiry Type <span className="cf__required">*</span>
+              </label>
+              <select
+                id="cf-enquiry"
+                className={`cf__input cf__input--select ${shakeField === "enquiry" ? "cf__input--shake" : ""}`}
+                value={fields.enquiry}
+                onChange={change("enquiry")}
+              >
+                <option value="">Select an enquiry type…</option>
+                <option value="General Enquiry">General Enquiry</option>
+                <option value="Technical Issue">Technical Issue</option>
+                <option value="Course Data Issue">Course Data Issue</option>
+                <option value="Partnership">Partnership</option>
+                <option value="Feature Request">Feature Request</option>
+                <option value="Other">Other</option>
+              </select>
+            </FieldWrapper>
+
+            {/* University — now optional, no searchable dropdown */}
+            <FieldWrapper error={errors.university}>
+              <label className="cf__label" htmlFor="cf-university">
+                <BookOpen
+                  size={13}
+                  strokeWidth={2}
+                  className="cf__label-icon"
+                />
+                University{" "}
+                <span
+                  style={{
+                    fontSize: "0.7rem",
+                    color: "var(--text-gray)",
+                    fontWeight: 400,
+                  }}
+                >
+                  (optional)
+                </span>
+              </label>
+              <div
+                className={
+                  shakeField === "university"
+                    ? "cf__shake-wrap cf__shake-wrap--shake"
+                    : "cf__shake-wrap"
+                }
+              >
+                <UniversitySelect
+                  value={fields.university}
+                  onChange={(val) => {
+                    setFields((prev) => ({ ...prev, university: val }));
+                    if (errors.university)
+                      setErrors((prev) => {
+                        const n = { ...prev };
+                        delete n.university;
+                        return n;
+                      });
+                  }}
+                  error={!!errors.university}
+                />
+              </div>
+            </FieldWrapper>
+
+            {/* Message — now required */}
+            <FieldWrapper error={errors.message}>
+              <label className="cf__label" htmlFor="cf-message">
+                <MessageSquare
+                  size={13}
+                  strokeWidth={2}
+                  className="cf__label-icon"
+                />
+                Message <span className="cf__required">*</span>
+              </label>
+              <textarea
+                id="cf-message"
+                className={`cf__input cf__input--textarea ${shakeField === "message" ? "cf__input--shake" : ""}`}
+                placeholder="Tell us what's on your mind…"
+                rows={4}
+                value={fields.message}
+                onChange={change("message")}
+              />
+            </FieldWrapper>
+
+            {/* Submit Error or Success*/}
+            {submitError && <SubmitError error={submitError} />}
+            {submitted && (
+              <SubmitSuccess
+                success="Message sent! 
             Thanks for reaching out. We'll get back to you shortly."
-            />
-          )}
-          {/* Submit */}
-          <button
-            className="btn btn--primary"
-            type="button"
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            aria-busy={isSubmitting}
-          >
-            <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
-            {isSubmitting ? (
-              <LoaderCircle
-                size={16}
-                strokeWidth={2.2}
-                className="cf__spinner"
               />
-            ) : (
-              <Send size={16} strokeWidth={2.2} />
             )}
-          </button>
+            {/* Submit */}
+            <button
+              className="btn btn--primary"
+              type="button"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              aria-busy={isSubmitting}
+            >
+              <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
+              {isSubmitting ? (
+                <LoaderCircle
+                  size={16}
+                  strokeWidth={2.2}
+                  className="cf__spinner"
+                />
+              ) : (
+                <Send size={16} strokeWidth={2.2} />
+              )}
+            </button>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

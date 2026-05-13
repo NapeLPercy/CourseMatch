@@ -17,7 +17,9 @@ import ProgressBar from "../ui/ProgressBar";
 import { validate } from "../../Utils/subjectsValidater";
 import SubjectSelect from "../ui/SubjectSelect";
 import GuestResultsSummary from "../data-display/GuestResultsSummary";
-import { Helmet } from "react-helmet-async";
+import SEO from "../ui/SEO";
+import { calculateApsFaqs } from "../../Utils/textData/SeoFaqs";
+
 export default function GuestCalculateAPS() {
   const { addSubjects, getSubjects } = useSubjects();
 
@@ -132,17 +134,12 @@ export default function GuestCalculateAPS() {
 
   return (
     <>
-      <Helmet>
-        <title>Calculate Your APS Score | CourseMatch</title>
-        <meta
-          name="description"
-          content="Enter your matric subjects and marks to calculate your APS score instantly."
-        />
-        <link
-          rel="canonical"
-          href="https://coursematchapp.co.za/aps-calculator"
-        />
-      </Helmet>
+      <SEO
+        title="APS Calculator South Africa | CourseMatch"
+        description="Calculate your APS score and compare university entry requirements."
+        url="https://coursematchapp.co.za/aps-calculator"
+        faq={calculateApsFaqs}
+      />
 
       <div className="as">
         {/* Hero */}

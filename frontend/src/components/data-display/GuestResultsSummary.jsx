@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import "../../styles/GuestResultsSummary.css";
 import AddSubjects from "../forms/GuestCalculateAPS";
-import { Helmet } from "react-helmet-async";
+import SEO from "../ui/SEO";
 import { useAuth } from "../../context/AuthContext";
 
 export default function GuestResultsSummary({ data }) {
@@ -34,17 +34,11 @@ export default function GuestResultsSummary({ data }) {
 
   return (
     <>
-      <Helmet>
-        <title>Compare APS Requirements by University | CourseMatch</title>
-        <meta
-          name="description"
-          content="Compare your APS score against entry requirements for South African universities."
-        />
-        <link
-          rel="canonical"
-          href="https://coursematchapp.co.za/aps-calculator"
-        />
-      </Helmet>
+      <SEO
+        title="Compare APS Requirements by University | CourseMatch"
+        description="Compare your APS score against entry requirements for South African universities."
+        url="https://coursematchapp.co.za/aps-calculator"
+      />
 
       <div className="grs">
         {/* Back */}

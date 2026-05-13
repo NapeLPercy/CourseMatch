@@ -10,7 +10,7 @@ import { formatTimestamp } from "../Utils/datetime";
 import BlogPostSkeleton from "../components/ui/BlogPostSkeleton";
 import BlogNotFound from "../components/ui/BlogNotFound";
 import ErrorState from "../components/ui/ErrorState";
-import { Helmet } from "react-helmet-async";
+import SEO from "../components/ui/SEO";
 
 function getInitials(name) {
   if (!name) return;
@@ -75,15 +75,22 @@ export default function BlogPost() {
 
   return (
     <>
-      <Helmet>
-        <title>{`${post?.title || "Blog Post"} | CourseMatch`}</title>
-        <meta
-          name="description"
-          content={post?.excerpt || "Read this article on CourseMatch."}
-        />
+      <SEO
+        title={`${post?.title || "Blog Post"} | CourseMatch South Africa`}
+        description={
+          post?.excerpt ||
+          "Read articles about APS scores, university requirements, and career guidance in South Africa."
+        }
+        url={url}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.title,
+          description: post.excerpt,
+          url: url,
+        }}
+      />
 
-        <link rel="canonical" href={url} />
-      </Helmet>{" "}
       <div className="bp">
         {/* Back nav */}
         <button className="bp__back" onClick={() => navigate("/blogs")}>

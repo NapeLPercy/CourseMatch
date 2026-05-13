@@ -5,8 +5,7 @@ import BlogSkeleton from "../components/ui/BlogsSkeleton";
 import ErrorState from "../components/ui/ErrorState";
 import { getAllBlogs } from "../services/blogService";
 import BlogCard from "../components/ui/BlogCard";
-
-import { Helmet } from "react-helmet-async";
+import SEO from "../components/ui/SEO";
 
 export default function BlogList() {
   const [search, setSearch] = useState("");
@@ -55,16 +54,20 @@ export default function BlogList() {
 
   return (
     <>
-      <Helmet>
-        <title>
-          "CourseMatch Blog | APS Tips, Career Advice & University Guides"
-        </title>
-        <meta
-          name="description"
-          content="Read articles about APS scores, university admission requirements, study options, and career advice for South African students."
-        />
-        <link rel="canonical" url="https://coursematchapp.co.za/blog" />
-      </Helmet>
+      <SEO
+        title="CourseMatch Blog | APS Tips, Career Advice & University Guides"
+        description="Read articles about APS scores, university admission requirements, study options, and career advice for South African students."
+        url="https://coursematchapp.co.za/blog"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "CourseMatch Blog",
+          description:
+            "Articles about APS scores, university admission requirements, study options, and career advice for South African students.",
+          url: "https://coursematchapp.co.za/blog",
+        }}
+      />
+
       <div className="bl">
         <div className="bl__hero">
           <h1 className="bl__title">Explore Our Blog</h1>
