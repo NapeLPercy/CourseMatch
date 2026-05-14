@@ -12,7 +12,7 @@ Multi-university course filter pipeline:
 Output:
 - filtered courses
 - APS per university (for UI)
-- number of qualified universities
+- number of universities where the student qualifies for at least 1 course
 */
 
 export default class MultiCourseFilter {
@@ -42,45 +42,45 @@ export default class MultiCourseFilter {
   // -----------------------------
   filterByAps() {
     return this.qualifications.filter((course) => {
-      const uni = course.university?.abbreviation;
-      const aps = this.getAPS(uni);
+      const uniSlug = course.university?.abbreviation;
+      const aps = this.getAPS(uniSlug);
 
       return course.minimum_aps <= aps;
     });
   }
 
   // -----------------------------
-  // BUILD APS SUMMARY (UI feature)
+  // BUILD APS SUMMARY
+  // Returns ALL universities, even if courseCount = 0
   // -----------------------------
   buildUniversityAPS(finalCourses) {
     const uniMap = new Map();
 
-    // Step 1: group courses per university
-    finalCourses.forEach((course) => {
+    // Step 1: Initialize all universities from full qualifications list
+    this.qualifications.forEach((course) => {
       const uniSlug = course.university?.abbreviation;
 
       if (!uniMap.has(uniSlug)) {
         uniMap.set(uniSlug, {
           name: course.university?.name,
           abbreviation: uniSlug,
+          aps: this.getAPS(uniSlug),
           courseCount: 0,
         });
       }
-
-      uniMap.get(uniSlug).courseCount++;
     });
 
-    // Step 2: attach APS
-    const result = [];
+    // Step 2: Count qualified courses per university
+    finalCourses.forEach((course) => {
+      const uniSlug = course.university?.abbreviation;
 
-    for (const [uniSlug, data] of uniMap.entries()) {
-      result.push({
-        ...data,
-        aps: this.getAPS(uniSlug), // reuse cached APS
-      });
-    }
+      if (uniMap.has(uniSlug)) {
+        uniMap.get(uniSlug).courseCount += 1;
+      }
+    });
 
-    return result;
+    // Step 3: Convert map to array
+    return Array.from(uniMap.values());
   }
 
   // -----------------------------
@@ -90,25 +90,30 @@ export default class MultiCourseFilter {
     // Step 1: APS filter
     const apsFiltered = this.filterByAps();
 
-    // Step 2: endorsement filter
+    // Step 2: Endorsement filter
     const endorsementFiltered = filterCoursesByEndorsement(
       apsFiltered,
-      this.studentEndorsement,
+      this.studentEndorsement
     );
 
-    // Step 3: subject prerequisite filter
+    // Step 3: Subject prerequisite filter
     const subjectFilter = new FilterBySubjects();
 
     const finalCourses = subjectFilter.filterCoursesByPrerequisites(
       this.subjects,
-      endorsementFiltered,
+      endorsementFiltered
     );
 
+    // Step 4: Build UI summary (includes all universities)
     const universityAPS = this.buildUniversityAPS(finalCourses);
+
     return {
       courses: finalCourses,
       universityAPS,
-      qualifiedUniversities: universityAPS.length,
+      // only count universities with at least one qualified course
+      qualifiedUniversities: universityAPS.filter(
+        (uni) => uni.courseCount > 0
+      ).length,
     };
   }
 }

@@ -86,6 +86,7 @@ export default function GuestCalculateAPS() {
         data.endorsement,
       );
       const results = filter.getQualifiedCourses();
+      console.log("this are the results: ",results);
       setSubmitted(true);
       setResults(results);
       addSubjects(subjects);

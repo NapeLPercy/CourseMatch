@@ -122,24 +122,26 @@ export default function GuestResultsSummary({ data }) {
 
                 {/* Per-uni btn */}
                 {user ? (
-                  <button
-                    className="grs__uni-btn"
-                    onClick={() => {
-                      sessionStorage.setItem(
-                        "visited-uni",
-                        JSON.stringify({
-                          name: uni.name,
-                          id: uni.abbreviation.toLowerCase(),
-                        }),
-                      );
-                      navigate(
-                        `/view-courses/${uni.abbreviation.toLowerCase()}`,
-                      );
-                    }}
-                  >
-                    View courses
-                    <ArrowRight size={14} strokeWidth={2.5} />
-                  </button>
+                  uni.courseCount > 0 && (
+                    <button
+                      className="grs__uni-btn"
+                      onClick={() => {
+                        sessionStorage.setItem(
+                          "visited-uni",
+                          JSON.stringify({
+                            name: uni.name,
+                            id: uni.abbreviation.toLowerCase(),
+                          }),
+                        );
+                        navigate(
+                          `/view-courses/${uni.abbreviation.toLowerCase()}`,
+                        );
+                      }}
+                    >
+                      View courses
+                      <ArrowRight size={14} strokeWidth={2.5} />
+                    </button>
+                  )
                 ) : (
                   <button
                     className="grs__uni-btn grs__uni-btn--ghost"
