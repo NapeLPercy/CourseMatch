@@ -9,7 +9,6 @@ import {
   User,
   Building2,
   FileText,
-  HelpCircle,
   Shield,
   GraduationCap,
   Users,
@@ -17,8 +16,9 @@ import {
   MessageSquare,
   BarChart3,
   ClipboardList,
-  Compass,
+ Wallet,
   Calculator,
+  ToolCase,
 } from "lucide-react";
 
 export const NAV_CONFIG = {
@@ -30,12 +30,23 @@ export const NAV_CONFIG = {
         icon: Home,
       },
 
-      //{ path: "/tutors/home", label: "Tutors", icon: Users },
       {
-        path: "/aps-calculator",
-        label: "APS Calculator",
-        icon: Calculator,
+        label: "Tools",
+        icon: ToolCase,
+        dropdown: [
+          {
+            path: "/aps-calculator",
+            label: "APS Calculator",
+            icon: Calculator,
+          },
+          {
+            path: "/nsfas-eligibility-checker",
+            label: "NSFAS Eligibility Checker",
+            icon: Wallet,
+          },
+        ],
       },
+
       { path: "/about", label: "About Us", icon: Info },
       { path: "/blogs", label: "Blog", icon: FileText },
       {
@@ -102,7 +113,7 @@ export const NAV_CONFIG = {
         label: "Courses",
         icon: GraduationCap,
         dropdown: [
-           {
+          {
             path: "/view-courses",
             label: "Find Courses",
             icon: GraduationCap,
@@ -113,7 +124,6 @@ export const NAV_CONFIG = {
             // new → needs icon
             icon: ClipboardList,
           },
-         
         ],
       },
 
@@ -123,9 +133,20 @@ export const NAV_CONFIG = {
         icon: User,
       },
       {
-        path: "/aps-calculator",
-        label: "APS Calculator",
-        icon: Calculator,
+        label: "Tools",
+        icon: ToolCase,
+        dropdown: [
+          {
+            path: "/aps-calculator",
+            label: "APS Calculator",
+            icon: Calculator,
+          },
+          {
+            path: "/nsfas-eligibility-checker",
+            label: "NSFAS Eligibility Checker",
+            icon: Wallet,
+          },
+        ],
       },
     ],
     showUser: true,
@@ -234,12 +255,12 @@ export const NAV_CONFIG = {
         label: "Universities",
         icon: Building2,
       },
-       {
+      {
         path: "/admin/manage-accounts",
         label: "Accounts",
         icon: Users,
       },
-      
+
       {
         path: "/admin/manage-blogs",
         label: "Blogs",
