@@ -30,7 +30,7 @@ export const universitiesData = [
       "ICT",
     ],
   },
-  {
+  /*{
     id: "up",
     name: "University of Pretoria",
     description:
@@ -134,7 +134,7 @@ export const universitiesData = [
       "Health Sciences",
       "Education",
     ],
-  },
+  },*/
 ];
 
 export const universitiesList = [

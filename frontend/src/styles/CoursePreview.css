@@ -1,0 +1,189 @@
+/* COURSE PREVIEW — CourseMatch */
+
+
+
+@media (max-width: 768px) {
+  .cp {
+    padding: 0 24px 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cp {
+    padding: 0 16px 40px;
+  }
+}
+
+.cp {
+  max-width: 1300px;
+  margin: 100px auto 0;
+  padding: 0 20px 60px;
+  box-sizing: border-box;
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  animation: cpFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cpFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── HERO ────────────────────────────────── */
+.cp__hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(30, 58, 138, 0.05);
+}
+
+.cp__hero-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.22);
+}
+
+.cp__hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cp__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.cp__subtitle {
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: #475569;
+  margin: 0;
+}
+
+/* ── NUDGE BANNER ────────────────────────── */
+.cp__nudge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  border-radius: 14px;
+  flex-wrap: wrap;
+}
+
+.cp__nudge-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cp__nudge-icon {
+  color: #93c5fd;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.cp__nudge-text p {
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0;
+}
+
+.cp__nudge-text strong {
+  color: #ffffff;
+}
+
+.cp__nudge-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cp__nudge-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.cp__nudge-btn--outline {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+
+.cp__nudge-btn--outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+}
+
+.cp__nudge-btn--filled {
+  background: #ffffff;
+  border: 1.5px solid #ffffff;
+  color: #1e3a8a;
+}
+
+.cp__nudge-btn--filled:hover {
+  background: #f0f7ff;
+}
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 640px) {
+  .cp__hero {
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px;
+  }
+
+  .cp__nudge {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .cp__nudge-actions {
+    width: 100%;
+  }
+
+  .cp__nudge-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
