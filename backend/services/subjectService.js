@@ -31,7 +31,6 @@ async function addSubjects(subjects, studentId, userId) {
     ]);
 
     //check if subjectsexists
-
     const exist = await subjectModel.subjectsExist(studentId);
     if (exist) {
       return { subjectsExists: true };
@@ -44,6 +43,10 @@ async function addSubjects(subjects, studentId, userId) {
     await insertStudentEndorsement(endorsement, userId);
 
     await conn.promise().commit();
+    /*always return an endorsement, if the req returns before this point,
+     it means the subjects already exists, and there endorsement already 
+     exists in the sessionStorage*/
+    return { endorsement };
   } catch (error) {
     await conn.promise().rollback();
     throw error;

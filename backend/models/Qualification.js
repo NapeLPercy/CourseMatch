@@ -115,7 +115,7 @@ module.exports = {
 
       LEFT JOIN prerequisite_subject ps
         ON ps.qualification_code = q.code
-
+z
       ORDER BY u.abbreaviation, f.faculty_id, q.code, ps.subject_name;
     `;
 

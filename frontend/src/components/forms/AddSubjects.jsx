@@ -15,6 +15,7 @@ import SubmitSuccess from "../ui/SubmitSuccess";
 import ProgressBar from "../ui/ProgressBar";
 import { validate } from "../../Utils/subjectsValidater";
 import SubjectSelect from "../ui/SubjectSelect";
+import MinorCourseMatching from "../data-display/MinorCourseMatching";
 
 export default function AddSubjects() {
   const { addSubjects, getSubjects } = useSubjects();
@@ -23,6 +24,7 @@ export default function AddSubjects() {
   const [errors, setErrors] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showMinorMatches, setShowMinorMatches] = useState(false);
   const MAX = 15;
   const MIN = 7;
 
@@ -53,7 +55,10 @@ export default function AddSubjects() {
 
   const handleSubmit = async () => {
     const errs = validate(subjects);
-    if (errs.length) { setErrors(errs); return; }
+    if (errs.length) {
+      setErrors(errs);
+      return;
+    }
 
     setLoading(true);
     setErrors([]);
@@ -62,12 +67,34 @@ export default function AddSubjects() {
 
     try {
       const { data } = await addStudentSubjects(payload);
-      if (!data.success) { setErrors([data.message] || ["Subjects submission failed"]); return; }
+      if (!data.success) {
+        setErrors([data.message] || ["Subjects submission failed"]);
+        return;
+      }
+      console.log(data, "here is the data");
       setSubmitted(true);
       addSubjects(data.subjects);
       setTimeout(() => reset(), 3000);
+
+      ///subjects submitted, add endorsement to session
+      sessionStorage.setItem(
+        "endorsement",
+        JSON.stringify(data?.endorsement),
+      );
+      
+        setShowMinorMatches(true);
     } catch (err) {
-      setErrors([err.response?.data?.message || "Submission failed. Try again."]);
+      setErrors([
+        err.response?.data?.message || "Submission failed. Try again.",
+      ]);
+      
+      const errorOuput = err?.response;
+      //user already added subjects,show minor match
+      if (errorOuput.data.message === "You already added your Subjects" &&
+        errorOuput.status === 409
+      ) {
+        setShowMinorMatches(true);
+      }
     } finally {
       setLoading(false);
       setTimeout(() => setSubmitted(false), 3000);
@@ -88,7 +115,11 @@ export default function AddSubjects() {
     {
       label: "Maths / Tech Maths / Maths Lit",
       met: subjects.some((s) =>
-        ["Mathematics", "Technical Mathematics", "Mathematical Literacy"].includes(s.name)
+        [
+          "Mathematics",
+          "Technical Mathematics",
+          "Mathematical Literacy",
+        ].includes(s.name),
       ),
     },
     {
@@ -105,9 +136,10 @@ export default function AddSubjects() {
     },
   ];
 
+
+  if (showMinorMatches) return <MinorCourseMatching />
   return (
     <div className="as">
-
       {/* Header */}
       <div className="as__hero">
         <div className="as__hero-icon">
@@ -116,7 +148,8 @@ export default function AddSubjects() {
         <div className="as__hero-text">
           <h1 className="as__title">Add your subjects</h1>
           <p className="as__subtitle">
-            Enter your matric subjects and marks. You need between 7 and 15 subjects.
+            Enter your matric subjects and marks. You need between 7 and 15
+            subjects.
           </p>
         </div>
       </div>
@@ -124,8 +157,15 @@ export default function AddSubjects() {
       {/* Requirements strip */}
       <div className="as__reqs">
         {requirements.map((r) => (
-          <div key={r.label} className={`as__req ${r.met ? "as__req--met" : ""}`}>
-            <CheckCircle2 size={13} strokeWidth={2.2} className="as__req-icon" />
+          <div
+            key={r.label}
+            className={`as__req ${r.met ? "as__req--met" : ""}`}
+          >
+            <CheckCircle2
+              size={13}
+              strokeWidth={2.2}
+              className="as__req-icon"
+            />
             {r.label}
           </div>
         ))}
@@ -137,7 +177,11 @@ export default function AddSubjects() {
       {/* Rows grid */}
       <div className="as__rows">
         {subjects.map((s, i) => (
-          <div key={i} className="as__row" style={{ animationDelay: `${i * 0.04}s` }}>
+          <div
+            key={i}
+            className="as__row"
+            style={{ animationDelay: `${i * 0.04}s` }}
+          >
             <span className="as__row-num">{i + 1}</span>
 
             <SubjectSelect
@@ -214,11 +258,14 @@ export default function AddSubjects() {
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? <span className="as__spinner" /> : <Send size={16} strokeWidth={2.2} />}
+          {loading ? (
+            <span className="as__spinner" />
+          ) : (
+            <Send size={16} strokeWidth={2.2} />
+          )}
           {loading ? "Saving…" : "Submit Subjects"}
         </button>
       </div>
-
     </div>
   );
 }

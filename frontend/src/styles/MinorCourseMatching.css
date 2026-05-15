@@ -1,0 +1,218 @@
+/* MINOR COURSE MATCHING — CourseMatch */
+
+.mcm {
+  width: 100%;
+  margin: 100px auto 0;
+  padding: 0 20px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+.mcm__hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(30, 58, 138, 0.05);
+}
+
+.mcm__hero-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.24);
+}
+
+.mcm__hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+
+
+.mcm__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.mcm__subtitle {
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: #475569;
+  margin: 0;
+}
+
+/* ── GRID ────────────────────────────────── */
+.mcm__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
+  gap: 14px;
+}
+
+/* ── CARD ────────────────────────────────── */
+.mcm__card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  transition:
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.22s ease,
+    border-color 0.18s ease;
+  animation: mcmCardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.04s);
+}
+
+.mcm__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.08);
+  border-color: #dbeafe;
+}
+
+@keyframes mcmCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mcm__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.mcm__uni-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.mcm__uni-faculties {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── BUTTON ──────────────────────────────── */
+.mcm__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #3b82f6;
+  background: #ffffff;
+  color: #3b82f6;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: auto;
+}
+
+.mcm__btn:hover:not(:disabled) {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.mcm__btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: #dbeafe;
+  border-color: #dbeafe;
+  color: #2563eb;
+}
+
+.mcm__spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(37, 99, 235, 0.3);
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: mcmSpin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes mcmSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── SKELETON ────────────────────────────── */
+.mcm__card--skel {
+  pointer-events: none;
+}
+
+.mcm__skel {
+  background: linear-gradient(90deg, #e2e8f0 0%, #f1f5f9 50%, #e2e8f0 100%);
+  background-size: 200% 100%;
+  border-radius: 6px;
+  animation: mcmShimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes mcmShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.mcm__skel--name {
+  height: 16px;
+  width: 80%;
+}
+.mcm__skel--faculties {
+  height: 12px;
+  width: 45%;
+  margin-top: 4px;
+}
+.mcm__skel--btn {
+  height: 38px;
+  width: 100%;
+  border-radius: 10px;
+  margin-top: auto;
+}
+
+@media (max-width: 480px) {
+  .mcm__hero {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+}

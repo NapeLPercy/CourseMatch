@@ -2,7 +2,6 @@ const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
 const { getSubjects, addSubjects } = require("../services/subjectService");
-const { subjectsExist } = require("../models/Subject");
 
 /*Add subjects*/
 exports.addSubjects = async (req, res) => {
@@ -37,9 +36,9 @@ exports.addSubjects = async (req, res) => {
       success: true,
       message: "Subjects added successfully",
       subjects: subjects,
+      endorsement: result?.endorsement,
     });
   } catch (error) {
-    console.error("Add subjects error:", error);
     return res.status(500).json({
       success: false,
       message: "Server error while adding subjects",
