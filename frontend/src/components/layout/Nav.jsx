@@ -5,7 +5,7 @@ import { Menu, X, ChevronDown, LogOut, User } from "lucide-react";
 import { NAV_CONFIG } from "../../Utils/textData/menuConfig";
 import "../../styles/Nav.css";
 import SmallLoader from "../ui/SmallLoader";
-
+import { FORCE_COLOURED_NAV } from "../../Utils/textData/navbarColorConfig";
 export default function Nav() {
   const { user, logout } = useAuth();
 
@@ -36,35 +36,7 @@ export default function Nav() {
   const dropdownRefs = useRef({});
 
   // Pages where navbar must be colored immediately
-  const forceColoredRoutes = [
-    "/student/course-deep-dive",
-    "/admin/manage-blogs",
-    "/admin/manage-accounts",
-    "/blog/",
-    "/blogs",
-    "/student/ai-recommended-courses",
-    "/tutors/home",
-    "/aps-calculator",
-    "/view-courses",
-    "/student/add/subjects",
-    "/student/dashboard",
-    "/tutor/dashboard",
-    "/parent/dashboard",
-    "/admin/dashboard",
-    "/student/manage-my-profile",
-    "/admin/manage-qualifications",
-    "/admin/manage-universities",
-    "/contact-us",
-    "/student/view/subjects",
-    "/login",
-    "/register",
-    "/terms-and-conditions",
-    "/welcome",
-    "/faq",
-    "/about",
-  ];
-
-  const forceColored = forceColoredRoutes.some((route) =>
+  const forceColored = FORCE_COLOURED_NAV.some((route) =>
     location.pathname.startsWith(route),
   );
 

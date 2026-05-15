@@ -54,6 +54,10 @@ import BlogPost from "./pages/BlogPost";
 import ManageBlogs from "./components/data-display/ManageBlogs";
 import DeepDive from "./components/data-display/DeepDive";
 import AdminManageAccounts from "./components/data-display/AdminManageAccounts";
+
+import { checkNsfasEligibility } from "./Utils/textData/nsfasEligibilityChecker";
+import NsfasEligibilityChecker from "./components/forms/NsfasEligibilityChecker";
+
 function App() {
   return (
     <UserProvider>
@@ -85,6 +89,10 @@ function App() {
 
                 <Route path="/aps-calculator" element={<GuestCalculateAPS />} />
 
+                <Route
+                  path="/nsfas-eligibility-checker"
+                  element={<NsfasEligibilityChecker />}
+                />
                 {/* Logged-in routes (STUDENT) */}
                 <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
                   <Route
@@ -148,7 +156,7 @@ function App() {
                     element={<AdminManageUniversities />}
                   />
 
-                   <Route
+                  <Route
                     path="/admin/manage-accounts"
                     element={<AdminManageAccounts />}
                   />
