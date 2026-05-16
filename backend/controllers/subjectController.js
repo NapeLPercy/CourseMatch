@@ -65,7 +65,6 @@ exports.getSubjects = async (req, res) => {
     //delegate to subject model
     const subjects = await getSubjects(studentId);
 
-    console.log("here are my subjects");
     return res.status(200).json({
       subjects: subjects,
       success: true,
