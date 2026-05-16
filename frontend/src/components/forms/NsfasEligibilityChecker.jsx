@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NSFAS_QUESTIONS } from "../../Utils/textData/nsfasEligibilityQuestions";
 import { checkNsfasEligibility } from "../../Utils/textData/nsfasEligibilityChecker";
 import {
@@ -10,7 +10,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import "../../styles/NsfasEligibilityChecker.css";
-
+import { getPageRelatedPosts } from "../../services/blogService";
+import RelatedPosts from "../RelatedPosts";
 export default function NsfasEligibilityChecker() {
   const [answers, setAnswers] = useState({
     isSouthAfrican: null,
@@ -25,11 +26,28 @@ export default function NsfasEligibilityChecker() {
     institutionType: null,
   });
 
+  const [relatedPosts, setRelatedPosts] = useState(null);
+
+  useEffect(() => {
+    fetchPageRelatedPosts();
+  }, []);
+
+  const fetchPageRelatedPosts = async () => {
+    try {
+      const { data } = await getPageRelatedPosts("NSFAS");
+
+      if (data.success) {
+        setRelatedPosts(data.blogs);
+      }
+    } catch (error) {
+      console.error("Error fetching related posts:", error);
+    }
+  };
   const [inputValue, setInputValue] = useState("");
   const [result, setResult] = useState(null);
 
   const visibleQuestions = NSFAS_QUESTIONS.filter(
-    (q) => !q.shouldShow || q.shouldShow(answers)
+    (q) => !q.shouldShow || q.shouldShow(answers),
   );
 
   const getAnswerValue = (id) => {
@@ -41,15 +59,17 @@ export default function NsfasEligibilityChecker() {
   };
 
   const currentQuestion = visibleQuestions.find(
-    (q) => getAnswerValue(q.id) === null
+    (q) => getAnswerValue(q.id) === null,
   );
 
-  const progress = visibleQuestions.length > 0
-    ? ((visibleQuestions.indexOf(currentQuestion) === -1
-        ? visibleQuestions.length
-        : visibleQuestions.indexOf(currentQuestion)) /
-       visibleQuestions.length) * 100
-    : 100;
+  const progress =
+    visibleQuestions.length > 0
+      ? ((visibleQuestions.indexOf(currentQuestion) === -1
+          ? visibleQuestions.length
+          : visibleQuestions.indexOf(currentQuestion)) /
+          visibleQuestions.length) *
+        100
+      : 100;
 
   const handleAnswer = (id, value) => {
     setAnswers((prev) => {
@@ -95,12 +115,11 @@ export default function NsfasEligibilityChecker() {
   }
 
   const answeredCount = visibleQuestions.filter(
-    (q) => getAnswerValue(q.id) !== null
+    (q) => getAnswerValue(q.id) !== null,
   ).length;
 
   return (
     <div className="nec">
-
       {/* Hero */}
       <div className="nec__hero">
         <div className="nec__hero-icon">
@@ -119,7 +138,10 @@ export default function NsfasEligibilityChecker() {
       {!result && (
         <div className="nec__progress">
           <div className="nec__progress-track">
-            <div className="nec__progress-fill" style={{ width: `${progress}%` }} />
+            <div
+              className="nec__progress-fill"
+              style={{ width: `${progress}%` }}
+            />
           </div>
           <span className="nec__progress-label">
             {answeredCount}
@@ -131,22 +153,30 @@ export default function NsfasEligibilityChecker() {
 
       {/* Result */}
       {result && (
-        <div className={`nec__result ${result.eligible ? "nec__result--eligible" : "nec__result--ineligible"}`}>
+        <div
+          className={`nec__result ${result.eligible ? "nec__result--eligible" : "nec__result--ineligible"}`}
+        >
           <div className="nec__result-icon">
-            {result.eligible
-              ? <CheckCircle2 size={32} strokeWidth={1.8} />
-              : <XCircle size={32} strokeWidth={1.8} />
-            }
+            {result.eligible ? (
+              <CheckCircle2 size={32} strokeWidth={1.8} />
+            ) : (
+              <XCircle size={32} strokeWidth={1.8} />
+            )}
           </div>
           <div className="nec__result-body">
             <h2 className="nec__result-title">
-              {result.eligible ? "You may qualify for NSFAS" : "You may not qualify for NSFAS"}
+              {result.eligible
+                ? "You may qualify for NSFAS"
+                : "You may not qualify for NSFAS"}
             </h2>
 
             {result.reasons.length > 0 && (
               <ul className="nec__result-list">
                 {result.reasons.map((r, i) => (
-                  <li key={i} className="nec__result-item nec__result-item--reason">
+                  <li
+                    key={i}
+                    className="nec__result-item nec__result-item--reason"
+                  >
                     <XCircle size={14} strokeWidth={2} />
                     {r}
                   </li>
@@ -157,7 +187,10 @@ export default function NsfasEligibilityChecker() {
             {result.warnings.length > 0 && (
               <ul className="nec__result-list">
                 {result.warnings.map((w, i) => (
-                  <li key={i} className="nec__result-item nec__result-item--warning">
+                  <li
+                    key={i}
+                    className="nec__result-item nec__result-item--warning"
+                  >
                     <AlertTriangle size={14} strokeWidth={2} />
                     {w}
                   </li>
@@ -188,17 +221,24 @@ export default function NsfasEligibilityChecker() {
                   onClick={() => handleAnswer(currentQuestion.id, opt.value)}
                 >
                   {opt.label}
-                  <ChevronRight size={15} strokeWidth={2} className="nec__option-arrow" />
+                  <ChevronRight
+                    size={15}
+                    strokeWidth={2}
+                    className="nec__option-arrow"
+                  />
                 </button>
               ))}
             </div>
           )}
 
           {/* Number / Currency */}
-          {(currentQuestion.type === "number" || currentQuestion.type === "currency") && (
+          {(currentQuestion.type === "number" ||
+            currentQuestion.type === "currency") && (
             <div className="nec__input-wrap">
               {currentQuestion.prefix && (
-                <span className="nec__input-prefix">{currentQuestion.prefix}</span>
+                <span className="nec__input-prefix">
+                  {currentQuestion.prefix}
+                </span>
               )}
               <input
                 className="nec__input"
@@ -213,7 +253,9 @@ export default function NsfasEligibilityChecker() {
                 }}
               />
               {currentQuestion.suffix && (
-                <span className="nec__input-suffix">{currentQuestion.suffix}</span>
+                <span className="nec__input-suffix">
+                  {currentQuestion.suffix}
+                </span>
               )}
               <button
                 className="nec__input-btn"
@@ -238,10 +280,11 @@ export default function NsfasEligibilityChecker() {
                 const val = getAnswerValue(q.id);
                 const display =
                   q.type === "radio"
-                    ? q.options.find((o) => o.value === val)?.label ?? String(val)
+                    ? (q.options.find((o) => o.value === val)?.label ??
+                      String(val))
                     : q.prefix
-                    ? `${q.prefix}${Number(val).toLocaleString()}`
-                    : `${val}${q.suffix ? " " + q.suffix : ""}`;
+                      ? `${q.prefix}${Number(val).toLocaleString()}`
+                      : `${val}${q.suffix ? " " + q.suffix : ""}`;
                 return (
                   <div key={q.id} className="nec__history-item">
                     <span className="nec__history-q">{q.label}</span>
@@ -252,7 +295,10 @@ export default function NsfasEligibilityChecker() {
           </div>
         </div>
       )}
-
+      <RelatedPosts
+        posts={relatedPosts}
+        header="Here are some of the NSFAS related posts"
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ const {
   getBlogShareById,
   deleteBlog,
   updateBlogStatus,
+  getBlogBySearchKeyword,
 } = require("../services/blogService");
 
 // CREATE BLOG
@@ -188,12 +189,14 @@ exports.updateBlog = async (req, res) => {
 
 //for blog sharing
 exports.getBlogSharePage = async (req, res) => {
-
   const blog = await getBlogShareById(req.params.id);
   if (!blog) return res.status(404).send("Not found");
 
   const ua = req.headers["user-agent"] || "";
-  const isBot = /facebookexternalhit|whatsapp|twitterbot|linkedinbot|slackbot|telegrambot|discordbot/i.test(ua);
+  const isBot =
+    /facebookexternalhit|whatsapp|twitterbot|linkedinbot|slackbot|telegrambot|discordbot/i.test(
+      ua,
+    );
 
   const serverUrl = process.env.BASE_URL;
   const frontendUrl = process.env.UI_URL;
@@ -218,4 +221,42 @@ exports.getBlogSharePage = async (req, res) => {
   }
 
   return res.redirect(`${frontendUrl}/blog/${blog.id}`);
+};
+
+// GET SINGLE BLOG
+// controller
+exports.getPageRelatedPosts = async (req, res) => {
+  try {
+    const { search } = req.query;
+
+    if (!search) {
+      return res.status(400).json({
+        success: false,
+        message: "Search word is required",
+      });
+    }
+
+    const blogs = await getBlogBySearchKeyword(search);
+
+    if (!blogs || blogs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No related posts found",
+        blogs: [],
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Data fetched successfully",
+      blogs,
+    });
+  } catch (err) {
+    console.error("Error fetching related posts:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
 };

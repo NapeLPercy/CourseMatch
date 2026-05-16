@@ -25,3 +25,10 @@ export async function deleteBlog(id) {
 export async function updateBlogStatus(status,id) {
   return await api.patch(`/api/blogs/${id}/status`,{status});
 }
+
+
+export async function getPageRelatedPosts(search) {
+  return await api.get("/api/blogs/search/related", {
+    params: { search },
+  });
+}

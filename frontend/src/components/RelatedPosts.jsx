@@ -2,14 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { Eye } from "lucide-react";
 import "../styles/RelatedPosts.css";
 
-export default function RelatedPosts({ posts }) {
+export default function RelatedPosts({ posts, header="More in this category" }) {
   const navigate = useNavigate();
 
-  if (!posts.length) return null;
+  if (!posts?.length) return null;
 
   return (
     <div className="rp">
-      <h3 className="rp__heading">More in this category</h3>
+      <h3 className="rp__heading">{header}</h3>
       <div className="rp__grid">
         {posts.map((post, i) => (
           <RelatedCard
