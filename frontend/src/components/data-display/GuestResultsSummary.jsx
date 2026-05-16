@@ -11,10 +11,11 @@ import {
 } from "lucide-react";
 import "../../styles/GuestResultsSummary.css";
 import AddSubjects from "../forms/GuestCalculateAPS";
+import RelatedPosts from "../RelatedPosts";
 import SEO from "../ui/SEO";
 import { useAuth } from "../../context/AuthContext";
 
-export default function GuestResultsSummary({ data }) {
+export default function GuestResultsSummary({ data, posts }) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [back, setBack] = useState(false);
@@ -178,6 +179,11 @@ export default function GuestResultsSummary({ data }) {
             <ArrowRight size={18} strokeWidth={2.5} />
           </button>
         </div>
+
+        <RelatedPosts
+          posts={posts}
+          header="Here are some of the APS related posts"
+        />
       </div>
     </>
   );

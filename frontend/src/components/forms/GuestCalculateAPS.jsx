@@ -19,7 +19,8 @@ import SubjectSelect from "../ui/SubjectSelect";
 import GuestResultsSummary from "../data-display/GuestResultsSummary";
 import SEO from "../ui/SEO";
 import { calculateApsFaqs } from "../../Utils/textData/SeoFaqs";
-
+import { getPageRelatedPosts } from "../../services/blogService";
+import RelatedPosts from "../RelatedPosts";
 export default function GuestCalculateAPS() {
   const { addSubjects, getSubjects } = useSubjects();
 
@@ -28,6 +29,7 @@ export default function GuestCalculateAPS() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
+  const [relatedPosts, setRelatedPosts] = useState(null);
   const MAX = 15;
   const MIN = 7;
 
@@ -54,6 +56,10 @@ export default function GuestCalculateAPS() {
   useEffect(() => {
     const subjectsData = getSubjects();
     if (subjectsData && subjectsData.length > 0) setSubjects(subjectsData);
+  }, []);
+
+   useEffect(() => {
+    fetchPageRelatedPosts();
   }, []);
 
   const reset = () => {
@@ -86,7 +92,7 @@ export default function GuestCalculateAPS() {
         data.endorsement,
       );
       const results = filter.getQualifiedCourses();
-      console.log("this are the results: ",results);
+      console.log("this are the results: ", results);
       setSubmitted(true);
       setResults(results);
       addSubjects(subjects);
@@ -102,7 +108,7 @@ export default function GuestCalculateAPS() {
     }
   };
 
-  if (results) return <GuestResultsSummary data={results} />;
+  if (results) return <GuestResultsSummary data={results} posts={relatedPosts} />;
 
   const requirements = [
     {
@@ -132,6 +138,19 @@ export default function GuestCalculateAPS() {
       met: subjects.some((s) => s.name.endsWith("HL")),
     },
   ];
+
+  //RELATED POSTS
+  const fetchPageRelatedPosts = async () => {
+    try {
+      const { data } = await getPageRelatedPosts("APS");
+
+      if (data.success) {
+        setRelatedPosts(data.blogs);
+      }
+    } catch (error) {
+      console.error("Error fetching related posts:", error);
+    }
+  };
 
   return (
     <>
@@ -269,6 +288,10 @@ export default function GuestCalculateAPS() {
             {loading ? "Computing…" : "Calculate APS"}
           </button>
         </div>
+        <RelatedPosts
+          posts={relatedPosts}
+          header="Here are some of the APS related posts"
+        />
       </div>
     </>
   );

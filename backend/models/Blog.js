@@ -335,4 +335,42 @@ module.exports = {
       connection.release();
     }
   },
+
+  // In your blog model object
+  getPostsByKeyword: async (keyword) => {
+    const sql = `
+    SELECT
+      bp.id,
+      bp.title,
+      bp.cover_image,
+      bp.num_of_reads
+    FROM blog_post bp
+    WHERE bp.status = 'PUBLISHED'
+      AND (
+        bp.title LIKE ?
+        OR bp.topic LIKE ?
+      )
+    ORDER BY bp.num_of_reads DESC
+    LIMIT 6
+  `;
+
+    const searchTerm = `%${keyword}%`;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [searchTerm, searchTerm], (err, rows) => {
+        if (err) return reject(err);
+
+        resolve(
+          rows.map((post) => ({
+            id: post.id,
+            title: post.title,
+            coverImageUrl: post.cover_image
+              ? `${process.env.BASE_URL}${post.cover_image}`
+              : null,
+            reads: post.num_of_reads,
+          })),
+        );
+      });
+    });
+  },
 };
