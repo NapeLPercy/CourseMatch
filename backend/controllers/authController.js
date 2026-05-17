@@ -9,11 +9,14 @@ const {
   validatePassword,
   getAdminAccounts,
   updateAccountRole,
+  verifyAccount,
 } = require("../services/accountService");
 const {
   requestPasswordReset,
   resetPassword,
 } = require("../services/passwordResetService");
+
+const { verifyEmail } = require("../services/emailVerificationService");
 
 /* 1 Check if account exist
 2 register email */
@@ -27,11 +30,15 @@ exports.register = async (req, res) => {
       return res.json({ success: false, message: "Email already registered" });
     }
 
-    await addAccount(email, password);
+    const createAccountResults = await addAccount(email, password);
 
     return res
       .status(201)
-      .json({ success: true, message: "Successfuly registered" });
+      .json({
+        success: true,
+        message: "Successfuly registered",
+        link: createAccountResults?.link,
+      });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -61,6 +68,14 @@ exports.login = async (req, res) => {
     }
 
     const account = results[0];
+    if (account?.status === "PENDING") {
+      return res.status(403).json({
+        success: false,
+        status: "PENDING",
+        message: "Please verify your email before logging in.",
+      });
+    }
+
     const isMatch = await validatePassword(password, account.password);
 
     if (!isMatch) {
@@ -146,17 +161,42 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
+// 2 verify account
+exports.verifyAccount = async (req, res) => {
+  const { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({
+      success: false,
+      message: "Token is required",
+    });
+  }
+
+  try {
+    const result = await verifyEmail(token);
+
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+
+    return res.status(200).json(result);
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 exports.getAdminAccounts = async (req, res) => {
   try {
     const result = await getAdminAccounts();
 
-    return res
-      .status(200)
-      .json({
-        result,
-        success: true,
-        message: "Accounts successfully fetched",
-      });
+    return res.status(200).json({
+      result,
+      success: true,
+      message: "Accounts successfully fetched",
+    });
   } catch (err) {
     console.error("Admin accounts error:", err);
 
@@ -179,12 +219,12 @@ exports.adminAddAccount = async (req, res) => {
       return res.json({ success: false, message: "Email already registered" });
     }
 
-    const password = "Rosina^*20";//will generate a random password and then send it to user
+    const password = "Rosina^*20"; //will generate a random password and then send it to user
 
     const result = await addAccount(email, password);
 
     if (result.userId) {
-      await updateAccountRole(undefined,{ "userId":result.userId, role });
+      await updateAccountRole(undefined, { userId: result.userId, role });
     }
 
     return res

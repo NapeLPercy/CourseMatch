@@ -14,8 +14,6 @@ const hashToken = (token) => {
 const requestPasswordReset = async (email) => {
   try {
     const account = await accountModel.checkAccountByEmail(email);
-
-    console.log(account, "data is back");
     // Always return same response (security)
     if (!account || account.length === 0) {
       return {
@@ -62,7 +60,6 @@ const resetPassword = async (rawToken, newPassword) => {
 
     const tokenRecord = await accountModel.getByTokenHash(tokenHash);
 
-    console.log(tokenHash, "hash token final");
 
     if (!tokenRecord) {
       return {

@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const accountModel = require("../models/Account");
 const { addUser } = require("./userService");
+const { createVerificationToken } = require("./emailVerificationService");
+const { sendEmail } = require("./sendEmailService");
 
 //update a user role during onboarding
 async function updateAccountRole(conn, data) {
@@ -43,9 +45,22 @@ async function addAccount(email, password) {
       accountId,
       ...userId,
     });
+    const results = await createVerificationToken(conn, accountId);
+    //send email to user
+    await sendEmail({
+      to: email,
+      subject: "Verify your account",
+      html: `
+    <h1>Welcome!</h1>
+    <p>Please verify your email by clicking the link below.</p>
+    <a href="${results?.link}">
+      Verify Email
+    </a>
+  `,
+    });
 
     await conn.promise().commit();
-    return userId;
+    return { userId };
   } catch (error) {
     await conn.promise().rollback();
     throw error;

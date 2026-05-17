@@ -20,6 +20,12 @@ export async function resetPassword(token, password) {
   return res;
 }
 
+
+export async function verifyAccount(token) {
+  const res = await api.post(`/api/auth/verify`, { token});
+  return res;
+}
+
 export async function getAllAccounts() {
   const res = await api.get(`/api/auth/accounts`);
   return res;
