@@ -25,6 +25,7 @@ import UniversityCourses from "./components/data-display/UnivesityCourses";
 //auth
 import RequestReset from "./pages/RequestReset";
 import ResetPassword from "./pages/ResetPassword";
+import VerifyAccount from "./pages/VerifyAccount";
 
 import Chat from "./components/layout/Chat";
 import MainLayout from "./components/layout/MainLayout";
@@ -184,6 +185,7 @@ function App() {
                 <Route path="/register" element={<Account />} />
                 <Route path="/request-reset" element={<RequestReset />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/verify-account" element={<VerifyAccount />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />

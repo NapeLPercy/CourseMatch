@@ -7,6 +7,7 @@ router.post("/login", authController.login);
 
 router.post("/request-reset", authController.requestPasswordReset);
 router.post("/reset", authController.resetPassword);
+router.post("/verify", authController.verifyAccount);
 router.get("/accounts", authController.getAdminAccounts);
 
 router.post("/add", authController.adminAddAccount);

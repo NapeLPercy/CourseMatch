@@ -12,6 +12,16 @@ module.exports = {
     });
   },
 
+   updateAccountStatus: async (accountId, status) => {
+    const sql = `UPDATE account SET status = ? WHERE id = ?`;
+    return new Promise((resolve, reject) => {
+      db.query(sql, [status, accountId], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
+
   updatePassword: async (accountId, newPassword) => {
     const sql = `UPDATE account SET  password = ? WHERE id = ?`;
 
@@ -37,7 +47,7 @@ module.exports = {
 
   //Login user
   login: async (email) => {
-    const sql = `SELECT id,role,user_id, email, password FROM account WHERE email = ?`;
+    const sql = `SELECT id,role,user_id, email,status, password FROM account WHERE email = ?`;
 
     return new Promise((resolve, reject) => {
       db.query(sql, [email], (err, result) => {
