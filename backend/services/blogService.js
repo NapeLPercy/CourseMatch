@@ -9,7 +9,9 @@ async function createBlog(blog) {
 async function getBlogById(id) {
   return await blogModel.getBlogById(id);
 }
-
+async function getBlogBySearchKeyword(keyword){
+  return await blogModel.getPostsByKeyword(keyword);
+}
 async function getBlogShareById(id) {
   return await blogModel.getBlogShareById(id);
 }
@@ -37,5 +39,6 @@ module.exports = {
   adminGetAllBlogs,
   deleteBlog,
   updateBlogStatus,
-  getBlogShareById
+  getBlogShareById,
+  getBlogBySearchKeyword
 };

@@ -56,6 +56,9 @@ function extractStudentSpecifData({ grade, age, role }) {
 
 //insert complete student data
 async function addStudentCompleteProfile(userId, profile) {
+  const results = await studentModel.personalityProfileExist(userId);
+  if (results) return { personalityProfileExist: true };
+
   await studentModel.updateStudentProfile(userId, profile);
 }
 //get complete student profile
@@ -81,9 +84,8 @@ async function getStudentId(userId) {
   return await studentModel.getStudentId(userId);
 }
 
-
 //user tries to view courses they were matched to
-async function getMatchedCourses(userId){
+async function getMatchedCourses(userId) {
   return await studentModel.getMyMatchedCourses(userId);
 }
 

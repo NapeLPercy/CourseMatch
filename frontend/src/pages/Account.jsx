@@ -49,24 +49,21 @@ export default function Account() {
     setLoading(true);
 
     try {
-      const {data} = await register(form);
+      const { data } = await register(form);
       console.log("here is the reply", data);
       if (!data.success) {
         setError(data.message || "Registration failed. Please try again.");
         return;
       }
 
-      setSuccess("Registration successful");
+      setSuccess("Registration successful, check your email to verify your account");
       setTimeout(() => {
         setSuccess(null);
-        navigate("/login");
-      }, 2000);
-      
+       // navigate("/login");
+      }, 10000);
     } catch (err) {
       console.error("Registration error:", err.response?.data || err.message);
-      setError(
-        err.response?.data?.error || "Registration failed. Please try again.",
-      );
+      setError("Registration failed. Please try again.");
       clearAfterDelay(setError);
     } finally {
       setLoading(false);
