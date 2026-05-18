@@ -63,6 +63,10 @@ export default function PersonalityProfileWizard() {
         setStep(0);
       }, 3000);
     } catch (err) {
+      if (err?.response?.status === 409) {
+        setSubmitError("You already submitted your personality profile");
+        return;
+      }
       setSubmitError("Submission failed. Please try again.");
     } finally {
       setLoading(false);
