@@ -74,6 +74,22 @@ module.exports = {
     });
   },
 
+  // Check if recommendations exist
+  personalityProfileExist: async (userId) => {
+    const sql = `
+      SELECT dream_job 
+      FROM student_profile
+      WHERE user_id = ?
+    `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [userId], (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows.length > 0);
+      });
+    });
+  },
+
   // Patch student's complete profile info
   updateStudentProfile: async (userId, profile) => {
     const sql = `

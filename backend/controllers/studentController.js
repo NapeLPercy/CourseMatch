@@ -78,8 +78,13 @@ exports.completeProfile = async (req, res) => {
         .json({ success: false, message: "Not authenticated" });
     }
 
-    await addStudentCompleteProfile(userId, profile);
-
+    const results = await addStudentCompleteProfile(userId, profile);
+    if (results?.personalityProfileExist) {
+      return res.status(409).json({
+        success: true,
+        message: "You already added your personality profile",
+      });
+    }
     return res.status(200).json({
       success: true,
       message: "Profile saved successfully",

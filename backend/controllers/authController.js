@@ -8,8 +8,7 @@ const {
   generateToken,
   validatePassword,
   getAdminAccounts,
-  updateAccountRole,
-  verifyAccount,
+  updateAccountRole
 } = require("../services/accountService");
 const {
   requestPasswordReset,
