@@ -112,7 +112,7 @@ export default function AdminUserList() {
             <thead>
               <tr>
                 <th>User</th>
-                {/*<th>User ID</th>*/}
+                <th>Last Login</th>
                 <th>Joined</th>
                 <th>Profile</th>
                 <th>Subjects</th>
@@ -132,9 +132,9 @@ export default function AdminUserList() {
                       </div>
                     </div>
                   </td>
-                  {/*<td>
-                    <span className="aul__id">{u.user_id}</span>
-                  </td>*/}
+                  <td>
+                    <span className="aul__id">{formatTimestamp(u.last_login)}</span>
+                  </td>
                   <td>
                     <span className="aul__date">
                       <Calendar size={11} strokeWidth={2} />

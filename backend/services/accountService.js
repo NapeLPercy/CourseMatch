@@ -15,6 +15,10 @@ async function updateAccountRole(conn, data) {
   return res;
 }
 
+async function updateLastLogin(userId) {
+ await accountModel.updateLastLogin(userId);
+}
+
 //checks if email is registered
 async function checkAccount(email) {
   return await accountModel.checkAccountByEmail(email);
@@ -137,4 +141,5 @@ module.exports = {
   validatePassword,
   generateToken,
   getAdminAccounts,
+  updateLastLogin,
 };

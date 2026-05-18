@@ -8,7 +8,8 @@ const {
   generateToken,
   validatePassword,
   getAdminAccounts,
-  updateAccountRole
+  updateAccountRole,
+  updateLastLogin,
 } = require("../services/accountService");
 const {
   requestPasswordReset,
@@ -86,6 +87,8 @@ exports.login = async (req, res) => {
 
     const token = generateToken(account);
 
+    await updateLastLogin(account.user_id);
+    
     const userData = {
       userId: account.user_id,
       role: account.role,

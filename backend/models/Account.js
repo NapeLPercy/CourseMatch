@@ -2,7 +2,7 @@ const db = require("../config/db");
 
 module.exports = {
   //Patch a user role, used during onboarding
-  updateAccountRole: async (conn=db, { userId, role }) => {
+  updateAccountRole: async (conn = db, { userId, role }) => {
     const sql = `UPDATE account SET role = ? WHERE user_id = ?`;
     return new Promise((resolve, reject) => {
       conn.query(sql, [role, userId], (err, result) => {
@@ -12,7 +12,7 @@ module.exports = {
     });
   },
 
-   updateAccountStatus: async (accountId, status) => {
+  updateAccountStatus: async (accountId, status) => {
     const sql = `UPDATE account SET status = ? WHERE id = ?`;
     return new Promise((resolve, reject) => {
       db.query(sql, [status, accountId], (err, result) => {
@@ -27,6 +27,17 @@ module.exports = {
 
     return new Promise((resolve, reject) => {
       db.query(sql, [newPassword, accountId], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
+
+  updateLastLogin: async (userId) => {
+    const sql = `UPDATE user SET last_login = NOW() WHERE id = ?`;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [userId], (err, result) => {
         if (err) return reject(err);
         resolve(result);
       });
@@ -142,9 +153,16 @@ module.exports = {
 
   getAllAccounts: async () => {
     const sql = `
-    SELECT id, user_id, created_at, email
-    FROM account WHERE role = 'STUDENT'
-  `;
+    SELECT
+    a.id,
+    a.user_id,
+    a.created_at,
+    a.email,
+    u.last_login
+FROM account a
+INNER JOIN user u
+    ON a.user_id = u.id
+WHERE a.role = 'STUDENT'`;
 
     return new Promise((resolve, reject) => {
       db.query(sql, [], (err, rows) => {
