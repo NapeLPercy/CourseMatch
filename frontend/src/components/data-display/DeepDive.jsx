@@ -14,6 +14,8 @@ import {
   GraduationCap,
   BookOpen,
   ChevronRight,
+  AlignLeft,
+  Info,
 } from "lucide-react";
 import "../../styles/DeepDive.css";
 import DeepDiveSkeleton from "../ui/DeepDiveSkeleton";
@@ -72,6 +74,7 @@ export default function DeepDive() {
 
   const {
     summary,
+    description,
     challenges,
     salary,
     careerPaths = [],
@@ -128,8 +131,18 @@ export default function DeepDive() {
 
       {/* Main grid */}
       <div className="dd__grid">
+
+        {/* Description */}
+        <div className="dd__card" style={{ "--i": 0 }}>
+          <div className="dd__card-icon dd__card-icon--orange">
+            <Info size={18} strokeWidth={2} />
+          </div>
+          <h3 className="dd__card-title">Qualification Description</h3>
+          <p className="dd__description">{description}</p>
+        </div>
+
         {/* Salary */}
-        <div className="dd__card dd__card--salary" style={{ "--i": 0 }}>
+        <div className="dd__card dd__card--salary" style={{ "--i": 1 }}>
           <div className="dd__card-icon dd__card-icon--green">
             <TrendingUp size={18} strokeWidth={2} />
           </div>
@@ -164,7 +177,7 @@ export default function DeepDive() {
         </div>
 
         {/* Career paths */}
-        <div className="dd__card dd__card--careers" style={{ "--i": 1 }}>
+        <div className="dd__card dd__card--careers" style={{ "--i": 2 }}>
           <div className="dd__card-icon dd__card-icon--blue">
             <Briefcase size={18} strokeWidth={2} />
           </div>
@@ -183,7 +196,7 @@ export default function DeepDive() {
         </div>
 
         {/* How to excel */}
-        <div className="dd__card" style={{ "--i": 2 }}>
+        <div className="dd__card" style={{ "--i": 3 }}>
           <div className="dd__card-icon dd__card-icon--amber">
             <Star size={18} strokeWidth={2} />
           </div>
@@ -203,7 +216,7 @@ export default function DeepDive() {
         </div>
 
         {/* Challenges */}
-        <div className="dd__card" style={{ "--i": 3 }}>
+        <div className="dd__card" style={{ "--i": 4 }}>
           <div className="dd__card-icon dd__card-icon--red">
             <AlertTriangle size={18} strokeWidth={2} />
           </div>
@@ -212,7 +225,7 @@ export default function DeepDive() {
         </div>
 
         {/* Companies */}
-        <div className="dd__card" style={{ "--i": 4 }}>
+        <div className="dd__card" style={{ "--i": 5 }}>
           <div className="dd__card-icon dd__card-icon--teal">
             <Building2 size={18} strokeWidth={2} />
           </div>
@@ -227,7 +240,7 @@ export default function DeepDive() {
         </div>
 
         {/* Alternatives */}
-        <div className="dd__card" style={{ "--i": 5 }}>
+        <div className="dd__card" style={{ "--i": 6 }}>
           <div className="dd__card-icon dd__card-icon--purple">
             <Lightbulb size={18} strokeWidth={2} />
           </div>

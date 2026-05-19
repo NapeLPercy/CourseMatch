@@ -7,6 +7,7 @@ const aiCourseDeepDiveModel = {
       INSERT INTO ai_course_deep_dives (
         id,
         summary,
+        description,
         challenges,
         career_paths,
         companies,
@@ -15,12 +16,13 @@ const aiCourseDeepDiveModel = {
         alternatives,
         user_id,
         course_code
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
       deepDive.id,
       deepDive.summary,
+      deepDive.description,
       deepDive.challenges || null,
       JSON.stringify(deepDive.careerPaths || []),
       JSON.stringify(deepDive.companies || []),
@@ -59,6 +61,7 @@ const aiCourseDeepDiveModel = {
         resolve({
           id: row.id,
           summary: row.summary,
+          description: row.description,
           challenges: row.challenges,
 
           careerPaths: safeParseJSON(row.career_paths) || [],

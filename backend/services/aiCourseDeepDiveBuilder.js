@@ -26,27 +26,32 @@ Generate the following fields:
 A personalized, future-focused explanation of how this course fits the student's
  personality profile and what their future could look like. Do NOT repeat input data directly.
 
-2. challenges:
+2. description:
+A concise description of approximately 80-100 words explaining what the course covers, the key 
+subjects and skills students will learn, and the types of real-world problems or industries 
+the qualification prepares them for.
+
+3. challenges:
 A realistic paragraph describing difficulties the student may face in this field, based on their personality profile.
 
-3. career_paths:
+4. career_paths:
 An array of 3–5 career options. Each must include:
 - title
 - description
 
-4. companies:
+5. companies:
 An array of real companies relevant to this field, preferably in South Africa.
 
-5. salary:
+6. salary:
 An object with:
 - entry
 - mid
 - senior
 
-6. how_to_excel:
+7. how_to_excel:
 An array of actionable steps tailored to the student's strengths and personality.
 
-7. alternatives:
+8. alternatives:
 An array of related alternative courses(3-5).
 
 ---
@@ -68,6 +73,7 @@ OUTPUT FORMAT (STRICT):
 
 {
   "summary": "string",
+  "description":"string",
   "challenges": "string",
   "careerPaths": [
     { "title": "string", "description": "string" }
