@@ -226,25 +226,33 @@
 /* ── CTA buttons ──────────────────────────────────────────── */
 .intro__actions {
   display: flex;
-  flex-wrap: wrap;
+ /* flex-wrap: wrap;*/
   gap: 12px;
   margin-bottom: 44px;
 }
 
+
+
 .btn {
+   flex: 1;          /* both buttons take equal width */
+  min-width: 0; 
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border: none;
   border-radius: 10px;
-  padding: 14px 32px;
+  padding: 16px 32px !important;
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   font-size: 0.92rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.25s ease;
+}
+
+.btn__inner {
+  white-space: nowrap;
 }
 
 .btn--primary-start {
@@ -450,6 +458,7 @@
 
   .intro__card {
     order: 2;
+    margin-top: 10px;
   }
 
   .intro__content {
@@ -478,7 +487,7 @@
 }
 
   .intro__container {
-  justify-items: center; /* 🔥 KEY FIX */
+  justify-items: center; /* KEY FIX */
 }
 
   .intro__text {
