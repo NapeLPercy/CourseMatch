@@ -78,7 +78,7 @@ export default function HowItWorks() {
           How it works
           <span className="hiw__eyebrow-line" />
         </span>
-        <h2 className="hiw__title">Three steps to clarity.</h2>
+        <h2 className="hiw__title">Four steps to clarity.</h2>
         <p className="hiw__subtitle">
           No hidden fees, no endless scrolling through university websites.
           CourseMatch does the heavy lifting so you can focus on your future.
