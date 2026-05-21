@@ -1,4 +1,5 @@
 export const FORCE_COLOURED_NAV = [
+  "/features",
   "/student/course-deep-dive",
   "/admin/manage-blogs",
   "/admin/manage-accounts",

@@ -4,6 +4,7 @@ import HowItWorks from "./HowItWorks";
 import Showcase from "./Showcase";
 import FAQ from "../components/data-display/FAQ";
 import Testimonials from "./Testimonials";
+import AboutUs from "./About";
 import SEO from "../components/ui/SEO";
 import { homeFaqs } from "../Utils/textData/SeoFaqs";
 // Home Component
@@ -16,8 +17,8 @@ export default function Home() {
         url="https://coursematchapp.co.za/"
         faq={homeFaqs}
       />
-
       <Hero />
+      <AboutUs />
       <HowItWorks />
       <Testimonials />
       <FAQ />

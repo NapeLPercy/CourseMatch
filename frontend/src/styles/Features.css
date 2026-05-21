@@ -1,0 +1,148 @@
+/* FEATURES — CourseMatch
+   Reuses .hiw header classes */
+
+/* ── GRID ────────────────────────────────── */
+.feat__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  width: 100%;
+}
+
+#features-section{
+    padding-top: 100px !important;
+}
+/* ── CARD ────────────────────────────────── */
+.feat__card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s ease,
+              border-color 0.18s ease;
+  transition-delay: var(--delay, 0s);
+}
+
+.feat__card--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feat__card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(30, 58, 138, 0.09);
+}
+
+/* Hover border tints per color */
+.feat__card--blue:hover   { border-color: #dbeafe; }
+.feat__card--purple:hover { border-color: #f3e8ff; }
+.feat__card--green:hover  { border-color: #dcfce7; }
+.feat__card--orange:hover { border-color: #ffedd5; }
+.feat__card--teal:hover   { border-color: #ccfbf1; }
+.feat__card--red:hover    { border-color: #fee2e2; }
+
+/* ── ICON ────────────────────────────────── */
+.feat__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.feat__icon--blue   { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #ffffff; }
+.feat__icon--purple { background: linear-gradient(135deg, #6b21a8, #9333ea); color: #ffffff; }
+.feat__icon--green  { background: linear-gradient(135deg, #15803d, #16a34a); color: #ffffff; }
+.feat__icon--orange { background: linear-gradient(135deg, #c2410c, #ea580c); color: #ffffff; }
+.feat__icon--teal   { background: linear-gradient(135deg, #0f766e, #14b8a6); color: #ffffff; }
+.feat__icon--red    { background: linear-gradient(135deg, #991b1b, #dc2626); color: #ffffff; }
+
+/* ── TEXT ────────────────────────────────── */
+.feat__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 0.97rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.feat__desc {
+  font-size: 0.82rem;
+  line-height: 1.75;
+  color: #475569;
+  margin: 0;
+}
+
+/*FEAT CTA*/
+.feat__cta {
+  display: flex;
+  justify-content: center;
+  margin: 50px 0 30px;
+}
+
+.feat__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 32px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: #ffffff;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.32);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.feat__cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.42);
+}
+
+.feat__cta-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.feat__cta-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.feat__cta-btn:hover svg {
+  transform: translateX(3px);
+}
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 1100px) {
+  .feat__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .feat__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .feat__grid {
+    grid-template-columns: 1fr;
+  }
+}

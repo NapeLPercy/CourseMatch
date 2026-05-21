@@ -1,6 +1,5 @@
 import {
   Home,
-  Info,
   Mail,
   LogIn,
   UserPlus,
@@ -9,7 +8,6 @@ import {
   User,
   Building2,
   FileText,
-  Shield,
   GraduationCap,
   Users,
   Calendar,
@@ -19,6 +17,7 @@ import {
  Wallet,
   Calculator,
   ToolCase,
+  Star,
 } from "lucide-react";
 
 export const NAV_CONFIG = {
@@ -47,19 +46,9 @@ export const NAV_CONFIG = {
         ],
       },
 
-      { path: "/about", label: "About Us", icon: Info },
+      { path: "/features", label: "Features", icon: Star },
       { path: "/blogs", label: "Blog", icon: FileText },
-      {
-        label: "Resources",
-        icon: FileText,
-        dropdown: [
-          {
-            path: "/terms-and-conditions",
-            label: "Terms & Conditions",
-            icon: Shield,
-          },
-        ],
-      },
+      
 
       {
         path: "/contact-us",

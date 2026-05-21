@@ -1,14 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  ClipboardList,
-  BookOpen,
-  Sparkles,
-  ArrowRight,
-  CheckCircle2,
-  ChevronDown,
-} from "lucide-react";
+import { Compass,BookOpen, Sparkles, ClipboardList, CheckCircle2, ChevronDown } from "lucide-react";
 import "./HowItWorks.css";
-
+import { HOW_IT_WORKS } from "../Utils/textData/howItWorks";
 /* ─── Scroll-reveal hook ───────────────────────────────────── */
 function useInView(threshold = 0.18) {
   const ref = useRef(null);
@@ -19,8 +12,10 @@ function useInView(threshold = 0.18) {
     if (!el) return;
 
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setInView(true); },
-      { threshold }
+      ([entry]) => {
+        if (entry.isIntersecting) setInView(true);
+      },
+      { threshold },
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -29,41 +24,12 @@ function useInView(threshold = 0.18) {
   return [ref, inView];
 }
 
-/* ─── Step data ─────────────────────────────────────────────── */
-const STEPS = [
-  {
-    id: 1,
-    Icon: ClipboardList,
-    label: "Assess",
-    title: "Submit Your Academic Profile",
-    description:
-      "Enter your matric subjects, marks, and key profile details. CourseMatch calculates your APS, checks endorsement eligibility, and prepares your academic snapshot instantly.",
-    tags: ["APS calculation", "Endorsement check", "Subject validation"],
-  },
-  {
-    id: 2,
-    Icon: BookOpen,
-    label: "Match",
-    title: "See What You Qualify For",
-    description:
-      "Get a ranked list of real university qualifications you meet the requirements for. See your fit score, required subjects, and exactly where you stand.",
-    tags: ["Requirement matching", "Fit scoring", "University database"],
-  },
-  {
-    id: 3,
-    Icon: Sparkles,
-    label: "Refine",
-    title: "Discover Your Best-Fit Path",
-    description:
-      "Layer in your strengths, interests, and goals. Our AI surfaces overlooked opportunities and ranks options by true academic potential — not guesswork.",
-    tags: ["AI insights", "Goal alignment", "Hidden opportunities"],
-  },
-];
-
-
 /* ─── Individual step card ─────────────────────────────────── */
 function StepCard({ step, index }) {
   const [ref, inView] = useInView(0.15);
+
+  const icons = [ClipboardList, BookOpen, Sparkles, Compass];
+  const Icon = icons[index];
 
   return (
     <div
@@ -71,30 +37,18 @@ function StepCard({ step, index }) {
       className={`step ${inView ? "step--visible" : ""}`}
       style={{ "--delay": `${index * 0.18}s` }}
     >
-      {/* Connector line (hidden on last) */}
-      {index < STEPS.length - 1 && (
-        <div className="step__connector" aria-hidden="true">
-          <span className="step__connector-line" />
-          <ArrowRight className="step__connector-arrow" size={16} />
+      {/* Step number + icon */}
+      <div className="step__head">
+        <div className="step__icon-wrap">
+          <Icon size={20} strokeWidth={1.8} />
         </div>
-      )}
-
-      {/* Icon ring */}
-      <div className="step__icon-wrap">
-        <div className="step__icon-glow" aria-hidden="true" />
-        <div className="step__icon-ring">
-          <step.Icon className="step__icon" size={28} strokeWidth={1.6} />
-        </div>
-        <span className="step__number">{step.id}</span>
+        <span className="step__number">0{step.id}</span>
       </div>
 
-      {/* Card body */}
+      {/* Body */}
       <div className="step__body">
-        <span className="step__label">{step.label}</span>
         <h3 className="step__title">{step.title}</h3>
         <p className="step__desc">{step.description}</p>
-
-        {/* Feature tags */}
         <div className="step__tags">
           {step.tags.map((tag) => (
             <span key={tag} className="step__tag">
@@ -114,7 +68,6 @@ export default function HowItWorks() {
 
   return (
     <section className="hiw" id="hiw-section">
-
       {/* Section header */}
       <div
         ref={headerRef}
@@ -125,19 +78,17 @@ export default function HowItWorks() {
           How it works
           <span className="hiw__eyebrow-line" />
         </span>
-        <h2 className="hiw__title">
-          Three steps to clarity.
-        </h2>
+        <h2 className="hiw__title">Three steps to clarity.</h2>
         <p className="hiw__subtitle">
-          No hidden fees, no endless scrolling through university websites. CourseMatch
-          does the heavy lifting so you can focus on your future.
+          No hidden fees, no endless scrolling through university websites.
+          CourseMatch does the heavy lifting so you can focus on your future.
         </p>
         <ChevronDown className="hiw__scroll-cue" size={22} strokeWidth={1.5} />
       </div>
 
       {/* Steps grid */}
       <div className="hiw__steps">
-        {STEPS.map((step, i) => (
+        {HOW_IT_WORKS.map((step, i) => (
           <StepCard key={step.id} step={step} index={i} />
         ))}
       </div>

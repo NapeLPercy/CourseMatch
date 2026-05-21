@@ -9,7 +9,7 @@ import { SubjectProvider } from "./context/SubjectContext";
 import Login from "./pages/Login";
 import Account from "./pages/Account";
 import Home from "./pages/Home";
-import About from "./pages/About";
+import Features from "./pages/Features";
 
 import AddSubjects from "./components/forms/AddSubjects";
 import ManageMyProfile from "./components/data-display/ManageMyProfile";
@@ -73,7 +73,7 @@ function App() {
               {/* Public pages with nav/footer */}
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
+                <Route path="/features" element={<Features />} />
                 <Route path="/contact-us" element={<Contact />} />
                 <Route
                   path="/terms-and-conditions"

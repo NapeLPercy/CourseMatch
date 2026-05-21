@@ -217,7 +217,6 @@ export default function Contact() {
         message: fields.message,
         time: getCurrentDateTime(),
       });
-      console.log("reply from emailjs", response);
       setSubmitted(true);
       setFields({
         name: "",

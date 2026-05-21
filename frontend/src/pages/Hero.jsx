@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import "./Hero.css";
 import { useNavigate } from "react-router-dom";
-import img from "../assets/hero.png";
 
 export default function Hero() {
   const sectionRef = useRef(null);
@@ -189,7 +188,7 @@ export default function Hero() {
               {/* Image - replace src with your actual platform screenshot */}
               <div className="intro__card-image">
                 <img
-                  src={img}
+                  src="/hero.png"
                   alt="CourseMatch platform preview"
                   className="intro__card-img"
                   loading="lazy"
