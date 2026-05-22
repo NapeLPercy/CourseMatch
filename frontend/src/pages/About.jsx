@@ -39,6 +39,20 @@ export default function AboutUs() {
   const [contentRef, contentIn] = useInView(0.15);
   const [statsRef, statsIn] = useInView(0.15);
 
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 1000);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth > 1000);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <section className="hiw" id="about-section">
       {/* Section header — same structure, different text */}
@@ -99,11 +113,7 @@ export default function AboutUs() {
         <div className="au__right">
           <div className="au__image-wrap">
             <img
-              src={
-                window.innerWidth > 1000
-                  ? "/aboutDesktop.png"
-                  : "/aboutPhone.png"
-              }
+              src={isDesktop ? "/aboutDesktop.png" : "/aboutPhone.png"}
               alt="Student using CourseMatch"
               className="au__image"
             />
