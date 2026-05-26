@@ -22,3 +22,9 @@ export async function getOrCreateDeepDive(subjects, qualification) {
 
   return res;
 }
+
+//course-comparisons
+export async function getOrCreateCourseComparisons(data) {
+  const res = await api.post(`/api/recommendation/course-comparisons`, data);
+  return res;
+}

@@ -58,7 +58,7 @@ import AdminManageAccounts from "./components/data-display/AdminManageAccounts";
 
 import { checkNsfasEligibility } from "./Utils/textData/nsfasEligibilityChecker";
 import NsfasEligibilityChecker from "./components/forms/NsfasEligibilityChecker";
-
+import CourseComparisons from "./components/data-display/CourseComparisons";
 function App() {
   return (
     <UserProvider>
@@ -129,6 +129,11 @@ function App() {
                   <Route
                     path="/student/course-deep-dive"
                     element={<DeepDive />}
+                  />
+
+                  <Route
+                    path="/student/course-comparisons"
+                    element={<CourseComparisons/>}
                   />
                 </Route>
 
