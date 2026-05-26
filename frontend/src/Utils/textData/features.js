@@ -4,6 +4,7 @@ import {
   GraduationCap,
   Banknote,
   Microscope,
+  Scale,
 } from "lucide-react";
 
 export const FEATURES = [
@@ -40,7 +41,15 @@ export const FEATURES = [
     color: "red",
   },
   {
-    id: 5,
+  id: 5,
+  icon: Scale,
+  title: "Qualification Comparison",
+  description:
+    "Compare two qualifications side-by-side using AI-powered insights. Discover which course better matches your academic strengths, personality, career goals, salary expectations, work environment preferences, and long-term opportunities.",
+  color: "blue",
+},
+  {
+    id: 6,
     icon: Banknote,
     title: "NSFAS Eligibility Checker",
     description:

@@ -24,9 +24,9 @@ export const HOW_IT_WORKS = [
   },
   {
     id: 4,
-    title: "Dive Deeper Into Career Paths",
+    title: "Explore and Compare Qualifications",
     description:
-      "Use Deep Dive to explore career descriptions, salary expectations, required skills, top employers, industry trends, challenges to expect, tips for success, and alternative career paths.",
-    tags: ["Career insights", "Salary information", "Alternative pathways"],
+      "Discover career opportunities, salary expectations, skills, employers, and industry insights with Deep Dive. Compare qualifications side-by-side to understand the best fit for your interests, strengths, and future ambitions.",
+    tags: ["Career insights", "Course comparison", "Future planning"],
   },
 ];
