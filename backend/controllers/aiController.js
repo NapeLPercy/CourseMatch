@@ -1,9 +1,10 @@
 const dotenv = require("dotenv");
 dotenv.config();
-
 const aiRecommendationService = require("../services/aiRecommendationService");
 const { getOrCreateDeepDive } = require("../services/aiCourseDeepDiveService");
 const { getStudentCompleteProfile } = require("../services/studentService");
+const {getOrCreateCourseComparison} = require("../services/aiCourseComparisonService");
+//const { use } = require("react");
 
 /*fetch or create AI scoring + explanation*/
 exports.getAIRecommendations = async (req, res) => {
@@ -55,7 +56,6 @@ exports.getAIRecommendations = async (req, res) => {
       results: results,
     });
   } catch (error) {
-    console.error("AI fit error:", error);
     return res.status(500).json({
       success: false,
       message: "Server error generating AI fit results",
@@ -91,7 +91,6 @@ exports.getAIDeepDive = async (req, res) => {
 
     const profile = await getStudentCompleteProfile(userId);
 
-    
     const results = await getOrCreateDeepDive({
       userId,
       qualification,
@@ -107,6 +106,61 @@ exports.getAIDeepDive = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Server error generating AI deep dive results",
+    });
+  }
+};
+
+//fetch or create course comparisons
+exports.getAICourseComparison = async (req, res) => {
+  try {
+    const userId  = req.userId;
+    const { qualifications, subjects } = req.body;
+    
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Not authenticated" });
+    }
+
+    if (!qualifications) {
+      return res.status(400).json({
+        success: false,
+        message: "Qualifications data is required.",
+      });
+    }
+
+    if (!subjects || subjects.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No subjects found.",
+      });
+    }
+
+    const profile = await getStudentCompleteProfile(userId);
+
+    
+    const comparison = await getOrCreateCourseComparison(
+      userId,
+      qualifications,
+      profile,
+      subjects,
+    );
+
+    if (!comparison) {
+      return res.status(404).json({
+        success: false,
+        message: "Comparison not found",
+      });
+    }
+
+    return res.json({
+      success: true,
+      comparison,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch comparison",
     });
   }
 };

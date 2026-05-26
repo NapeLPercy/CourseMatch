@@ -18,6 +18,7 @@ import {
   Calculator,
   ToolCase,
   Star,
+  Scale,
 } from "lucide-react";
 
 export const NAV_CONFIG = {
@@ -112,6 +113,12 @@ export const NAV_CONFIG = {
             label: "My Courses",
             // new → needs icon
             icon: ClipboardList,
+          },
+
+           {
+            path: "/student/course-comparisons",
+            label: "Compare Courses",
+            icon: Scale,
           },
         ],
       },
