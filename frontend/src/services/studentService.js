@@ -1,7 +1,7 @@
 import { api, handleApiError } from "./api";
 
-export async function getBasicStudentInfo() {
-  const res = await api.get(`/api/student/profile/basic`);
+export async function getStudentDashboard() {
+  const res = await api.get(`/api/student/dashboard`);
   return res;
 }
 

@@ -1,8 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const studentController = require("../controllers/studentController");
+const studentDashboardController = require("../controllers/studentDashboardController");
 const authenticate = require("../middleware/AuthenticationMiddleware");
 const authorize = require("../middleware/AuthorizationMiddleware");
+const attachProfileId = require("../middleware/profileMiddleware");
+
+
 
 router.post(
   "/profile/basic",
@@ -36,6 +40,14 @@ router.get(
   authenticate,
   authorize("STUDENT"),
   studentController.getMyMatchedQualifications,
+);
+
+router.get(
+  "/dashboard",
+  authenticate,
+  authorize("STUDENT"),
+  attachProfileId,
+  studentDashboardController.computeStudentDashboard,
 );
 
 module.exports = router;

@@ -35,7 +35,7 @@ module.exports = {
 
   //Get student's subjects
   getSubjectsByStudentIdForUser: async (studentId) => {
-    const sql = `SELECT subject_id AS id, name, mark, endorsement_subject FROM subject WHERE student_id = ?
+    const sql = `SELECT subject_id AS id, name, mark FROM subject WHERE student_id = ?
   `;
     return new Promise((resolve, reject) => {
       db.query(sql, [studentId], (err, result) => {

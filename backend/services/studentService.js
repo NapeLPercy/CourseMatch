@@ -3,13 +3,16 @@ const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
 const studentModel = require("../models/Student");
+const subjectModel = require("../models/Subject");
 const { addUserProfile } = require("./userService");
 const { updateAccountRole } = require("./accountService");
+const { parseComparison } = require("../utils/parseComparison");
+
+const { getDashboardAiData } = require("../models/StudentDashboard");
 
 /* 1 Add user generic data
 2 Add student specifc data
 3 Patch Role in that account table */
-
 async function addStudentProfile(userId, profileData) {
   const conn = await new Promise((resolve, reject) => {
     db.getConnection((err, connection) => {
@@ -89,6 +92,35 @@ async function getMatchedCourses(userId) {
   return await studentModel.getMyMatchedCourses(userId);
 }
 
+//student dashboard
+
+async function computeStudentDashboard(userId, studentId) {
+  const subjects = await subjectModel.getSubjectsByStudentIdForUser(studentId);
+  const basicProfile = await getStudentBasicProfile(userId);
+  const activity = await getDashboardAiData(userId);
+
+  const recommendation = activity.recommendation || null;
+  const deepDive = activity.deepDive || null;
+  const comparison = parseComparison(activity.comparison);
+
+  return {
+    subjects,
+    profile: basicProfile,
+    activity: {
+      recommendation,
+      deepDive,
+      comparison,
+    },
+    flags: {
+      hasSubjects: !!subjects?.length,
+      hasProfile: !!basicProfile?.dreamJob,
+      hasRecommendation: !!recommendation,
+      hasDeepDive: !!deepDive,
+      hasComparison: !!comparison,
+    },
+  };
+}
+
 module.exports = {
   addStudentProfile,
   addStudentCompleteProfile,
@@ -98,4 +130,5 @@ module.exports = {
   getStudentCompleteProfile,
   getStudentId,
   getMatchedCourses,
+  computeStudentDashboard,
 };
