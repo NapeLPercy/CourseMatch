@@ -15,7 +15,6 @@ const parentRoutes = require("./routes/parentRoutes");
 const tutorRoutes = require("./routes/tutorRoutes");
 const guestRoutes = require("./routes/guestRoutes");
 const blogRoutes = require("./routes/blogRoutes");
-
 dotenv.config();
 const app = express();
 

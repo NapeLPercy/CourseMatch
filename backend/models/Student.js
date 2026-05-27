@@ -34,6 +34,7 @@ module.exports = {
     SELECT 
       sp.id AS studentId, 
       u.full_name AS fullName, 
+      sp.dream_job AS dreamJob,
       sp.grade, 
       sp.endorsement 
     FROM student_profile sp

@@ -51,7 +51,7 @@ exports.getSubjects = async (req, res) => {
   try {
     const { userId, studentId } = req;
 
-    if (!userId) {
+    if(!userId) {
       return res
         .status(401)
         .json({ success: false, message: "You are not authorized" });
