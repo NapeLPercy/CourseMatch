@@ -78,7 +78,7 @@ module.exports = {
   // Check if recommendations exist
   personalityProfileExist: async (userId) => {
     const sql = `
-      SELECT dream_job 
+      SELECT dream_job AS dreamJob
       FROM student_profile
       WHERE user_id = ?
     `;
@@ -86,7 +86,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       db.query(sql, [userId], (err, rows) => {
         if (err) return reject(err);
-        resolve(rows.length > 0);
+        resolve(rows[0]);
       });
     });
   },
