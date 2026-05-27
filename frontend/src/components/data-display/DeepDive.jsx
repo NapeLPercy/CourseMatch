@@ -14,12 +14,12 @@ import {
   GraduationCap,
   BookOpen,
   ChevronRight,
-  AlignLeft,
   Info,
 } from "lucide-react";
 import "../../styles/DeepDive.css";
 import DeepDiveSkeleton from "../ui/DeepDiveSkeleton";
 import { formatTimestamp } from "../../Utils/datetime";
+import { getCachedDashboard } from "../../Utils/studentDashboardCache";
 
 export default function DeepDive() {
   const navigate = useNavigate();
@@ -46,6 +46,13 @@ export default function DeepDive() {
       const { data } = await getOrCreateDeepDive(getSubjects(), course);
 
       setDeepDive(data.results);
+
+      //recomendations fetched for first time, remove cache
+      const dashboadData = getCachedDashboard();
+      if(!dashboadData.data.flags.hasDeepDive){
+        sessionStorage.removeItem("student_dashboard");
+      }
+
     } catch (err) {
       console.log(err);
       setError(true);

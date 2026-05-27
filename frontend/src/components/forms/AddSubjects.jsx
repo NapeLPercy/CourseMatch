@@ -71,17 +71,17 @@ export default function AddSubjects() {
         setErrors([data.message] || ["Subjects submission failed"]);
         return;
       }
-      console.log(data, "here is the data");
       setSubmitted(true);
       addSubjects(data.subjects);
       setTimeout(() => reset(), 3000);
 
-      ///subjects submitted, add endorsement to session
+      ///subjects submitted, add endorsement to session,remove current dashboard
       sessionStorage.setItem(
         "endorsement",
         JSON.stringify(data?.endorsement),
       );
       
+      sessionStorage.removeItem("student_dashboard");
         setShowMinorMatches(true);
     } catch (err) {
       setErrors([

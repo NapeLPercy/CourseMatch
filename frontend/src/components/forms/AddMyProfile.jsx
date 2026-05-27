@@ -57,6 +57,9 @@ export default function PersonalityProfileWizard() {
     try {
       const { data } = await addCompleteStudentInfo(answers);
       setSuccess(true);
+      
+      sessionStorage.removeItem("student_dashboard");//remove after profile success
+      
       setTimeout(() => {
         setSuccess(false);
         setAnswers(initialAnswers);

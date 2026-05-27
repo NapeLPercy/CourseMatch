@@ -9,6 +9,7 @@ import CourseFilter from "../../Utils/courseFilters/CourseFilter";
 import UniversityCoursesSkeleton from "../ui/UniversityCoursesSkeleton";
 import EmptyState from "../ui/EmptyState";
 import { getOrCreateAIRecommedations } from "../../services/aiService";
+import { getCachedDashboard } from "../../Utils/studentDashboardCache";
 
 function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
   const [loading, setLoading] = useState(true);
@@ -76,6 +77,11 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
 
       const results = data.results || [];
       setRecommendedCourses(results);
+      //recomendations fetched for first time, remove cache
+      const dashboadData = getCachedDashboard();
+      if(!dashboadData.data.flags.hasRecommendation){
+        sessionStorage.removeItem("student_dashboard");
+      }
     } catch (err) {
       const message = err.response?.data?.message;
 

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import "../../styles/CourseComparisons.css";
 import ComparisonResult from "./ComparisonResults";
+import { getCachedDashboard } from "../../Utils/studentDashboardCache";
 
 /* ── Skeleton ───────────────────────────── */
 function CourseSkeleton() {
@@ -54,6 +55,11 @@ export default function CourseComparisons() {
     try {
       const { data } = await getMyMatches();
       setCourses(data.matchedData || []);
+      //courses compared for first time, remove cache
+      const dashboadData = getCachedDashboard();
+      if (!dashboadData.data.flags.hasComparison) {
+        sessionStorage.removeItem("student_dashboard");
+      }
     } catch {
       setFetchError(true);
     } finally {
