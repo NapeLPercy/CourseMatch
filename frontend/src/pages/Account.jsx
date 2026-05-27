@@ -1,20 +1,18 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Mail,
   Lock,
   Eye,
   EyeOff,
   UserPlus,
-  CheckCircle2,
-  X,
   AlertCircle,
 } from "lucide-react";
 import AuthCard from "../components/layout/AuthCard";
 import ".././styles/Account.css";
 import { validatePassword } from "../Utils/passwordManager";
 import { register } from "../services/accountService";
+import SubmitSuccess from "../components/ui/SubmitSuccess";
 
 export default function Account() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -22,7 +20,6 @@ export default function Account() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -50,19 +47,16 @@ export default function Account() {
 
     try {
       const { data } = await register(form);
-      console.log("here is the reply", data);
       if (!data.success) {
         setError(data.message || "Registration failed. Please try again.");
         return;
       }
-
       setSuccess("Registration successful, check your email to verify your account");
       setTimeout(() => {
         setSuccess(null);
        // navigate("/login");
       }, 10000);
     } catch (err) {
-      console.error("Registration error:", err.response?.data || err.message);
       setError("Registration failed. Please try again.");
       clearAfterDelay(setError);
     } finally {
@@ -82,11 +76,7 @@ export default function Account() {
         </div>
       )}
 
-      {success && (
-        <div className="rp__success">
-          <p className="rp__success-text">{success}</p>
-        </div>
-      )}
+      {success && <SubmitSuccess success={success}/>}
 
       <form onSubmit={handleSubmit} className="register-form">
         {/* Email */}

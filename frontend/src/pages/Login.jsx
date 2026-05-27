@@ -1,21 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import {
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  LogIn,
-  CheckCircle2,
-  X,
-  AlertCircle,
-} from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, LogIn, X, AlertCircle } from "lucide-react";
 import AuthCard from "../components/layout/AuthCard";
 import { useAuth } from "../context/AuthContext";
 import ".././styles/Login.css";
 import { userLogin } from "../services/accountService";
-
+import SubmitSuccess from "../components/ui/SubmitSuccess";
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -42,16 +33,13 @@ export default function Login() {
       if (data.token) {
         sessionStorage.setItem("token", JSON.stringify(data.token));
       }
-
-      console.log("Here is the data",data);
       const role = data.user.role;
 
       let pathUrl = "/welcome";
       if (role === "STUDENT") pathUrl = "/student/dashboard";
       else if (role === "PARENT") pathUrl = "/parent/dashboard";
       else if (role === "TUTOR") pathUrl = "/tutor/dashboard";
-      else if (role === "ADMIN") pathUrl = "/admin/dashboard"
-      
+      else if (role === "ADMIN") pathUrl = "/admin/dashboard";
 
       login(data.user);
       setSuccess("Login successful!");
@@ -59,7 +47,7 @@ export default function Login() {
       setTimeout(() => {
         navigate(pathUrl);
         setSuccess(null);
-      }, 1500);
+      }, 2000);
     } catch (err) {
       // Handle backend errors (401, 400, etc)
       if (err.response) {
@@ -85,12 +73,13 @@ export default function Login() {
         </div>
       )}
 
-      {success && (
+      {/*{success && (
         <div className="rp__success">
           <p className="rp__success-text">{success}</p>
         </div>
-      )}
+      )}*/}
 
+        {success && <SubmitSuccess success={success} />}
       <form onSubmit={handleSubmit} className="login-form">
         {/* Email */}
         <div className="login__field">
