@@ -1,11 +1,9 @@
-import {
-  Sparkles,
-} from "lucide-react";
+import { Sparkles } from "lucide-react";
 export default function AIUsageSection({ flags }) {
   const features = [
     { label: "AI Recommendations", key: "hasRecommendation", color: "#2563eb" },
     { label: "Career Deep Dive", key: "hasDeepDive", color: "#9333ea" },
-    { label: "Course Comparison", key: "hasComparison", color: "#0f766e" },
+    { label: "Course Comparison", key: "hasComparison", color: "#ea580c" },
   ];
 
   const usedCount = features.filter((f) => flags[f.key]).length;
@@ -50,16 +48,16 @@ export default function AIUsageSection({ flags }) {
 
         {/* All users baseline */}
         <div className="db__bar-row db__bar-row--baseline">
-          <span className="db__bar-label db__bar-label--muted">
-            All users (avg)
-          </span>
+          <span className="db__bar-label db__bar-label">Other users</span>
           <div className="db__bar-track">
             <div
-              className="db__bar-fill db__bar-fill--baseline"
-              style={{ width: "100%" }}
+              className="db__bar-fill db__bar-fill"
+              style={{ width: "100%", backgroundColor: "green" }}
             />
           </div>
-          <span className="db__bar-pct db__bar-pct--muted">100%</span>
+          <span className="db__bar-pct db__bar-pct" style={{ color: "green" }}>
+            100%
+          </span>
         </div>
       </div>
     </div>
