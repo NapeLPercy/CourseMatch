@@ -79,6 +79,7 @@ exports.completeProfile = async (req, res) => {
     }
 
     const results = await addStudentCompleteProfile(userId, profile);
+    
     if (results?.personalityProfileExist) {
       return res.status(409).json({
         success: true,

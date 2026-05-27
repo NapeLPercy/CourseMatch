@@ -60,10 +60,11 @@ function extractStudentSpecifData({ grade, age, role }) {
 //insert complete student data
 async function addStudentCompleteProfile(userId, profile) {
   const results = await studentModel.personalityProfileExist(userId);
-  if (results) return { personalityProfileExist: true };
-
+  if (results.dreamJob) return { personalityProfileExist: true };
   await studentModel.updateStudentProfile(userId, profile);
 }
+
+
 //get complete student profile
 async function getStudentProfile(userId) {
   return await studentModel.getStudentProfileByUserId(userId);
