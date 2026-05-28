@@ -15,6 +15,7 @@ const parentRoutes = require("./routes/parentRoutes");
 const tutorRoutes = require("./routes/tutorRoutes");
 const guestRoutes = require("./routes/guestRoutes");
 const blogRoutes = require("./routes/blogRoutes");
+const emailMessageRoutes= require("./routes/emailMessageRoutes");
 dotenv.config();
 const app = express();
 
@@ -56,7 +57,7 @@ app.use("/api/parent", parentRoutes);
 app.use("/api/tutor", tutorRoutes);
 app.use("/api/guest", guestRoutes);
 app.use("/api/blogs", blogRoutes);
-
+app.use("/api/email", emailMessageRoutes);
 
 const PORT = process.env.PORT || 5000;
 

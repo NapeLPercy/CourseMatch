@@ -19,6 +19,7 @@ export const FORCE_COLOURED_NAV = [
   "/student/manage-my-profile",
   "/admin/manage-qualifications",
   "/admin/manage-universities",
+  "/admin/send-email",
   "/contact-us",
   "/student/view/subjects",
   "/login",
