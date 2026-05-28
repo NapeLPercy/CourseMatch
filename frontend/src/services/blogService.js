@@ -1,7 +1,6 @@
 import {api} from "../services/api";
 
 export async function createBlog(blog) {
-  console.log(blog);
   return await api.post(`/api/blogs`,blog);
 }
 

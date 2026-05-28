@@ -55,8 +55,7 @@ import BlogPost from "./pages/BlogPost";
 import ManageBlogs from "./components/data-display/ManageBlogs";
 import DeepDive from "./components/data-display/DeepDive";
 import AdminManageAccounts from "./components/data-display/AdminManageAccounts";
-
-import { checkNsfasEligibility } from "./Utils/textData/nsfasEligibilityChecker";
+import SendEmailPage from "./components/forms/SendEmailPage";
 import NsfasEligibilityChecker from "./components/forms/NsfasEligibilityChecker";
 import CourseComparisons from "./components/data-display/CourseComparisons";
 function App() {
@@ -176,6 +175,8 @@ function App() {
                   />
 
                   <Route path="/admin/manage-blogs" element={<ManageBlogs />} />
+               
+               <Route path="/admin/send-email" element={<SendEmailPage/>}/>
                 </Route>
               </Route>
 

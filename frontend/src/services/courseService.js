@@ -1,4 +1,4 @@
-import { api, handleApiError } from "./api";
+import { api} from "./api";
 
 /*ADMIN METHODS*/
 export async function addCourse(qualification) {

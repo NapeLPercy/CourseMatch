@@ -1,33 +1,28 @@
-import { useState, useMemo,useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Search, CheckCircle2, XCircle, Calendar, Mail } from "lucide-react";
 import "../../styles/AdminViewUsers.css";
 import { getAllAccounts } from "../../services/accountService";
 import { formatTimestamp } from "../../Utils/datetime";
 import ErrorState from "../ui/ErrorState";
-import  AdminUserListSkeleton from "../ui/AdminViewUsersSkeleton";
+import AdminUserListSkeleton from "../ui/AdminViewUsersSkeleton";
+import { useNavigate } from "react-router-dom";
+import StatusPill from "../ui/StatusPill";
+
 function getInitials(email) {
   return email.slice(0, 2).toUpperCase();
 }
 
-function StatusPill({ value, label }) {
-  return (
-    <span className={`aul__pill ${value ? "aul__pill--yes" : "aul__pill--no"}`}>
-      {value ? (
-        <CheckCircle2 size={11} strokeWidth={2.5} />
-      ) : (
-        <XCircle size={11} strokeWidth={2.5} />
-      )}
-      {label}
-    </span>
-  );
-}
+
 
 export default function AdminUserList() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [users, setUsers] = useState([]);
-  const[loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
+
   const fetchUsers = async () => {
     setError(null);
     setLoading(true);
@@ -42,7 +37,7 @@ export default function AdminUserList() {
     }
   };
 
-   useState(() => {
+  useState(() => {
     fetchUsers();
   }, []);
 
@@ -61,8 +56,15 @@ export default function AdminUserList() {
     });
   }, [users, search, filter]);
 
-  if(loading) return < AdminUserListSkeleton/>
-  if(error) return <ErrorState message={error} onRetry={fetchUsers}/>
+
+const handleSendEmail = (user) => {
+  navigate("/admin/send-email", {
+    state: { user },
+  });
+};
+
+  if (loading) return <AdminUserListSkeleton />;
+  if (error) return <ErrorState message={error} onRetry={fetchUsers} />;
   return (
     <div className="aul">
       {/* Controls */}
@@ -101,7 +103,7 @@ export default function AdminUserList() {
       </p>
 
       {/* Table */}
-      {(filtered.length === 0) ? (
+      {filtered.length === 0 ? (
         <div className="aul__empty">
           <Search size={36} strokeWidth={1.5} />
           <p>No users match your search.</p>
@@ -116,6 +118,7 @@ export default function AdminUserList() {
                 <th>Joined</th>
                 <th>Profile</th>
                 <th>Subjects</th>
+                <th>Message</th>
               </tr>
             </thead>
             <tbody>
@@ -133,7 +136,9 @@ export default function AdminUserList() {
                     </div>
                   </td>
                   <td>
-                    <span className="aul__id">{formatTimestamp(u.last_login)}</span>
+                    <span className="aul__id">
+                      {formatTimestamp(u.last_login)}
+                    </span>
                   </td>
                   <td>
                     <span className="aul__date">
@@ -146,6 +151,15 @@ export default function AdminUserList() {
                   </td>
                   <td>
                     <StatusPill value={u.hasSubjects} label="Subjects" />
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        handleSendEmail(u);
+                      }}
+                    >
+                      Email
+                    </button>
                   </td>
                 </tr>
               ))}
