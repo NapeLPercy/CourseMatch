@@ -13,18 +13,19 @@ import {
   Users,
   Lightbulb,
   Sparkles,
+  BrainCog,
 } from "lucide-react";
 import "../../styles/ViewMyProfile.css";
 import { getCompleteStudentInfo } from "../../services/studentService";
 import ErrorState from "../ui/ErrorState";
 import EmptyState from "../ui/EmptyState";
-import Skeleton from "../ui/Skeleton";
+import PageHeader from "../ui/PageHeader";
 /* Main component */
 export default function ViewMyProfile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     fetchStudentProfile();
   }, []);
@@ -48,13 +49,8 @@ export default function ViewMyProfile() {
     }
   };
 
-  const handleEdit = () => {
-    console.log("EDIT PROFILE:", profile);
-    alert("Edit clicked. Check console for full profile data.");
-  };
-
   if (loading) {
-    return <Skeleton />;
+    return <ViewProfileSkeleton />;
   }
 
   if ((!profile && !error) || !profile?.aspiration) {
@@ -68,27 +64,13 @@ export default function ViewMyProfile() {
 
   return (
     <div className="vp">
-      {/* Header with Edit button */}
-      <div className="vp__header">
-        <div className="vp__header-left">
-          <div className="vp__avatar">
-            <User size={32} strokeWidth={1.6} />
-          </div>
-          <div className="vp__header-text">
-            <h2 className="vp__name">{profile.full_name}</h2>
-            <div className="vp__age">
-              <Calendar size={14} strokeWidth={2} />
-              <span>{profile.age} years old</span>
-            </div>
-          </div>
-        </div>
-
-        <button type="button" className="vp__edit-btn" onClick={handleEdit}>
-          <Edit3 size={16} strokeWidth={2} />
-          Edit Profile
-        </button>
-      </div>
-
+      <PageHeader
+        icon={BrainCog}
+        title="My personality profile"
+        subtitle="Your personal insights help our AI recommend courses that truly fit who you are."
+        pillOne={profile.grade}
+        pillTwo={profile.endorsement}
+      />
       {/* Profile sections */}
       <div className="vp__sections">
         {/* Section: Career & Aspirations */}
@@ -164,7 +146,7 @@ export default function ViewMyProfile() {
               Preferred Environment
             </div>
             <div className="vp__field-value">
-              <span className="vp__badge">{profile.preferred_environment}</span>
+              {profile.preferred_environment}
             </div>
           </div>
 
@@ -206,9 +188,7 @@ export default function ViewMyProfile() {
                 <Users size={13} strokeWidth={2} />
                 Work Style
               </div>
-              <div className="vp__field-value">
-                <span className="vp__badge">{profile.work_style}</span>
-              </div>
+              <div className="vp__field-value">{profile.work_style}</div>
             </div>
 
             <div className="vp__field">
@@ -217,13 +197,35 @@ export default function ViewMyProfile() {
                 Problem-Solving
               </div>
               <div className="vp__field-value">
-                <span className="vp__badge">
-                  {profile.problem_solving_approach}
-                </span>
+                {profile.problem_solving_approach}
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function ViewProfileSkeleton() {
+  return (
+    <div className="vp">
+      <div className="vp__header">
+        <div className="vp__header-left">
+          <div className="vp__skel vp__skel--avatar" />
+         
+        </div>
+      </div>
+
+      <div className="vp__sections">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="vp__section">
+            <div className="vp__skel vp__skel--section-title" />
+            <div className="vp__skel vp__skel--field" />
+            <div className="vp__skel vp__skel--field" />
+            <div className="vp__skel vp__skel--field vp__skel--field-short" />
+          </div>
+        ))}
       </div>
     </div>
   );

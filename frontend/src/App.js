@@ -12,7 +12,6 @@ import Home from "./pages/Home";
 import Features from "./pages/Features";
 
 import AddSubjects from "./components/forms/AddSubjects";
-import ManageMyProfile from "./components/data-display/ManageMyProfile";
 
 //subjects
 import ViewSubjectsPage from "./components/data-display/ViewSubjectsPage";
@@ -58,6 +57,9 @@ import AdminManageAccounts from "./components/data-display/AdminManageAccounts";
 import SendEmailPage from "./components/forms/SendEmailPage";
 import NsfasEligibilityChecker from "./components/forms/NsfasEligibilityChecker";
 import CourseComparisons from "./components/data-display/CourseComparisons";
+import PersonalityProfileWizard from "./components/forms/AddMyProfile";
+import ViewMyProfile from "./components/data-display/ViewMyProfile";
+
 function App() {
   return (
     <UserProvider>
@@ -121,8 +123,13 @@ function App() {
                     element={<UniversityCourses />}
                   />
                   <Route
-                    path="/student/manage-my-profile"
-                    element={<ManageMyProfile />}
+                    path="/student/add/personality"
+                    element={<PersonalityProfileWizard/>}
+                  />
+
+                  <Route
+                    path="/student/view/personality"
+                    element={<ViewMyProfile/>}
                   />
 
                   <Route

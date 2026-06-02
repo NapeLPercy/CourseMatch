@@ -2,7 +2,6 @@ import {
   Home,
   Mail,
   LogIn,
-  UserPlus,
   TrendingUpDown,
   BookOpen,
   User,
@@ -10,6 +9,8 @@ import {
   FileText,
   GraduationCap,
   Users,
+  UserPlus,
+  Eye,
   Calendar,
   MessageSquare,
   BarChart3,
@@ -86,16 +87,17 @@ export const NAV_CONFIG = {
         label: "Subjects",
         icon: BookOpen,
         dropdown: [
-          {
-            path: "/student/view/subjects",
-            label: "My Subjects",
-            icon: BookOpen,
-          },
-          {
+           {
             path: "/student/add/subjects",
             label: "Add Subjects",
             icon: FileText,
           },
+          {
+            path: "/student/view/subjects",
+            label: "View Subjects",
+            icon: BookOpen,
+          },
+         
         ],
       },
 
@@ -123,11 +125,23 @@ export const NAV_CONFIG = {
         ],
       },
 
-      {
-        path: "/student/manage-my-profile",
-        label: "Manage Profile",
-        icon: User,
-      },
+     { 
+  label: "Personality", 
+  icon: User, 
+  dropdown: [ 
+    { 
+      path: "/student/add/personality", 
+      label: "Add Personality", 
+      icon: UserPlus, 
+    }, 
+    { 
+      path: "/student/view/personality", 
+      label: "View Personality", 
+      icon: Eye, 
+    }, 
+  ], 
+},
+
       {
         label: "Tools",
         icon: ToolCase,

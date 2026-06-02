@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Send } from "lucide-react";
+import { BrainCog, ChevronLeft, ChevronRight, Send } from "lucide-react";
 import { personalityQuestions } from "../../Utils/textData/personalityQuestions";
 import { addCompleteStudentInfo } from "../../services/studentService";
 import SubmitSuccess from "../ui/SubmitSuccess";
 import SubmitError from "../ui/SubmitError";
 import "../../styles/AddMyProfile.css";
-
+import PageHeader from "../ui/PageHeader";
 const TOTAL = personalityQuestions.length;
 
 const initialAnswers = personalityQuestions.reduce((acc, q) => {
@@ -57,9 +57,9 @@ export default function PersonalityProfileWizard() {
     try {
       const { data } = await addCompleteStudentInfo(answers);
       setSuccess(true);
-      
-      sessionStorage.removeItem("student_dashboard");//remove after profile success
-      
+
+      sessionStorage.removeItem("student_dashboard"); //remove after profile success
+
       setTimeout(() => {
         setSuccess(false);
         setAnswers(initialAnswers);
@@ -78,11 +78,12 @@ export default function PersonalityProfileWizard() {
 
   return (
     <div className="ppw">
-      {/* Intro */}
-      <p className="ppw__intro">
-        Enter your personality profile so that our AI can recommend the best
-        courses for you based on your unique strengths, interests, and goals.
-      </p>
+      <PageHeader
+        icon={BrainCog}
+        title="Submit Personality Profile"
+        subtitle="Enter your personality profile so that our AI can recommend the best
+        courses for you based on your unique strengths, interests, and goals."
+      />
 
       {/* Progress */}
       <div className="ppw__progress">
