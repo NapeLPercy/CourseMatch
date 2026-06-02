@@ -33,8 +33,8 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
     setSaving(true);
 
     await onSave({
-      Subject_Id: subject.Subject_Id,
-      Mark: Number(mark),
+    id: subject.id,
+      mark: Number(mark),
     });
     setSaving(false);
   };
@@ -54,16 +54,16 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
         {/* subject name */}
         <div className="emd-header">
           <p className="emd-header__label">Editing</p>
-          <h2 className="emd-header__title">{subject.Name}</h2>
+          <h2 className="emd-header__title">{subject.name}</h2>
         </div>
 
         {/* current mark snapshot */}
         <div className="emd-current">
-          <div className="emd-current__badge">{subject.Mark}</div>
+          <div className="emd-current__badge">{subject.mark}</div>
           <div className="emd-current__meta">
             <span className="emd-current__meta-label">Current mark</span>
             <span className="emd-current__meta-value">
-              {subject.Mark} / 100
+              {subject.mark} / 100
             </span>
           </div>
         </div>
