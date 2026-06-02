@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ViewSubjects from "./ViewSubjects";
-import Skeleton from "../ui/Skeleton";
 import ErrorState from "../ui/ErrorState";
 import { getSubjects } from "../../services/subjectService";
 import "../../styles/ViewSubjects.css";
@@ -37,7 +36,7 @@ export default function ViewSubjectsPage() {
       const response = await axios.put(
         `${API_BASE}/api/subjects/${Subject_Id}`,
         { Mark },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       const data = response.data;
@@ -45,8 +44,8 @@ export default function ViewSubjectsPage() {
         // Update local state
         setSubjects((prev) =>
           prev.map((s) =>
-            s.subject_id === Subject_Id ? { ...s, mark: Mark } : s
-          )
+            s.subject_id === Subject_Id ? { ...s, mark: Mark } : s,
+          ),
         );
         alert(data.message);
       }
@@ -60,38 +59,9 @@ export default function ViewSubjectsPage() {
   };
 
   // Loading state
-  if (loading) {
-    return (
-      <div className="vs">
-        <header className="vs__header">
-          <div className="vs__header-text">
-            <h1 className="vs__title">My Subjects</h1>
-            <p className="vs__subtitle">
-              View and manage the subjects you've submitted for course matching
-            </p>
-          </div>
-        </header>
-        <Skeleton />
-      </div>
-    );
-  }
-
   // Error state
-  if (error) {
-    return (
-      <div className="vs">
-        <header className="vs__header">
-          <div className="vs__header-text">
-            <h1 className="vs__title">My Subjects</h1>
-            <p className="vs__subtitle">
-              View and manage the subjects you've submitted for course matching
-            </p>
-          </div>
-        </header>
-        <ErrorState message={error} onRetry={fetchSubjects} />
-      </div>
-    );
-  }
-
-  return <ViewSubjects subjects={subjects} onSave={handleSave} />;
+  if (error) return <ErrorState message={error} onRetry={fetchSubjects} />;
+  return (
+    <ViewSubjects subjects={subjects} onSave={handleSave} loading={loading} />
+  );
 }

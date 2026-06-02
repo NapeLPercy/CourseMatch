@@ -1,332 +1,270 @@
-/* ============================================================
-   VIEW SUBJECTS — CourseMatch
-   ============================================================ */
+/* VIEW SUBJECTS — CourseMatch */
 
-:root {
-  --primary-blue: #1e3a8a;
-  --medium-blue: #2563eb;
-  --light-blue: #3b82f6;
-  --pale-blue: #dbeafe;
-  --white: #ffffff;
-  --off-white: #f8fafc;
-  --text-dark: #1e293b;
-  --text-gray: #475569;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   CONTAINER
-   ══════════════════════════════════════════════════════════════ */
 .vs {
-  min-height: 100vh;
-  background: linear-gradient(180deg, var(--off-white) 0%, var(--white) 100%);
-  padding: 100px 24px 80px;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   HEADER
-   ══════════════════════════════════════════════════════════════ */
-.vs__header {
-  max-width: 1000px;
-  margin: 0 auto 48px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 24px;
-  padding-bottom: 24px;
-  border-bottom: 2px solid var(--pale-blue);
-}
-
-.vs__header-text {
-  flex: 1;
-}
-
-.vs__title {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(2rem, 4vw, 2.8rem);
-  font-weight: 700;
-  color: var(--text-dark);
-  margin: 0 0 12px;
-  line-height: 1.2;
-}
-
-.vs__subtitle {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--text-gray);
-  margin: 0;
-  max-width: 600px;
-}
-
-.vs__count-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.12));
-  border: 2px solid var(--light-blue);
-  border-radius: 14px;
-  padding: 14px 20px;
-  flex-shrink: 0;
-}
-
-.vs__count-badge strong {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--medium-blue);
-  line-height: 1;
-}
-
-.vs__count-badge span {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--text-gray);
-}
-
-/* ══════════════════════════════════════════════════════════════
-   GRID
-   ══════════════════════════════════════════════════════════════ */
-.vs__grid {
-  max-width: 1000px;
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   SUBJECT CARD
-   ══════════════════════════════════════════════════════════════ */
-.vs__card {
-  background: var(--white);
-  border: 1px solid var(--pale-blue);
-  border-radius: 16px;
-  padding: 20px;
+  padding: 80px 40px 80px;
   display: flex;
   flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+ 
+
+/* ── GRID ────────────────────────────────── */
+.vs__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
   gap: 16px;
-  box-shadow: 0 2px 12px rgba(30, 58, 138, 0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-  animation: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: calc(var(--index, 0) * 0.05s);
 }
 
-@keyframes cardIn {
-  0%   { opacity: 0; transform: translateY(10px); }
-  100% { opacity: 1; transform: translateY(0); }
+/* ── CARD ────────────────────────────────── */
+.vs__card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+  transition:
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.22s ease,
+    border-color 0.18s ease;
+  animation: vsCardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.04s);
 }
-
-.vs__card:nth-child(1)  { --index: 0; }
-.vs__card:nth-child(2)  { --index: 1; }
-.vs__card:nth-child(3)  { --index: 2; }
-.vs__card:nth-child(4)  { --index: 3; }
-.vs__card:nth-child(5)  { --index: 4; }
-.vs__card:nth-child(6)  { --index: 5; }
-.vs__card:nth-child(7)  { --index: 6; }
-.vs__card:nth-child(8)  { --index: 7; }
 
 .vs__card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(30, 58, 138, 0.12);
-  border-color: rgba(37, 99, 235, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.09);
+  border-color: #dbeafe;
 }
 
+@keyframes vsCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── CARD HEADER ─────────────────────────── */
 .vs__card-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
 }
 
-.vs__card-name {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--text-dark);
-  margin: 0;
-  line-height: 1.4;
-  flex: 1;
+.vs__card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #dbeafe;
+  color: #1e3a8a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .vs__card-edit {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: transparent;
-  border: 1px solid var(--pale-blue);
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--medium-blue);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 4px 9px;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
-  flex-shrink: 0;
+  transition: all 0.15s ease;
 }
 
 .vs__card-edit:hover {
-  background: rgba(37, 99, 235, 0.08);
-  border-color: var(--light-blue);
+  color: #2563eb;
+  border-color: #3b82f6;
+  background: #eff6ff;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   MARK BADGE (Color-coded by performance)
-   ══════════════════════════════════════════════════════════════ */
+/* ── NAME ────────────────────────────────── */
+.vs__card-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* ── PROGRESS BAR ────────────────────────── */
+.vs__bar-wrap {
+  width: 100%;
+}
+
+.vs__bar-track {
+  width: 100%;
+  height: 6px;
+  background: #f1f5f9;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.vs__bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── MARK BADGE ──────────────────────────── */
 .vs__card-mark {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  border: 2px solid;
-  border-radius: 12px;
-  padding: 12px 16px;
-  transition: transform 0.2s ease;
-}
-
-.vs__card:hover .vs__card-mark {
-  transform: scale(1.02);
+  gap: 7px;
+  padding: 5px 11px;
+  border-radius: 20px;
+  width: fit-content;
 }
 
 .vs__card-mark-value {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 1.8rem;
-  font-weight: 700;
-  line-height: 1;
+  font-size: 0.82rem;
+  font-weight: 800;
 }
 
 .vs__card-mark-label {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
-/* ── Performance bands ────────────────────────────────────── */
-
-/* Distinction (80+) */
+/* ── MARK VARIANTS ───────────────────────── */
 .vs__card-mark--distinction {
-  background: rgba(34, 197, 94, 0.1);
-  border-color: #22c55e;
+  background: #dcfce7;
+  border: 1px solid rgba(22, 163, 74, 0.2);
   color: #15803d;
 }
 
-.vs__card-mark--distinction .vs__card-mark-value {
-  color: #15803d;
+.vs__card-mark--distinction.vs__bar-fill,
+.vs__bar-fill.vs__card-mark--distinction {
+  background: #16a34a;
 }
 
-.vs__card-mark--distinction .vs__card-mark-label {
-  color: #16a34a;
-}
-
-/* Strong (70-79) */
 .vs__card-mark--strong {
-  background: rgba(37, 99, 235, 0.1);
-  border-color: var(--light-blue);
-  color: var(--medium-blue);
-}vs-card__mark--distinction
-
-.vs__card-mark--strong .vs__card-mark-value {
-  color: var(--primary-blue);
+  background: #dbeafe;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  color: #1e3a8a;
 }
 
-.vs__card-mark--strong .vs__card-mark-label {
-  color: var(--medium-blue);
-}
-
-/* Solid (60-69) */
 .vs__card-mark--solid {
-  background: rgba(37, 99, 235, 0.08);
-  border-color: rgba(37, 99, 235, 0.4);
-  color: var(--medium-blue);
+  background: #ede9fe;
+  border: 1px solid rgba(124, 58, 237, 0.18);
+  color: #6d28d9;
 }
 
-.vs__card-mark--solid .vs__card-mark-value {
-  color: var(--medium-blue);
-}
-
-.vs__card-mark--solid .vs__card-mark-label {
-  color: var(--light-blue);
-}
-
-/* Developing (50-59) */
 .vs__card-mark--developing {
-  background: rgba(234, 179, 8, 0.1);
-  border-color: #f59e0b;
-  color: #a16207;
+  background: #fef9c3;
+  border: 1px solid rgba(202, 138, 4, 0.2);
+  color: #854d0e;
 }
 
-.vs__card-mark--developing .vs__card-mark-value {
-  color: #a16207;
-}
-
-.vs__card-mark--developing .vs__card-mark-label {
-  color: #ca8a04;
-}
-
-/* Emerging (40-49) */
 .vs__card-mark--emerging {
-  background: rgba(234, 179, 8, 0.08);
-  border-color: rgba(245, 158, 11, 0.6);
-  color: #a16207;
+  background: #ffedd5;
+  border: 1px solid rgba(194, 65, 12, 0.18);
+  color: #c2410c;
 }
 
-.vs__card-mark--emerging .vs__card-mark-value {
-  color: #92400e;
-}
-
-.vs__card-mark--emerging .vs__card-mark-label {
-  color: #a16207;
-}
-
-/* Needs Support (<40) */
 .vs__card-mark--needs-support {
-  background: rgba(248, 113, 113, 0.1);
-  border-color: #ef4444;
-  color: #dc2626;
+  background: #fee2e2;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  color: #991b1b;
 }
 
-.vs__card-mark--needs-support .vs__card-mark-value {
-  color: #dc2626;
+/* Bar fill colours per band */
+.vs__bar-fill.vs__card-mark--distinction {
+  background: #16a34a;
+}
+.vs__bar-fill.vs__card-mark--strong {
+  background: #2563eb;
+}
+.vs__bar-fill.vs__card-mark--solid {
+  background: #7c3aed;
+}
+.vs__bar-fill.vs__card-mark--developing {
+  background: #ca8a04;
+}
+.vs__bar-fill.vs__card-mark--emerging {
+  background: #ea580c;
+}
+.vs__bar-fill.vs__card-mark--needs-support {
+  background: #dc2626;
 }
 
-.vs__card-mark--needs-support .vs__card-mark-label {
-  color: #ef4444;
+/* ── SKELETON ────────────────────────────── */
+.vs__card--skel {
+  pointer-events: none;
+  gap: 14px;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   RESPONSIVE
-   ══════════════════════════════════════════════════════════════ */
+.vs__skel {
+  background: linear-gradient(90deg, #e2e8f0 0%, #f1f5f9 50%, #e2e8f0 100%);
+  background-size: 200% 100%;
+  border-radius: 6px;
+  animation: vsShimmer 1.6s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.07s);
+}
+
+@keyframes vsShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.vs__skel--name {
+  height: 16px;
+  width: 75%;
+}
+.vs__skel--bar {
+  height: 6px;
+  width: 100%;
+  border-radius: 99px;
+}
+.vs__skel--badge {
+  height: 26px;
+  width: 50%;
+  border-radius: 20px;
+}
+
+/* ── RESPONSIVE ──────────────────────────── */
 @media (max-width: 768px) {
   .vs {
-    padding: 88px 20px 60px;
+    padding: 86px 20px 60px;
+    gap: 18px;
   }
+}
 
-  .vs__header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .vs__count-badge {
-    align-self: flex-start;
+@media (max-width: 480px) {
+  .vs {
+    padding: 84px 14px 48px;
   }
 
   .vs__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 500px) {
-  .vs__card {
-    padding: 16px;
-  }
-
-  .vs__card-mark-value {
-    font-size: 1.5rem;
+@media (max-width: 360px) {
+  .vs__grid {
+    grid-template-columns: 1fr;
   }
 }
