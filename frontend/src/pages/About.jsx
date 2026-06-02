@@ -8,8 +8,6 @@ import {
   Star,
 } from "lucide-react";
 import "./About.css";
-import aboutDesktop from "../assets/aboutDesktop.png";
-import aboutPhone from "../assets/aboutPhone.png";
 function useInView(threshold = 0.18) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);

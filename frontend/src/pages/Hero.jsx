@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Hero.css";
 import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 1000);
+
   const sectionRef = useRef(null);
   const navigate = useNavigate();
 
@@ -14,6 +16,18 @@ export default function Hero() {
         el.classList.add("intro--mounted");
       });
     }
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth > 1000);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   return (
@@ -188,7 +202,7 @@ export default function Hero() {
               {/* Image - replace src with your actual platform screenshot */}
               <div className="intro__card-image">
                 <img
-                  src="/hero.png"
+                  src={isDesktop ? "/heroDesktop.png" : "/heroPhone.png"}
                   alt="CourseMatch platform preview"
                   className="intro__card-img"
                   loading="lazy"

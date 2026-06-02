@@ -62,7 +62,7 @@ export default function SetupSection({ flags, navigate }) {
           {!hasProfile && (
             <button
               className="db__setup-btn db__setup-btn--purple"
-              onClick={() => navigate("/student/manage-my-profile")}
+              onClick={() => navigate("/student/add/personality")}
             >
               <User size={15} strokeWidth={2} />
               Add Personality profile
