@@ -66,6 +66,8 @@ export default function SendEmailPage() {
     if (selectedImage) formData.append("coursematchImage", selectedImage);
 
     try {
+      console.log("formdata", formData);
+      
       await sendEmail(formData); /*axios.post("/api/messages/send", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });*/
