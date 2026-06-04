@@ -191,6 +191,7 @@ exports.updateBlog = async (req, res) => {
 //for blog sharing
 exports.getBlogSharePage = async (req, res) => {
   const blog = await getBlogShareById(req.params.slug);
+  
   if (!blog) return res.status(404).send("Not found");
 
   const ua = req.headers["user-agent"] || "";

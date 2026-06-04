@@ -179,22 +179,23 @@ module.exports = {
       })),
     };
   },
-  getBlogShareById: (id) => {
+  getBlogShareById: (slug) => {
     return new Promise((resolve, reject) => {
       const postSql = `
       SELECT 
         id,
+        slug,
         title,
         excerpt,
         cover_image,
         published_at
       FROM blog_post
-      WHERE id = ?
+      WHERE slug = ?
         AND status = 'PUBLISHED'
       LIMIT 1
     `;
 
-      db.query(postSql, [id], (err, results) => {
+      db.query(postSql, [slug], (err, results) => {
         if (err) return reject(err);
 
         const post = results[0];
@@ -203,6 +204,7 @@ module.exports = {
 
         resolve({
           id: post.id,
+          slug:post.slug,
           title: post.title,
           excerpt: post.excerpt,
           coverImageUrl: post.cover_image
