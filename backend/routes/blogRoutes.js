@@ -35,10 +35,10 @@ router.patch(
 );
 //guest
 router.get("/all", blogController.getAllBlogs);
-router.get("/:id", blogController.getBlogById);
+router.get("/:slug", blogController.getBlogBySlug);
 router.get("/search/related",blogController.getPageRelatedPosts);
 
 //for sharing
-router.get("/post/:id", blogController.getBlogSharePage);
+router.get("/post/:slug", blogController.getBlogSharePage);
 
 module.exports = router;

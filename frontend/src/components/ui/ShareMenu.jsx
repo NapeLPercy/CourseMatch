@@ -14,7 +14,7 @@ export default function ShareMenu({ post }) {
   const serverUrl = process.env.REACT_APP_API_BASE; //url to server
   const url =
     typeof window !== "undefined"
-      ? `${serverUrl}/api/blogs/post/${post?.id}`
+      ? `${serverUrl}/api/blogs/post/${post?.slug}`
       : "";
 
   const image = post?.coverImageUrl || "";

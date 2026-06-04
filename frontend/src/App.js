@@ -82,7 +82,7 @@ function App() {
                 />
 
                 <Route path="/blogs" element={<BlogList />} />
-                <Route path="/blog/:id" element={<BlogPost />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
               </Route>
 
               {/* Shows nav only */}

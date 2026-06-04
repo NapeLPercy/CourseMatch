@@ -19,7 +19,7 @@ export default function BlogCard({ post, index }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/blog/${post.id}`);
+    navigate(`/blog/${post.slug}`);
   };
 
   return (
