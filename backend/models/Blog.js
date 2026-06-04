@@ -6,6 +6,7 @@ module.exports = {
     const sql = `
     SELECT 
       bp.id,
+      bp.slug,
       bp.title,
       bp.excerpt,
       bp.topic,
@@ -23,6 +24,7 @@ module.exports = {
 
         const result = rows.map((row) => ({
           id: row.id,
+          slug: row.slug,
           title: row.title,
           excerpt: row.excerpt,
           topic: row.topic,
@@ -44,6 +46,7 @@ module.exports = {
     SELECT 
       bp.id,
       bp.title,
+      bp.slug,
       bp.excerpt,
       bp.topic,
       bp.num_of_reads,
@@ -61,6 +64,7 @@ module.exports = {
 
         const result = rows.map((row) => ({
           id: row.id,
+          slug: row.slug,
           title: row.title,
           excerpt: row.excerpt,
           topic: row.topic,
@@ -78,11 +82,12 @@ module.exports = {
     });
   },
 
-  getBlogById: async (id) => {
+  getBlogBySlug: async (slug) => {
     // 🔹 MAIN POST (with author JOIN)
     const postSql = `
     SELECT 
       bp.id,
+      bp.slug,
       bp.title,
       bp.excerpt,
       bp.topic,
@@ -90,19 +95,20 @@ module.exports = {
       bp.num_of_reads,
       bp.published_at
     FROM blog_post bp
-    WHERE bp.id = ?
+    WHERE bp.slug = ?
   `;
 
     const post = await new Promise((resolve, reject) => {
-      db.query(postSql, [id], (err, rows) => {
+      db.query(postSql, [slug], (err, rows) => {
         if (err) return reject(err);
         resolve(rows[0]);
       });
     });
-
+    
     if (!post) return null;
 
     // 🔹 BLOCKS
+    const postId = post.id;
     const blocksSql = `
     SELECT type, content, position
     FROM blog_block
@@ -111,7 +117,7 @@ module.exports = {
   `;
 
     const blocks = await new Promise((resolve, reject) => {
-      db.query(blocksSql, [id], (err, rows) => {
+      db.query(blocksSql, [postId], (err, rows) => {
         if (err) return reject(err);
         resolve(rows);
       });
@@ -121,6 +127,7 @@ module.exports = {
     const relatedSql = `
     SELECT 
       bp.id,
+      bp.slug,
       bp.title,
       bp.cover_image,
       bp.num_of_reads
@@ -133,7 +140,7 @@ module.exports = {
   `;
 
     const related = await new Promise((resolve, reject) => {
-      db.query(relatedSql, [post.topic, id], (err, rows) => {
+      db.query(relatedSql, [post.topic, postId], (err, rows) => {
         if (err) return reject(err);
         resolve(rows);
       });
@@ -142,6 +149,7 @@ module.exports = {
     // 🔹 FINAL RESPONSE
     return {
       id: post.id,
+      slug:post.slug,
       title: post.title,
       excerpt: post.excerpt,
       topic: post.topic,
@@ -162,6 +170,7 @@ module.exports = {
 
       related: related.map((r) => ({
         id: r.id,
+        slug:r.slug,
         title: r.title,
         coverImageUrl: r.cover_image
           ? `${process.env.BASE_URL}${r.cover_image}`
@@ -222,14 +231,14 @@ module.exports = {
       // Insert blog post
       const insertPostSql = `
       INSERT INTO blog_post
-      (id, title, excerpt, topic, cover_image, status, num_of_reads, created_at)
-      VALUES (?,  ?, ?, ?, ?, 'DRAFT', 5, NOW())
+      (id, slug, title, excerpt, topic, cover_image, status, num_of_reads, created_at)
+      VALUES (?,  ?,  ?, ?, ?, ?, 'DRAFT', 5, NOW())
     `;
 
       await new Promise((res, rej) =>
         connection.query(
           insertPostSql,
-          [data.id, data.title, data.excerpt, data.topic, data.coverImage],
+          [data.id,data.slug, data.title, data.excerpt, data.topic, data.coverImage],
           (err) => (err ? rej(err) : res()),
         ),
       );
@@ -341,6 +350,7 @@ module.exports = {
     const sql = `
     SELECT
       bp.id,
+      bp.slug,
       bp.title,
       bp.cover_image,
       bp.num_of_reads
@@ -363,6 +373,7 @@ module.exports = {
         resolve(
           rows.map((post) => ({
             id: post.id,
+            slug: post.slug,
             title: post.title,
             coverImageUrl: post.cover_image
               ? `${process.env.BASE_URL}${post.cover_image}`

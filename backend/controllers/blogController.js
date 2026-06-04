@@ -2,7 +2,7 @@ const {
   createBlog,
   getAllBlogs,
   adminGetAllBlogs,
-  getBlogById,
+  getBlogBySlug,
   getBlogShareById,
   deleteBlog,
   updateBlogStatus,
@@ -78,17 +78,18 @@ exports.adminGetAllBlogs = async (req, res) => {
 };
 
 // GET SINGLE BLOG
-exports.getBlogById = async (req, res) => {
+exports.getBlogBySlug = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { slug } = req.params;
 
-    if (!id) {
+    console.log("slug in the backend ", slug);
+    if (!slug) {
       return res
         .status(400)
         .json({ success: false, message: "Blog id is required" });
     }
 
-    const blog = await getBlogById(id);
+    const blog = await getBlogBySlug(slug);
 
     if (!blog) {
       return res.json({ success: false, message: "Blog not found" });
@@ -189,7 +190,7 @@ exports.updateBlog = async (req, res) => {
 
 //for blog sharing
 exports.getBlogSharePage = async (req, res) => {
-  const blog = await getBlogShareById(req.params.id);
+  const blog = await getBlogShareById(req.params.slug);
   if (!blog) return res.status(404).send("Not found");
 
   const ua = req.headers["user-agent"] || "";
@@ -212,7 +213,7 @@ exports.getBlogSharePage = async (req, res) => {
           <meta property="og:title" content="${blog.title}" />
           <meta property="og:description" content="${blog.excerpt}" />
           <meta property="og:image" content="${imageUrl}" />
-          <meta property="og:url" content="${serverUrl}/api/blogs/post/${blog.id}" />
+          <meta property="og:url" content="${serverUrl}/api/blogs/post/${blog.slug}" />
           <meta property="og:type" content="article" />
         </head>
         <body></body>
@@ -220,7 +221,7 @@ exports.getBlogSharePage = async (req, res) => {
     `);
   }
 
-  return res.redirect(`${frontendUrl}/blog/${blog.id}`);
+  return res.redirect(`${frontendUrl}/blog/${blog.slug}`);
 };
 
 // GET SINGLE BLOG

@@ -38,27 +38,28 @@ export default function BlogPost() {
 
   // const sorted = [...post?.blocks].sort((a, b) => a.position - b.position);
   const navigate = useNavigate();
-  const { id } = useParams();
-  const url = `https://coursematchapp.co.za/blog/${id}`;
+  const { slug } = useParams();
+  const url = `https://coursematchapp.co.za/blog/${slug}`;
 
   useEffect(() => {
-    getPostAndRelatedPosts(id);
-  }, [id]);
+    getPostAndRelatedPosts(slug);
+  }, [slug]);
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [slug]);
 
-  const getPostAndRelatedPosts = async (postId) => {
+  const getPostAndRelatedPosts = async (postSlug) => {
     setLoading(true);
     setError(null);
     setNotFound(false);
     try {
-      const { data } = await getBlogById(postId);
+      const { data } = await getBlogById(postSlug);
       if (!data.success) {
         //blognot found
         setNotFound(true);
         return;
       }
+      console.log("here is the data ",data);
       setPost(data.blog);
       setRelatedPosts(data.blog.related);
     } catch (error) {

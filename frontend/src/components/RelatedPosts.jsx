@@ -26,7 +26,7 @@ export default function RelatedPosts({ posts, header="More in this category" }) 
 
 function RelatedCard({ post, index, navigate }) {
   const handleClick = () => {
-    navigate(`/blog/${post.id}`);
+    navigate(`/blog/${post.slug}`);
   };
 
   return (

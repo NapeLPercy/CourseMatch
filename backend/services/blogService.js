@@ -2,12 +2,17 @@ const blogModel = require("../models/Blog");
 const { v4: uuidv4 } = require("uuid");
 
 async function createBlog(blog) {
-  blog.id = uuidv4();
+  blog.id = uuidv4();blog.slug = blog.title
+  .toLowerCase()
+  .trim()
+  .replace(/[^\w\s]/g, "") // remove ?, !, :, ', (), etc.
+  .replace(/\s+/g, "-")    // spaces -> -
+  .replace(/-+/g, "-");    // remove duplicate -
   return await blogModel.createBlog(blog);
 }
 
-async function getBlogById(id) {
-  return await blogModel.getBlogById(id);
+async function getBlogBySlug(slug) {
+  return await blogModel.getBlogBySlug(slug);
 }
 async function getBlogBySearchKeyword(keyword){
   return await blogModel.getPostsByKeyword(keyword);
@@ -34,7 +39,7 @@ async function deleteBlog(id) {
 
 module.exports = {
   createBlog,
-  getBlogById,
+  getBlogBySlug,
   getAllBlogs,
   adminGetAllBlogs,
   deleteBlog,
