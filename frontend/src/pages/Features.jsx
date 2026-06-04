@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import "../styles/Features.css";
 import { FEATURES } from "../Utils/textData/features";
+import SEO from "../components/ui/SEO";
 
 function useInView(threshold = 0.18) {
   const ref = useRef(null);
@@ -46,39 +47,58 @@ export default function Features() {
   const navigate = useNavigate();
 
   return (
-    <section className="hiw" id="features-section">
-      {/* Header — same structure as HowItWorks and AboutUs */}
-      <div
-        ref={headerRef}
-        className={`hiw__header ${headerIn ? "hiw__header--visible" : ""}`}
-      >
-        <span className="hiw__eyebrow">
-          <span className="hiw__eyebrow-line" />
-          Features
-          <span className="hiw__eyebrow-line" />
-        </span>
-        <h2 className="hiw__title">Everything you need to choose right.</h2>
-        <p className="hiw__subtitle">
-          From APS calculation to AI-powered career insights — CourseMatch gives
-          you the tools to make a confident, informed decision about your
-          future.
-        </p>
-        <ChevronDown className="hiw__scroll-cue" size={22} strokeWidth={1.5} />
-      </div>
+    <>
+      <SEO
+        title="CourseMatch Features | APS Calculator, AI Course Matching & NSFAS Tools"
+        description="Explore CourseMatch features including APS calculation, qualification eligibility checking, AI course recommendations, career insights, qualification comparisons, and NSFAS eligibility checking."
+        url="https://coursematchapp.co.za/features"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: "CourseMatch Features",
+          description:
+            "Explore CourseMatch tools including APS Calculator, Qualification Eligibility Checker, AI Course Recommendations, Career Deep Dive, Qualification Comparison, and NSFAS Eligibility Checker.",
+          url: "https://coursematchapp.co.za/features",
+        }}
+      />
+      <section className="hiw" id="features-section">
+        {/* Header — same structure as HowItWorks and AboutUs */}
+        <div
+          ref={headerRef}
+          className={`hiw__header ${headerIn ? "hiw__header--visible" : ""}`}
+        >
+          <span className="hiw__eyebrow">
+            <span className="hiw__eyebrow-line" />
+            Features
+            <span className="hiw__eyebrow-line" />
+          </span>
+          <h2 className="hiw__title">Everything you need to choose right.</h2>
+          <p className="hiw__subtitle">
+            From APS calculation to AI-powered career insights — CourseMatch
+            gives you the tools to make a confident, informed decision about
+            your future.
+          </p>
+          <ChevronDown
+            className="hiw__scroll-cue"
+            size={22}
+            strokeWidth={1.5}
+          />
+        </div>
 
-      {/* Feature cards grid */}
-      <div className="feat__grid">
-        {FEATURES.map((feature, i) => (
-          <FeatureCard key={feature.id} feature={feature} index={i} />
-        ))}
-      </div>
+        {/* Feature cards grid */}
+        <div className="feat__grid">
+          {FEATURES.map((feature, i) => (
+            <FeatureCard key={feature.id} feature={feature} index={i} />
+          ))}
+        </div>
 
-      <div className="feat__cta">
-        <button className="feat__cta-btn" onClick={() => navigate("/login")}>
-          Explore features
-          <ArrowRight size={16} strokeWidth={2.5} />
-        </button>
-      </div>
-    </section>
+        <div className="feat__cta">
+          <button className="feat__cta-btn" onClick={() => navigate("/login")}>
+            Explore features
+            <ArrowRight size={16} strokeWidth={2.5} />
+          </button>
+        </div>
+      </section>
+    </>
   );
 }

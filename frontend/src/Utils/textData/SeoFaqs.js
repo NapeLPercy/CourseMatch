@@ -58,3 +58,67 @@ export const calculateApsFaqs = [
       "Yes, CourseMatch uses a standardized APS calculation method and adjusts results to reflect common university admission rules in South Africa.",
   },
 ];
+
+
+export const nsfasEligibilityFaqs = [
+  {
+    question: "What is NSFAS?",
+    answer:
+      "NSFAS (National Student Financial Aid Scheme) is a South African government-funded program that provides financial assistance to eligible students studying at public universities and TVET colleges.",
+  },
+  {
+    question: "Who qualifies for NSFAS funding?",
+    answer:
+      "NSFAS funding is generally available to South African citizens and permanent residents who meet the financial eligibility requirements and are studying or planning to study at a public university or TVET college.",
+  },
+  {
+    question: "How do I check if I qualify for NSFAS?",
+    answer:
+      "You can use the CourseMatch NSFAS Eligibility Checker to assess whether you meet common NSFAS funding requirements before submitting an application.",
+  },
+  {
+    question: "Does NSFAS fund university students?",
+    answer:
+      "Yes, NSFAS provides funding for eligible students studying approved qualifications at public universities in South Africa.",
+  },
+  {
+    question: "Does NSFAS fund TVET college students?",
+    answer:
+      "Yes, eligible students enrolled at public TVET colleges may qualify for NSFAS funding.",
+  },
+  {
+    question: "What income qualifies for NSFAS?",
+    answer:
+      "NSFAS uses household income thresholds to determine eligibility. Requirements may change over time, so students should always verify the latest criteria through official NSFAS channels.",
+  },
+  {
+    question: "Can I receive NSFAS funding if I am already studying?",
+    answer:
+      "Continuing students may qualify for NSFAS funding if they meet the eligibility requirements and academic progression rules.",
+  },
+  {
+    question: "Does NSFAS fund postgraduate studies?",
+    answer:
+      "NSFAS funding is primarily intended for undergraduate qualifications. Limited postgraduate funding may be available for specific programmes, subject to NSFAS policies.",
+  },
+  {
+    question: "What does NSFAS funding cover?",
+    answer:
+      "NSFAS funding may include tuition fees, accommodation, learning materials, transport, and living allowances depending on the institution and student circumstances.",
+  },
+  {
+    question: "Can I apply for NSFAS if I have already been accepted at a university?",
+    answer:
+      "Yes, acceptance at a university or TVET college does not prevent you from applying for NSFAS funding if you meet the eligibility requirements.",
+  },
+  {
+    question: "Does passing the NSFAS Eligibility Checker guarantee funding?",
+    answer:
+      "No. The eligibility checker provides guidance based on available information. Final funding decisions are made by NSFAS after reviewing your official application and supporting documents.",
+  },
+  {
+    question: "When should I apply for NSFAS?",
+    answer:
+      "Students should apply during the official NSFAS application period and ensure all required information and supporting documents are submitted before the deadline.",
+  }
+];
