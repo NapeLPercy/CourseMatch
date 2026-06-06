@@ -9,4 +9,4 @@ Disallow: /register
 Disallow: /request-reset
 Disallow: /reset-password
 
-Sitemap: https://coursematchapp.co.za/sitemap.xml
+Sitemap: https://www.coursematchapp.co.za/sitemap.xml
