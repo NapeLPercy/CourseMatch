@@ -237,7 +237,7 @@ module.exports = {
             .prereqs.push({
               subject_id: row.subject_id,
               subject_name: row.subject_name,
-              min_ark: row.minimum_mark
+              min_mark: row.minimum_mark
             });
         }
       });

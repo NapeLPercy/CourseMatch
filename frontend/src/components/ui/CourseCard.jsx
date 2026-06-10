@@ -5,13 +5,17 @@ export default function renderCourseCard(course, index) {
 
       <div className="uni-course-card__meta">
         <span className="uni-course-card__meta-item">
-          <strong>Code:</strong> {course.qualification_code}
+          <strong>Min APS:</strong> {course.minimum_aps}
+        </span>
+        <span className="uni-course-card__meta-item">
+          <strong>NQF:</strong> {course.qualification_nqf}
         </span>
         <span className="uni-course-card__meta-item">
           <strong>Duration:</strong> {course.minimum_duration} yrs
         </span>
+
         <span className="uni-course-card__meta-item">
-          <strong>Min APS:</strong> {course.minimum_aps}
+          <strong>Code:</strong> {course.qualification_code}
         </span>
       </div>
 

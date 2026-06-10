@@ -98,6 +98,7 @@ module.exports = {
               minimum_duration: row.Minimum_Duration,
               minimum_aps: row.Minimum_APS,
               minimum_endorsement: row.Minimum_Endorsement,
+              qualification_nqf: row.nqf,
               faculty_id: row.Faculty_Id,
               prereqs: [],
             };
