@@ -59,7 +59,11 @@ import NsfasEligibilityChecker from "./components/forms/NsfasEligibilityChecker"
 import CourseComparisons from "./components/data-display/CourseComparisons";
 import PersonalityProfileWizard from "./components/forms/AddMyProfile";
 import ViewMyProfile from "./components/data-display/ViewMyProfile";
-
+import DiplomaCourses from "./pages/DiplomaCourses";
+import NoMathsCourses from "./pages/NoMathsCourses";
+import HigherCertificateCourses from "./pages/HighCertificateCourses";
+import ExtendedProgrammes from "./pages/ExtendedCourses";
+import BachelorCourses from "./pages/BachelorCourses";
 function App() {
   return (
     <UserProvider>
@@ -95,6 +99,29 @@ function App() {
                   path="/nsfas-eligibility-checker"
                   element={<NsfasEligibilityChecker />}
                 />
+
+                <Route path="/diploma-courses" element={<DiplomaCourses />} />
+
+                <Route
+                  path="/bachelor-degree-courses"
+                  element={<BachelorCourses />}
+                />
+
+                <Route
+                  path="/extended-programmes"
+                  element={<ExtendedProgrammes />}
+                />
+
+                <Route
+                  path="/higher-certificate-courses"
+                  element={<HigherCertificateCourses />}
+                />
+
+                <Route
+                  path="/courses-without-maths"
+                  element={<NoMathsCourses />}
+                />
+
                 {/* Logged-in routes (STUDENT) */}
                 <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
                   <Route
@@ -124,12 +151,12 @@ function App() {
                   />
                   <Route
                     path="/student/add/personality"
-                    element={<PersonalityProfileWizard/>}
+                    element={<PersonalityProfileWizard />}
                   />
 
                   <Route
                     path="/student/view/personality"
-                    element={<ViewMyProfile/>}
+                    element={<ViewMyProfile />}
                   />
 
                   <Route
@@ -139,7 +166,7 @@ function App() {
 
                   <Route
                     path="/student/course-comparisons"
-                    element={<CourseComparisons/>}
+                    element={<CourseComparisons />}
                   />
                 </Route>
 
@@ -182,8 +209,8 @@ function App() {
                   />
 
                   <Route path="/admin/manage-blogs" element={<ManageBlogs />} />
-               
-               <Route path="/admin/send-email" element={<SendEmailPage/>}/>
+
+                  <Route path="/admin/send-email" element={<SendEmailPage />} />
                 </Route>
               </Route>
 

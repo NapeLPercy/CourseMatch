@@ -1,0 +1,155 @@
+/* COURSE FILTER LIST — CourseMatch */
+
+.cfl {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── CONTROLS ────────────────────────────── */
+.cfl__controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.cfl__search-wrap {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cfl__search-icon {
+  position: absolute;
+  left: 12px;
+  color: #94a3b8;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.cfl__search {
+  width: 100%;
+  padding: 10px 36px 10px 36px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.875rem;
+  color: #1e293b;
+  background: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cfl__search:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+}
+
+.cfl__clear {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.cfl__clear:hover { color: #1e293b; }
+
+.cfl__select-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.cfl__select {
+  padding: 10px 32px 10px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #1e293b;
+  background: #ffffff;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.18s ease;
+}
+
+.cfl__select:focus { border-color: #3b82f6; }
+
+.cfl__chevron {
+  position: absolute;
+  right: 10px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+/* ── META ────────────────────────────────── */
+.cfl__meta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 640px) {
+  .cfl__controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cfl__search-wrap {
+    min-width: unset;
+  }
+
+  .cfl__select {
+    width: 100%;
+  }
+}
+
+
+/*Parent styles*/
+/* FILTERED COURSE PAGE — CourseMatch */
+
+.fcp {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 96px 40px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  animation: fcpFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fcpFadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .fcp { padding: 86px 20px 60px; gap: 18px; }
+}
+
+@media (max-width: 480px) {
+  .fcp { padding: 84px 14px 48px; gap: 16px; }
+}

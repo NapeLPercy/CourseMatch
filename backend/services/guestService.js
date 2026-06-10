@@ -1,7 +1,11 @@
-const { getAllCourses } = require("./courseService");
+const { getAllCourses,  getQualificationsByFilter } = require("./courseService");
 
 // Get all qualifications, when a guest is computing aps
 async function guestGetAllQualifications() {
   return getAllCourses();
 }
-module.exports = { guestGetAllQualifications };
+
+async function guestGetQualificationsByFilter(keyword){
+  return getQualificationsByFilter(keyword);
+}
+module.exports = { guestGetAllQualifications, guestGetQualificationsByFilter };

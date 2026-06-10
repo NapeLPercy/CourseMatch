@@ -166,7 +166,86 @@ module.exports = {
       });
     });
   },
+  
+  getQualificationsByFilter: async (whereClause) => {
+  const sql = `
+    SELECT
+      q.code                         AS qualification_code,
+      q.name                         AS qualification_name,
+      q.minimum_aps                  AS minimum_aps,
+      q.nqf                          AS qualification_nqf,
+      q.minimum_endorsement          AS minimum_endorsement,
+      q.minimum_duration             AS minimum_duration,
 
+      f.faculty_id                   AS faculty_id,
+      f.name                         AS faculty_name,
+      f.University_Abbreviation      AS university_abbreviation,
+
+      u.name                         AS university_name,
+      u.url                          AS university_url,
+
+      ps.subject_id                  AS subject_id,
+      ps.subject_name                AS subject_name,
+      ps.minimum_mark                AS minimum_mark
+
+    FROM qualification q
+    JOIN faculty f
+      ON f.faculty_id = q.faculty_id
+    JOIN university u
+      ON u.abbreaviation = f.University_Abbreviation
+    LEFT JOIN prerequisite_subject ps
+      ON ps.qualification_code = q.code
+
+    WHERE ${whereClause}
+
+    ORDER BY
+      u.abbreaviation,
+      f.faculty_id,
+      q.code,
+      ps.subject_name;
+  `;
+
+  return new Promise((resolve, reject) => {
+    db.query(sql, (err, rows) => {
+      if (err) return reject(err);
+
+      const qualificationsMap = {};
+
+      rows.forEach((row) => {
+        if (!qualificationsMap[row.qualification_code]) {
+          qualificationsMap[row.qualification_code] = {
+            qualification_code: row.qualification_code,
+            qualification_name: row.qualification_name,
+            minimum_aps: row.minimum_aps,
+            qualification_nqf: row.qualification_nqf,
+            minimum_endorsement: row.minimum_endorsement,
+            minimum_duration: row.minimum_duration,
+
+            faculty_id: row.faculty_id,
+            faculty_name: row.faculty_name,
+            university_abbreviation: row.university_abbreviation,
+
+            university_name: row.university_name,
+            university_url: row.university_url,
+
+            prereqs: []
+          };
+        }
+
+        if (row.subject_id) {
+          qualificationsMap[row.qualification_code]
+            .prereqs.push({
+              subject_id: row.subject_id,
+              subject_name: row.subject_name,
+              min_ark: row.minimum_mark
+            });
+        }
+      });
+
+      resolve(Object.values(qualificationsMap));
+    });
+  });
+},
   //Delete a qualification
   deleteQualification: async (qualificationCode) => {
     const sql = `DELETE FROM qualification WHERE code = ?`;

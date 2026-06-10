@@ -1,4 +1,9 @@
 export const FORCE_COLOURED_NAV = [
+  "/bachelor-degree-courses",
+  "/diploma-courses",
+  "/higher-certificate-courses",
+  "/extended-programmes",
+  "/courses-without-maths",
   "/features",
   "/student/course-deep-dive",
   "/student/course-comparisons",
