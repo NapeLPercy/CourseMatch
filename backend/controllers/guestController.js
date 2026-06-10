@@ -1,7 +1,8 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-const { guestGetAllQualifications } = require("../services/guestService");
+const { guestGetAllQualifications, guestGetQualificationsByFilter } = require("../services/guestService");
+
 const {
   computeEndorsementAndAPSSubjects,
 } = require("../services/subjectService");
@@ -31,6 +32,22 @@ exports.guestGetAllQualifications = async (req, res) => {
     return res.status(500).json({
       message: "Error fetching qualifications",
       success: false,
+    });
+  }
+};
+
+//guestget qualifications
+exports.guestGetQualificationsByFilter = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+    const qualifications =
+      await guestGetQualificationsByFilter(keyword);
+
+    res.status(200).json(qualifications);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "Failed to fetch qualifications",
     });
   }
 };

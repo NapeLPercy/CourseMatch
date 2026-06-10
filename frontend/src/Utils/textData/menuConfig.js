@@ -11,11 +11,12 @@ import {
   Users,
   UserPlus,
   Eye,
+  Award,Search,
   Calendar,
   MessageSquare,
   BarChart3,
   ClipboardList,
- Wallet,
+  Wallet,
   Calculator,
   ToolCase,
   Star,
@@ -30,7 +31,37 @@ export const NAV_CONFIG = {
         label: "Home",
         icon: Home,
       },
-
+      {
+        label: "Courses",
+        icon: GraduationCap,
+        dropdown: [
+          {
+            path: "/bachelor-degree-courses",
+            label: "Bachelor Degrees",
+            icon: GraduationCap,
+          },
+          {
+            path: "/diploma-courses",
+            label: "Diploma Courses",
+            icon: BookOpen,
+          },
+          {
+            path: "/higher-certificate-courses",
+            label: "Higher Certificates",
+            icon: Award,
+          },
+          {
+            path: "/extended-programmes",
+            label: "Extended Programmes",
+            icon: FileText,
+          },
+          {
+            path: "/courses-without-maths",
+            label: "Courses Without Maths",
+            icon: Calculator,
+          },
+        ],
+      },
       {
         label: "Tools",
         icon: ToolCase,
@@ -50,11 +81,10 @@ export const NAV_CONFIG = {
 
       { path: "/features", label: "Features", icon: Star },
       { path: "/blogs", label: "Blog", icon: FileText },
-      
 
       {
         path: "/contact-us",
-        label: "Contact Us",
+        label: "Contact",
         icon: Mail,
       },
     ],
@@ -87,7 +117,7 @@ export const NAV_CONFIG = {
         label: "Subjects",
         icon: BookOpen,
         dropdown: [
-           {
+          {
             path: "/student/add/subjects",
             label: "Add Subjects",
             icon: FileText,
@@ -97,7 +127,6 @@ export const NAV_CONFIG = {
             label: "View Subjects",
             icon: BookOpen,
           },
-         
         ],
       },
 
@@ -113,34 +142,64 @@ export const NAV_CONFIG = {
           {
             path: "/student/ai-recommended-courses",
             label: "My Courses",
-            // new → needs icon
             icon: ClipboardList,
           },
 
-           {
+          {
             path: "/student/course-comparisons",
             label: "Compare Courses",
             icon: Scale,
           },
         ],
       },
+      {
+        label: "Explore Courses",
+        icon: Search,
+        dropdown: [
+          {
+            path: "/bachelor-degree-courses",
+            label: "Bachelor Degrees",
+            icon: GraduationCap,
+          },
+          {
+            path: "/diploma-courses",
+            label: "Diploma Courses",
+            icon: BookOpen,
+          },
+          {
+            path: "/higher-certificate-courses",
+            label: "Higher Certificates",
+            icon: Award,
+          },
+          {
+            path: "/extended-programmes",
+            label: "Extended Programmes",
+            icon: FileText,
+          },
+          {
+            path: "/courses-without-maths",
+            label: "Courses Without Maths",
+            icon: Calculator,
+          },
+        ],
+      },
 
-     { 
-  label: "Personality", 
-  icon: User, 
-  dropdown: [ 
-    { 
-      path: "/student/add/personality", 
-      label: "Add Personality", 
-      icon: UserPlus, 
-    }, 
-    { 
-      path: "/student/view/personality", 
-      label: "View Personality", 
-      icon: Eye, 
-    }, 
-  ], 
-},
+      {
+        label: "Personality",
+        icon: User,
+        dropdown: [
+          {
+            path: "/student/add/personality",
+            label: "Add Personality",
+            icon: UserPlus,
+          },
+          {
+            path: "/student/view/personality",
+            label: "View Personality",
+            icon: Eye,
+          },
+        ],
+      },
 
       {
         label: "Tools",
