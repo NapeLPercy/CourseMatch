@@ -32,7 +32,7 @@ function Block({ block }) {
 export default function BlogPost() {
   const [post, setPost] = useState({});
   const [relatedPosts, setRelatedPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState(null);
 
@@ -49,7 +49,7 @@ export default function BlogPost() {
   }, [slug]);
 
   const getPostAndRelatedPosts = async (postSlug) => {
-    setLoading(true);
+    //setLoading(true);
     setError(null);
     setNotFound(false);
     try {
@@ -59,7 +59,6 @@ export default function BlogPost() {
         setNotFound(true);
         return;
       }
-      console.log("here is the data ",data);
       setPost(data.blog);
       setRelatedPosts(data.blog.related);
     } catch (error) {
