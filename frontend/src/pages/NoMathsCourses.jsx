@@ -5,7 +5,8 @@ import PageHeader from "../components/ui/PageHeader";
 import FilteredCourses from "../components/ui/FilteredCourses";
 import ErrorState from "../components/ui/ErrorState";
 import UniversityCoursesSkeleton from "../components/ui/UniversityCoursesSkeleton";
-
+import SEO from "../components/ui/SEO";
+import { coursesWithoutMathsFaqs } from "../Utils/textData/SeoFaqs";
 export default function NoMathsCourses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,21 +30,29 @@ export default function NoMathsCourses() {
   };
 
   return (
-    <div className="fcp">
-      <PageHeader
-        icon={GraduationCap}
-        title="Courses without maths"
-        subtitle="Find qualifications that don't require Mathematics as a subject — open to more students."
-        pillOne={!loading && !error ? `${courses.length} courses` : null}
+    <>
+      <SEO
+        title="Courses You Can Study Without Maths | CourseMatch"
+        description="Discover university courses that do not require Mathematics. Explore qualifications available to students with Mathematical Literacy or no Mathematics."
+        url="https://www.coursematchapp.co.za/courses-without-maths"
+        faq={coursesWithoutMathsFaqs}
       />
-      {loading && <UniversityCoursesSkeleton />}
-      {error && (
-        <ErrorState
-          message="Failed to load courses. Please try again."
-          onRetry={fetchCourses}
+      <div className="fcp">
+        <PageHeader
+          icon={GraduationCap}
+          title="Courses without maths"
+          subtitle="Find qualifications that don't require Mathematics as a subject — open to more students."
+          pillOne={!loading && !error ? `${courses.length} courses` : null}
         />
-      )}
-      {!loading && !error && <FilteredCourses courses={courses} />}
-    </div>
+        {loading && <UniversityCoursesSkeleton />}
+        {error && (
+          <ErrorState
+            message="Failed to load courses. Please try again."
+            onRetry={fetchCourses}
+          />
+        )}
+        {!loading && !error && <FilteredCourses courses={courses} />}
+      </div>
+    </>
   );
 }

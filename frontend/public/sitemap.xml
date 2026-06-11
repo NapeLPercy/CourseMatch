@@ -18,12 +18,32 @@
     <loc>https://www.coursematchapp.co.za/blogs</loc>
   </url>
 
-   <url>
+  <url>
     <loc>https://www.coursematchapp.co.za/features</loc>
   </url>
 
-   <url>
+  <url>
     <loc>https://www.coursematchapp.co.za/contact-us</loc>
+  </url>
+
+  <url>
+    <loc>https://www.coursematchapp.co.za/bachelor-degree-courses</loc>
+  </url>
+
+  <url>
+    <loc>https://www.coursematchapp.co.za/diploma-courses</loc>
+  </url>
+
+  <url>
+    <loc>https://www.coursematchapp.co.za/higher-certificate-courses</loc>
+  </url>
+
+  <url>
+    <loc>https://www.coursematchapp.co.za/extended-programmes</loc>
+  </url>
+
+  <url>
+    <loc>https://www.coursematchapp.co.za/courses-without-maths</loc>
   </url>
 
   <url>
@@ -36,7 +56,8 @@
 
 
   <url>
-    <loc>https://coursematchapp.co.za/blog/how-to-improve-your-marks-before-final-exams-even-if-youre-behind</loc>
+    <loc>
+      https://coursematchapp.co.za/blog/how-to-improve-your-marks-before-final-exams-even-if-youre-behind</loc>
   </url>
 
   <url>
@@ -48,11 +69,13 @@
   </url>
 
   <url>
-    <loc>https://www.coursematchapp.co.za/blog/how-to-choose-a-course-based-on-your-subjects-and-marks</loc>
+    <loc>
+      https://www.coursematchapp.co.za/blog/how-to-choose-a-course-based-on-your-subjects-and-marks</loc>
   </url>
 
   <url>
-    <loc>https://www.coursematchapp.co.za/blog/why-choosing-a-course-is-so-hard-and-how-to-make-it-easier</loc>
+    <loc>
+      https://www.coursematchapp.co.za/blog/why-choosing-a-course-is-so-hard-and-how-to-make-it-easier</loc>
   </url>
 
   <url>
