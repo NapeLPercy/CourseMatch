@@ -42,6 +42,10 @@ export const NAV_CONFIG = {
             path: "/nsfas-eligibility-checker",
             label: "NSFAS Eligibility Checker",
           },
+          {
+            path: "/university-prospectuses",
+            label: "Prospectus Downloader",
+          },
         ],
       },
 
@@ -147,6 +151,10 @@ export const NAV_CONFIG = {
             path: "/nsfas-eligibility-checker",
             label: "NSFAS Eligibility Checker",
           },
+          {
+            path: "/university-prospectuses",
+            label: "Prospectus Downloader",
+          },
         ],
       },
     ],
@@ -177,14 +185,13 @@ export const NAV_CONFIG = {
             path: "/matched-courses",
             label: "Matched Courses",
           },
-          { path: "/view-courses", label: "All Courses"},
+          { path: "/view-courses", label: "All Courses" },
         ],
       },
 
       {
         path: "/student/manage-my-profile",
         label: "Manage Profile",
-
       },
     ],
     showUser: true,
@@ -196,7 +203,6 @@ export const NAV_CONFIG = {
       {
         path: "/tutor/dashboard",
         label: "Dashboard",
-  
       },
 
       {
@@ -212,23 +218,21 @@ export const NAV_CONFIG = {
       {
         label: "Lessons",
         dropdown: [
-          { path: "/lessons", label: "Upcoming Lessons"},
+          { path: "/lessons", label: "Upcoming Lessons" },
           {
             path: "/schedule-lesson",
             label: "Schedule Lesson",
-            
           },
         ],
       },
 
-      { path: "/tutor/subjects", label: "Subjects", },
+      { path: "/tutor/subjects", label: "Subjects" },
 
-      { path: "/messages", label: "Messages",},
+      { path: "/messages", label: "Messages" },
 
       {
         path: "/student/manage-my-profile",
         label: "Manage Profile",
-  
       },
     ],
     showUser: true,
@@ -240,22 +244,31 @@ export const NAV_CONFIG = {
       {
         path: "/admin/dashboard",
         label: "Dashboard",
-   
       },
       {
         path: "/admin/manage-qualifications",
         label: "Qualifications",
-   
       },
       {
         path: "/admin/manage-universities",
         label: "Universities",
-      
+      },
+      {
+        label: "Prospectus",
+        dropdown: [
+          {
+            path: "/admin/add/university-prospectus",
+            label: "Add Prospectus",
+          },
+          {
+            path: "/admin/manage/university-prospectuses",
+            label: "Manage Prospectus",
+          },
+        ],
       },
       {
         path: "/admin/manage-accounts",
         label: "Accounts",
-  
       },
 
       {

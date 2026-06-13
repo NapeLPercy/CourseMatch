@@ -64,6 +64,8 @@ import NoMathsCourses from "./pages/NoMathsCourses";
 import HigherCertificateCourses from "./pages/HighCertificateCourses";
 import ExtendedProgrammes from "./pages/ExtendedCourses";
 import BachelorCourses from "./pages/BachelorCourses";
+import Prospectus from "./components/data-display/Prospectus";
+import AddProspectus from "./components/forms/AddProspectus";
 function App() {
   return (
     <UserProvider>
@@ -98,6 +100,11 @@ function App() {
                 <Route
                   path="/nsfas-eligibility-checker"
                   element={<NsfasEligibilityChecker />}
+                />
+
+                <Route
+                  path="/university-prospectuses"
+                  element={<Prospectus />}
                 />
 
                 <Route path="/diploma-courses" element={<DiplomaCourses />} />
@@ -190,6 +197,17 @@ function App() {
                     path="/admin/manage-qualifications"
                     element={<AdminManageQualifications />}
                   />
+
+                  <Route
+                    path="/admin/manage/university-prospectuses"
+                    element={<Prospectus />}
+                  />
+
+                  <Route
+                    path="/admin/add/university-prospectus"
+                    element={<AddProspectus />}
+                  />
+
                   <Route
                     path="/admin/manage-universities"
                     element={<AdminManageUniversities />}

@@ -1,0 +1,219 @@
+/* PROSPECTUS — CourseMatch */
+
+.pros {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 84px 40px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  animation: prosFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes prosFadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── GRID ────────────────────────────────── */
+.pros__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* ── CARD ────────────────────────────────── */
+.pros__card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-sizing: border-box;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s ease,
+              border-color 0.18s ease;
+  animation: prosCardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.05s);
+}
+
+.pros__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.09);
+  border-color: #dbeafe;
+}
+
+@keyframes prosCardIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pros__card--skel {
+  pointer-events: none;
+}
+
+/* ── AVATAR ──────────────────────────────── */
+.pros__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22);
+}
+
+.pros__avatar-text {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+}
+
+/* ── BODY ────────────────────────────────── */
+.pros__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pros__uni-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pros__year {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── ACTIONS ─────────────────────────────── */
+.pros__card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.pros__download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1.5px solid #3b82f6;
+  background: #ffffff;
+  color: #2563eb;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+
+.pros__download-btn:hover:not(:disabled) {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.pros__download-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.pros__delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  border: 1.5px solid #fee2e2;
+  background: #fff5f5;
+  color: #dc2626;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+}
+
+.pros__delete-btn:hover:not(:disabled) {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
+.pros__delete-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── SPINNERS ────────────────────────────── */
+.pros__spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(37, 99, 235, 0.25);
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: prosSpin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+.pros__spinner--red {
+  border-color: rgba(220, 38, 38, 0.25);
+  border-top-color: #dc2626;
+}
+
+@keyframes prosSpin { to { transform: rotate(360deg); } }
+
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 768px) {
+  .pros {
+    padding: 84px 20px 60px;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .pros__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pros__card {
+    flex-wrap: wrap;
+  }
+
+  .pros__card-actions {
+    width: 100%;
+  }
+
+  .pros__download-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .pros {
+    padding: 84px 14px 48px;
+  }
+}
