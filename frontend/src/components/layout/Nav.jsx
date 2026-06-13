@@ -175,6 +175,17 @@ export default function Nav() {
     };
   }, [mobileOpen]);
 
+  //handle responsiveness
+  useEffect(() => {
+  const handleResize = () => {
+    if (window.innerWidth > 1000) {
+      setMobileOpen(false);
+    }
+  };
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
   /* Close mobile on route change */
   useEffect(() => {
     setMobileOpen(false);
