@@ -1,19 +1,142 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Menu, X, ChevronDown, LogOut, User } from "lucide-react";
+import { ChevronDown, Menu, X, LogOut } from "lucide-react";
 import { NAV_CONFIG } from "../../Utils/textData/menuConfig";
-import "../../styles/Nav.css";
-import SmallLoader from "../ui/SmallLoader";
 import { FORCE_COLOURED_NAV } from "../../Utils/textData/navbarColorConfig";
+import SmallLoader from "../ui/SmallLoader";
+import "../../styles/Nav.css";
+
+/* ── Dropdown item ──────────────────────── */
+function DropdownItem({ item, onClose }) {
+  return (
+    <Link to={item.path} className="nav__dropdown-link" onClick={onClose}>
+      {item.label}
+    </Link>
+  );
+}
+
+/* ── Nav item (with or without dropdown) ── */
+function NavItem({ item, onClose }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const timerRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    clearTimeout(timerRef.current);
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timerRef.current = setTimeout(() => setOpen(false), 120);
+  };
+
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  if (item.dropdown) {
+    return (
+      <div
+        ref={ref}
+        className="nav__item nav__item--dropdown"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <button className="nav__trigger" aria-expanded={open}>
+          {item.label}
+          <ChevronDown
+            size={13}
+            strokeWidth={2.5}
+            className={`nav__chevron ${open ? "nav__chevron--open" : ""}`}
+          />
+        </button>
+        {open && (
+          <div className="nav__dropdown">
+            <div className="nav__dropdown-inner">
+              {item.dropdown.map((sub) => (
+                <DropdownItem key={sub.path} item={sub} onClose={onClose} />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="nav__item">
+      <Link to={item.path} className="nav__link" onClick={onClose}>
+        {item.label}
+      </Link>
+    </div>
+  );
+}
+
+/* ── Mobile accordion item ──────────────── */
+function MobileNavItem({ item, onClose, activeDropdown, setActiveDropdown }) {
+  const id = item.label;
+  const open = activeDropdown === id;
+
+  const toggle = () => {
+    setActiveDropdown((prev) => (prev === id ? null : id));
+  };
+
+  if (item.dropdown) {
+    return (
+      <div className="nav__mob-item">
+        <button
+          className="nav__mob-trigger"
+          onClick={toggle}
+          aria-expanded={open}
+        >
+          {item.label}
+          <ChevronDown
+            size={14}
+            strokeWidth={2.5}
+            className={`nav__chevron ${open ? "nav__chevron--open" : ""}`}
+          />
+        </button>
+        {open && (
+          <div className="nav__mob-dropdown">
+            {item.dropdown.map((sub) => (
+              <Link
+                key={sub.path}
+                to={sub.path}
+                className="nav__mob-link"
+                onClick={onClose}
+              >
+                {sub.label}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="nav__mob-item">
+      <Link
+        to={item.path}
+        className="nav__mob-link nav__mob-link--top"
+        onClick={onClose}
+      >
+        {item.label}
+      </Link>
+    </div>
+  );
+}
+
+/* ── Main Nav ───────────────────────────── */
 export default function Nav() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
 
   const isLoggedIn = !!user;
   const isAdmin = user?.role === "ADMIN";
   const isTutor = user?.role === "TUTOR";
   const isParent = user?.role === "PARENT";
-
   const currentRole = !isLoggedIn
     ? "guest"
     : isAdmin
@@ -26,246 +149,103 @@ export default function Nav() {
 
   const navItems = NAV_CONFIG[currentRole];
 
-  const [logOut, setLogOut] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const [scrolled, setScrolled] = useState(false);
-  const [mobile, setMobile] = useState(false);
-  const [openDropdowns, setOpenDropdowns] = useState({});
-  const dropdownRefs = useRef({});
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
-  // Pages where navbar must be colored immediately
-  const forceColored = FORCE_COLOURED_NAV.some((route) =>
-    location.pathname.startsWith(route),
+  const forceColored = FORCE_COLOURED_NAV.some((r) =>
+    location.pathname.startsWith(r),
   );
+  const isColored = forceColored || scrolled;
 
-  // Scroll listener
+  /* Scroll */
   useEffect(() => {
     const onScroll = () => {
-      if (forceColored) return;
-      setScrolled(window.scrollY > 40);
+      if (!forceColored) setScrolled(window.scrollY > 40);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [forceColored]);
 
-  const navColored = forceColored || scrolled;
-
-  // Close dropdowns on outside click
+  /* Lock body on mobile open */
   useEffect(() => {
-    const handler = (e) => {
-      const isInsideDropdown = Object.values(dropdownRefs.current).some(
-        (ref) => ref && ref.contains(e.target),
-      );
-
-      if (isInsideDropdown) return; // ✅ ignore internal clicks
-
-      setOpenDropdowns({});
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
     };
+  }, [mobileOpen]);
 
-    //document.addEventListener("mousedown", handler);
-    //document.addEventListener("click", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  // Lock body scroll when mobile drawer is open
+  /* Close mobile on route change */
   useEffect(() => {
-    document.body.style.overflow = mobile ? "hidden" : "";
-    return () => (document.body.style.overflow = "");
-  }, [mobile]);
-
-  // Close mobile drawer on route change
-  useEffect(() => {
-    setMobile(false);
-    setOpenDropdowns({});
+    setMobileOpen(false);
   }, [location.pathname]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 1100) {
-        setMobile(false); // close overlay
-        setOpenDropdowns({}); // optional: reset dropdowns (prevents weird states)
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const handleLogout = () => {
-    setLogOut(true);
+    setLoggingOut(true);
     setTimeout(() => {
       navigate("/");
       logout();
-
-      setLogOut(false);
-    }, 3000);
+      setLoggingOut(false);
+    }, 2000);
   };
 
-  const isActive = (path) => location.pathname === path;
-
-  const toggleDropdown = (key) => {
-    setOpenDropdowns((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  // Render a single nav item (with or without dropdown)
-  const renderNavItem = (item, index, isMobile = false) => {
-    const key = `${item.label}-${index}`;
-    const Icon = item.icon;
-
-    // Item with dropdown
-    if (item.dropdown) {
-      const isOpen = openDropdowns[key];
-
-      return (
-        <div
-          key={key}
-          ref={(el) => (dropdownRefs.current[key] = el)}
-          className="nav__dropdown-wrap"
-        >
-          <button
-            type="button"
-            className={`nav__dropdown-trigger ${
-              isOpen ? "nav__dropdown-trigger--open" : ""
-            } ${isMobile ? "nav__overlay-link" : ""}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleDropdown(key);
-            }}
-            aria-haspopup="true"
-            aria-expanded={isOpen}
-          >
-            {Icon && (
-              <Icon size={15} strokeWidth={2} className="nav__link-icon" />
-            )}
-            {item.label}
-            <ChevronDown
-              size={14}
-              strokeWidth={2.2}
-              className={`nav__dropdown-chevron ${
-                isOpen ? "nav__dropdown-chevron--open" : ""
-              }`}
-            />
-          </button>
-
-          {isOpen && (
-            <div className="nav__dropdown-panel">
-              {item.dropdown.map((subItem, subIndex) => {
-                const SubIcon = subItem.icon;
-                console.log(subItem.path);
-                return (
-                  <Link
-                    key={subIndex}
-                    to={subItem.path}
-                    className="nav__dropdown-item"
-                    onClick={() => {
-                      requestAnimationFrame(() => {
-                        setOpenDropdowns({});
-                        setMobile(false);
-                      });
-                    }}
-                  >
-                    {SubIcon && <SubIcon size={15} strokeWidth={2} />}
-                    {subItem.label}
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    // Regular link
-    return (
-      <Link
-        key={key}
-        to={item.path}
-        className={`nav__link ${isActive(item.path) ? "nav__link--active" : ""} ${
-          isMobile ? "nav__overlay-link" : ""
-        }`}
-        onClick={() => setMobile(false)}
-      >
-        {Icon && <Icon size={15} strokeWidth={2} className="nav__link-icon" />}
-        {item.label}
-      </Link>
-    );
-  };
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
 
   return (
     <>
-      {/* Main nav bar */}
-      <nav className={`nav ${navColored ? "nav--scrolled" : ""}`}>
+      <nav className={`nav ${isColored ? "nav--colored" : "nav--transparent"}`}>
         <div className="nav__inner">
           {/* Logo */}
-          <Link to="/" className="nav__logo" onClick={() => setMobile(false)}>
-            Course<span className="nav__logo-accent">Match</span>
+          <Link to="/" className="nav__logo" onClick={closeMobile}>
+            <span className="nav__logo-course">Course</span>
+            <span className="nav__logo-match">Match</span>
           </Link>
 
           {/* Desktop links */}
-          <div className="nav__desktop">
-            {navItems.main.map((item, index) =>
-              renderNavItem(item, index, false),
-            )}
+          <div className="nav__links">
+            {navItems?.main?.map((item) => (
+              <NavItem
+                key={item.path || item.label}
+                item={item}
+                onClose={closeMobile}
+              />
+            ))}
+          </div>
 
-            {/* Guest actions (login/signup buttons) */}
-            {navItems.actions && (
+          {/* Desktop actions */}
+          <div className="nav__actions">
+            {!isLoggedIn ? (
               <>
-                <Link
-                  to={navItems.actions.login.path}
-                  className={`nav__action-btn nav__action-btn--${navItems.actions.login.variant}`}
-                >
-                  <navItems.actions.login.icon size={15} strokeWidth={2} />
-                  {navItems.actions.login.label}
+                <Link to="/login" className="nav__btn nav__btn--ghost">
+                  Sign in
                 </Link>
-                <Link
-                  to={navItems.actions.signup.path}
-                  className={`nav__action-btn nav__action-btn--${navItems.actions.signup.variant}`}
-                >
-                  <navItems.actions.signup.icon size={15} strokeWidth={2} />
-                  {navItems.actions.signup.label}
+                <Link to="/register" className="nav__btn nav__btn--primary">
+                  Get started
                 </Link>
               </>
-            )}
-
-            {/* Logged-in user pill + logout */}
-            {navItems.showUser && (
-              <div className="nav__user">
-                <div
-                  className={`nav__avatar ${
-                    navItems.isAdmin ? "nav__avatar--admin" : ""
-                  }`}
-                >
-                  <User size={15} strokeWidth={2} />
-                </div>
-                <button
-                  type="button"
-                  className="nav__logout"
-                  onClick={handleLogout}
-                  disabled={logOut}
-                >
-                  {logOut ? (
-                    <SmallLoader />
-                  ) : (
-                    <LogOut size={15} strokeWidth={2} />
-                  )}
-                  {logOut ? "Logging out..." : "Logout"}
-                </button>
-              </div>
+            ) : (
+              <button
+                className="nav__btn nav__btn--logout"
+                onClick={handleLogout}
+                disabled={loggingOut}
+              >
+                {loggingOut ? (
+                  <SmallLoader />
+                ) : (
+                  <LogOut size={15} strokeWidth={2} />
+                )}
+                {loggingOut ? "Signing out…" : "Sign out"}
+              </button>
             )}
           </div>
 
           {/* Mobile hamburger */}
-
           <button
-            type="button"
-            className="nav__hamburger"
-            onClick={() => setMobile((o) => !o)}
-            aria-label={mobile ? "Close menu" : "Open menu"}
+            className="nav__burger"
+            onClick={() => setMobileOpen((o) => !o)}
+            aria-label="Toggle menu"
           >
-            {mobile ? (
+            {mobileOpen ? (
               <X size={22} strokeWidth={2} />
             ) : (
               <Menu size={22} strokeWidth={2} />
@@ -274,71 +254,59 @@ export default function Nav() {
         </div>
       </nav>
 
-      {/* Mobile overlay */}
-      <div className={`nav__overlay ${mobile ? "nav__overlay--open" : ""}`}>
-        <div className="nav__overlay-inner">
-          {/* Close button */}
-          <button
-            type="button"
-            className="nav__overlay-close"
-            onClick={() => setMobile(false)}
-            aria-label="Close menu"
-          >
-            <X size={22} strokeWidth={2} />
-          </button>
+      {/* Mobile drawer */}
+      <div className={`nav__drawer ${mobileOpen ? "nav__drawer--open" : ""}`}>
+        <div className="nav__drawer-inner">
+          <div className="nav__drawer-links">
+            {navItems?.main?.map((item) => (
+              <MobileNavItem
+                key={item.path || item.label}
+                item={item}
+                onClose={closeMobile}
+                activeDropdown={activeMobileDropdown}
+                setActiveDropdown={setActiveMobileDropdown}
+              />
+            ))}
+          </div>
 
-          {/* Links */}
-          <div className="nav__overlay-links">
-            {navItems.main.map((item, index) =>
-              renderNavItem(item, index, true),
-            )}
-
-            {/* Guest actions */}
-            {navItems.actions && (
+          <div className="nav__drawer-footer">
+            {!isLoggedIn ? (
               <>
-                <div className="nav__overlay-divider" />
                 <Link
-                  to={navItems.actions.login.path}
-                  className="nav__overlay-link nav__overlay-link--ghost"
-                  //nav__overlay-link nav__overlay-link--primary"
-                  onClick={() => setMobile(false)}
+                  to="/login"
+                  className="nav__drawer-btn nav__drawer-btn--ghost"
+                  onClick={closeMobile}
                 >
-                  <navItems.actions.login.icon size={18} strokeWidth={2} />
-                  {navItems.actions.login.label}
+                  Sign in
                 </Link>
                 <Link
-                  to={navItems.actions.signup.path}
-                  className="nav__overlay-link nav__overlay-link--primary"
-                  onClick={() => setMobile(false)}
+                  to="/register"
+                  className="nav__drawer-btn nav__drawer-btn--primary"
+                  onClick={closeMobile}
                 >
-                  <navItems.actions.signup.icon size={18} strokeWidth={2} />
-                  {navItems.actions.signup.label}
+                  Get started
                 </Link>
               </>
-            )}
-
-            {/* Logged-in logout button */}
-            {navItems.showUser && (
-              <>
-                <div className="nav__overlay-divider" />
-                <button
-                  type="button"
-                  className="nav__overlay-logout"
-                  onClick={handleLogout}
-                  disabled={logOut}
-                >
-                  {logOut ? (
-                    <SmallLoader />
-                  ) : (
-                    <LogOut size={18} strokeWidth={2} />
-                  )}
-                  {logOut ? "Logging out..." : "Logout"}
-                </button>
-              </>
+            ) : (
+              <button
+                className="nav__drawer-btn nav__drawer-btn--logout"
+                onClick={handleLogout}
+                disabled={loggingOut}
+              >
+                {loggingOut ? (
+                  <SmallLoader />
+                ) : (
+                  <LogOut size={15} strokeWidth={2} />
+                )}
+                {loggingOut ? "Signing out…" : "Sign out"}
+              </button>
             )}
           </div>
         </div>
       </div>
+
+      {/* Mobile overlay */}
+      {mobileOpen && <div className="nav__overlay" onClick={closeMobile} />}
     </>
   );
 }
