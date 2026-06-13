@@ -7,11 +7,20 @@ import ErrorState from "../components/ui/ErrorState";
 import UniversityCoursesSkeleton from "../components/ui/UniversityCoursesSkeleton";
 import SEO from "../components/ui/SEO";
 import { extendedProgrammeFaqs } from "../Utils/textData/SeoFaqs";
+import Warning from "../components/ui/Warning";
 
 export default function ExtendedProgrammes() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [showWarning, setShowWarning] = useState(null);
+
+  useEffect(() => {
+    const data = localStorage.getItem("courses-alert");
+    localStorage.removeItem("courses-alert");
+    if (data) return;
+    setShowWarning(true);
+  }, []);
 
   useEffect(() => {
     fetchCourses();
@@ -29,6 +38,10 @@ export default function ExtendedProgrammes() {
       setLoading(false);
     }
   };
+  const handleCloseWarning = () => {
+    localStorage.setItem("courses-alert", "dismissed");
+    setShowWarning(false);
+  };
 
   return (
     <>
@@ -37,6 +50,11 @@ export default function ExtendedProgrammes() {
         description="Explore extended curriculum programmes designed to help students gain access to university qualifications and academic support."
         url="https://www.coursematchapp.co.za/extended-programmes"
         faq={extendedProgrammeFaqs}
+      />
+      <Warning
+        show={showWarning}
+        message="To see the courses you <b>qualify for</b>, <b>log in</b> and complete your profile."
+        onClose={handleCloseWarning}
       />
       <div className="fcp">
         <PageHeader

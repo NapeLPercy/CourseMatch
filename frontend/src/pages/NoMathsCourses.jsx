@@ -7,10 +7,20 @@ import ErrorState from "../components/ui/ErrorState";
 import UniversityCoursesSkeleton from "../components/ui/UniversityCoursesSkeleton";
 import SEO from "../components/ui/SEO";
 import { coursesWithoutMathsFaqs } from "../Utils/textData/SeoFaqs";
+import Warning from "../components/ui/Warning";
+
 export default function NoMathsCourses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [showWarning, setShowWarning] = useState(null);
+
+  useEffect(() => {
+    const data = localStorage.getItem("courses-alert");
+    localStorage.removeItem("courses-alert");
+    if (data) return;
+    setShowWarning(true);
+  }, []);
 
   useEffect(() => {
     fetchCourses();
@@ -28,6 +38,10 @@ export default function NoMathsCourses() {
       setLoading(false);
     }
   };
+  const handleCloseWarning = () => {
+    localStorage.setItem("courses-alert", "dismissed");
+    setShowWarning(false);
+  };
 
   return (
     <>
@@ -37,6 +51,12 @@ export default function NoMathsCourses() {
         url="https://www.coursematchapp.co.za/courses-without-maths"
         faq={coursesWithoutMathsFaqs}
       />
+      <Warning
+        show={showWarning}
+        message="To see the courses you <b>qualify for</b>, <b>log in</b> and complete your profile."
+        onClose={handleCloseWarning}
+      />
+
       <div className="fcp">
         <PageHeader
           icon={GraduationCap}
