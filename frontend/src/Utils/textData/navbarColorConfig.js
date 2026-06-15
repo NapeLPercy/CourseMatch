@@ -3,6 +3,8 @@ export const FORCE_COLOURED_NAV = [
   "/university-prospectuses",
   "/admin/manage/university-prospectuses",
   "/bachelor-degree-courses",
+"/extended-programmes",
+"/student/course-comparisons",
   "/diploma-courses",
   "/higher-certificate-courses",
   "/courses-without-maths",
