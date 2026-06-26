@@ -6,12 +6,14 @@ import "../../styles/ViewSubjects.css";
 import PageHeader from "../ui/PageHeader";
 
 function getMarkBand(mark) {
-  if (mark >= 80) return { cls: "vs__card-mark--distinction", label: "Distinction" };
-  if (mark >= 70) return { cls: "vs__card-mark--strong",      label: "Strong"      };
-  if (mark >= 60) return { cls: "vs__card-mark--solid",       label: "Solid"       };
-  if (mark >= 50) return { cls: "vs__card-mark--developing",  label: "Developing"  };
-  if (mark >= 40) return { cls: "vs__card-mark--emerging",    label: "Emerging"    };
-  return           { cls: "vs__card-mark--needs-support", label: "Needs support" };
+  if (mark >= 80)
+    return { cls: "vs__card-mark--distinction", label: "Distinction" };
+  if (mark >= 70) return { cls: "vs__card-mark--strong", label: "Strong" };
+  if (mark >= 60) return { cls: "vs__card-mark--solid", label: "Solid" };
+  if (mark >= 50)
+    return { cls: "vs__card-mark--developing", label: "Developing" };
+  if (mark >= 40) return { cls: "vs__card-mark--emerging", label: "Emerging" };
+  return { cls: "vs__card-mark--needs-support", label: "Needs support" };
 }
 
 function SubjectsSkeleton() {
@@ -28,16 +30,22 @@ function SubjectsSkeleton() {
   );
 }
 
-export default function ViewSubjects({ subjects = [], onSave, loading}) {
+export default function ViewSubjects({
+  subjects = [],
+  onSave,
+  loading,
+  onUpdateError,
+}) {
   const [editingSubject, setEditingSubject] = useState(null);
 
   const avg = subjects.length
-    ? Math.round(subjects.reduce((s, sub) => s + Number(sub.mark), 0) / subjects.length)
+    ? Math.round(
+        subjects.reduce((s, sub) => s + Number(sub.mark), 0) / subjects.length,
+      )
     : null;
 
   return (
     <div className="vs">
-
       <PageHeader
         icon={BookOpen}
         title="My subjects"
@@ -100,7 +108,6 @@ export default function ViewSubjects({ subjects = [], onSave, loading}) {
                   <span className="vs__card-mark-value">{mark}%</span>
                   <span className="vs__card-mark-label">{label}</span>
                 </div>
-
               </div>
             );
           })}
@@ -111,13 +118,16 @@ export default function ViewSubjects({ subjects = [], onSave, loading}) {
         <EditmarkModal
           subject={editingSubject}
           onSave={async (payload) => {
-            await onSave(payload);
-            setEditingSubject(null);
+            const success = await onSave(payload);
+
+            if (success) {
+              setEditingSubject(null);
+            }
           }}
           onClose={() => setEditingSubject(null)}
+          onUpdateError={onUpdateError}
         />
       )}
-
     </div>
   );
 }

@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/EditmarkModal.css";
 
-export default function EditmarkModal({ subject, onSave, onClose }) {
-  const [mark, setMark] = useState(String(subject.Mark));
+export default function EditmarkModal({
+  subject,
+  onSave,
+  onClose,
+  onUpdateError,
+}) {
+  const [mark, setMark] = useState(String(subject.mark));
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-
-  // Validation
+  
   const validate = (value) => {
     const num = Number(value);
 
     if (value.trim() === "") return "Mark cannot be empty.";
     if (isNaN(num)) return "Mark must be a number.";
     if (num < 0 || num > 100) return "Mark must be between 0 and 100.";
+    if (Number(subject.mark) === num)
+      return "New mark cannot be equal to the current mark";
     return ""; // valid
   };
 
@@ -33,9 +39,10 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
     setSaving(true);
 
     await onSave({
-    id: subject.id,
+      subjectId: subject.id,
       mark: Number(mark),
     });
+
     setSaving(false);
   };
 
@@ -87,9 +94,9 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
           <p className="emd-field__error">{error}</p>
         </div>
 
-        <p style={{ color: "red" }}>
-          Marks cannot be changed for now,COMING SOON!
-        </p>
+        {/* update mark error */}
+        {onUpdateError && <p style={{ color: "red" }}>{onUpdateError}</p>}
+
         {/* action buttons */}
         <div className="emd-actions">
           <button
@@ -103,8 +110,7 @@ export default function EditmarkModal({ subject, onSave, onClose }) {
           <button
             className={`emd-actions__btn emd-actions__btn--save${saving ? " emd-actions__btn--saving" : ""}`}
             onClick={handleSave}
-            disabled={true}
-            // disabled={saving || isInvalid}
+            disabled={saving || isInvalid}
           >
             {saving ? (
               <>
