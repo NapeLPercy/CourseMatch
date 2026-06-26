@@ -1,7 +1,11 @@
 const { v4: uuidv4 } = require("uuid");
 const dotenv = require("dotenv");
 dotenv.config();
-const { getSubjects, addSubjects } = require("../services/subjectService");
+const {
+  getSubjects,
+  addSubjects,
+  updateMark,
+} = require("../services/subjectService");
 
 /*Add subjects*/
 exports.addSubjects = async (req, res) => {
@@ -51,7 +55,7 @@ exports.getSubjects = async (req, res) => {
   try {
     const { userId, studentId } = req;
 
-    if(!userId) {
+    if (!userId) {
       return res
         .status(401)
         .json({ success: false, message: "You are not authorized" });
@@ -82,30 +86,30 @@ exports.getSubjects = async (req, res) => {
 exports.updateMark = async (req, res) => {
   try {
     const { subjectId } = req.params;
-    const { Mark } = req.body;
-    const { userId } = req.user;
-
+    const { newSubjectMark } = req.body;
+    const { userId, studentId } = req;
+    
     if (!userId) {
       return res
         .status(401)
         .json({ success: false, message: "You are not authorized" });
     }
 
-    if (Mark === undefined || Mark === null) {
+    if (newSubjectMark === undefined || newSubjectMark === null) {
       return res.status(400).json({ message: "Mark is required" });
     }
 
     // optional: validate mark is a number 0-100
-    const markNum = Number(Mark);
+    const markNum = Number(newSubjectMark);
     if (!Number.isFinite(markNum) || markNum < 0 || markNum > 100) {
       return res.status(400).json({ message: "Mark must be 0-100" });
     }
 
-    await updateMark(subjectId, markNum);
+    const updated = await updateMark(userId, studentId, subjectId, markNum);
 
     return res.status(200).json({
-      message: "Mark updated",
-      success: true,
+      message: updated ? "Mark updated" : "Subject not updated.",
+      success: updated,
     });
   } catch (err) {
     console.error(err);

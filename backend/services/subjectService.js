@@ -67,9 +67,56 @@ async function getSubjects(studentId) {
 }
 
 // Update a mark value
-async function updateMark(subjectId, markNum) {
-  await subjectModel.updateMark(subjectId, markNum);
+async function updateMark(userId, studentId, subjectId, newSubjectMark) {
+  const conn = await new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) return reject(err);
+      resolve(connection);
+    });
+  });
+
+  try {
+    await conn.promise().beginTransaction();
+
+    // Fetch current subjects
+    const studentSubjects = await getSubjects(studentId);
+
+    // Find the subject to update
+    const subjectToUpdate = studentSubjects.find(
+      (subject) => subject.id === subjectId,
+    );
+
+    if (!subjectToUpdate) {
+      throw new Error("Subject not found.");
+    }
+
+    // Update mark in the database
+    const result = await subjectModel.updateMark(subjectId, newSubjectMark);
+
+    if (result.affectedRows !== 1) {
+      throw new Error("Failed to update subject mark.");
+    }
+
+    // Update the in-memory object
+    subjectToUpdate.mark = newSubjectMark.toString();
+
+    // Recompute endorsement
+    const { endorsement } = computeEndorsementAndAPSSubjects(studentSubjects);
+
+    // Update endorsement
+    await insertStudentEndorsement(endorsement, userId);
+
+    await conn.promise().commit();
+
+    return true;
+  } catch (error) {
+    await conn.promise().rollback();
+    throw error;
+  } finally {
+    conn.release();
+  }
 }
+
 module.exports = {
   getSubjects,
   updateMark,

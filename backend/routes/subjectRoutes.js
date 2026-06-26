@@ -19,10 +19,12 @@ router.get(
   attachProfileId,
   subjectController.getSubjects,
 );
-router.put(
+
+router.patch(
   "/:subjectId",
   authenticate,
   authorize("STUDENT"),
+   attachProfileId,
   subjectController.updateMark,
 );
 
