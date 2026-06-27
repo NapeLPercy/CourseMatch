@@ -16,9 +16,7 @@ export default function BachelorCourses() {
   const [showWarning, setShowWarning] = useState(null);
 
   useEffect(() => {
-    const data = localStorage.getItem("courses-alert");
-    localStorage.removeItem("courses-alert");
-    if (data) return;
+    if (localStorage.getItem("courses-alert")) return;
     setShowWarning(true);
   }, []);
 
@@ -46,7 +44,6 @@ export default function BachelorCourses() {
     setShowWarning(false);
   };
 
-  
   return (
     <>
       <SEO
@@ -57,7 +54,8 @@ export default function BachelorCourses() {
       />
       <Warning
         show={showWarning}
-        message="To see the courses you <b>qualify for</b>, <b>log in</b> and complete your profile."  onClose={handleCloseWarning}
+        message="To see the courses you <b>qualify for</b>, <b>log in</b> and complete your profile."
+        onClose={handleCloseWarning}
       />
 
       <div className="fcp">

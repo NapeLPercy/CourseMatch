@@ -15,9 +15,7 @@ export default function HigherCertificateCourses() {
   const [showWarning, setShowWarning] = useState(null);
 
   useEffect(() => {
-    const data = localStorage.getItem("courses-alert");
-    localStorage.removeItem("courses-alert");
-    if (data) return;
+    if (localStorage.getItem("courses-alert")) return;
     setShowWarning(true);
   }, []);
 
