@@ -32,13 +32,11 @@ exports.register = async (req, res) => {
 
     const createAccountResults = await addAccount(email, password);
 
-    return res
-      .status(201)
-      .json({
-        success: true,
-        message: "Successfuly registered",
-        link: createAccountResults?.link,
-      });
+    return res.status(201).json({
+      success: true,
+      message: "Successfuly registered",
+      link: createAccountResults?.link,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -88,7 +86,7 @@ exports.login = async (req, res) => {
     const token = generateToken(account);
 
     await updateLastLogin(account.user_id);
-    
+
     const userData = {
       userId: account.user_id,
       role: account.role,
@@ -192,7 +190,14 @@ exports.verifyAccount = async (req, res) => {
 
 exports.getAdminAccounts = async (req, res) => {
   try {
+    const { userId } = req;
     const result = await getAdminAccounts();
+
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Not authenticated" });
+    }
 
     return res.status(200).json({
       result,
@@ -211,9 +216,12 @@ exports.getAdminAccounts = async (req, res) => {
 //admin add user
 exports.adminAddAccount = async (req, res) => {
   const { email, role } = req.body;
-
-  console.log(email, role);
-
+  const { userId } = req;
+  if (!userId) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Not authenticated" });
+  }
   try {
     const results = await checkAccount(email);
 
