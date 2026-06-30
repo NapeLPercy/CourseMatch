@@ -53,12 +53,6 @@ export default function ViewMyProfile() {
     return <ViewProfileSkeleton />;
   }
 
-  if ((!profile && !error) || !profile?.aspiration) {
-    return (
-      <EmptyState message="No profile found. Please create one in the 'Add Profile' tab." />
-    );
-  }
-
   if (error)
     return <ErrorState message={error} onRetry={fetchStudentProfile} />;
 
@@ -68,141 +62,148 @@ export default function ViewMyProfile() {
         icon={BrainCog}
         title="My personality profile"
         subtitle="Your personal insights help our AI recommend courses that truly fit who you are."
-        pillOne={profile.grade}
-        pillTwo={profile.endorsement}
+        pillOne={profile?.grade}
+        pillTwo={profile?.endorsement}
       />
-      {/* Profile sections */}
-      <div className="vp__sections">
-        {/* Section: Career & Aspirations */}
-        <div className="vp__section">
-          <h3 className="vp__section-title">
-            <Sparkles size={16} strokeWidth={2} />
-            Career & Aspirations
-          </h3>
+      {/* Error state */}
+      {((!profile && !error) || (!profile?.aspiration && !error)) && (
+        <EmptyState message="No profile found. Please create one in the 'Add Profile' tab." />
+      )}
 
-          {profile.dreamJob && (
+      {/* Profile sections */}
+      {profile?.aspiration && (
+        <div className="vp__sections">
+          {/* Section: Career & Aspirations */}
+          <div className="vp__section">
+            <h3 className="vp__section-title">
+              <Sparkles size={16} strokeWidth={2} />
+              Career & Aspirations
+            </h3>
+
+            {profile.dreamJob && (
+              <div className="vp__field">
+                <div className="vp__field-label">
+                  <Briefcase size={13} strokeWidth={2} />
+                  Dream Job
+                </div>
+                <div className="vp__field-value">{profile.dreamJob}</div>
+              </div>
+            )}
+
             <div className="vp__field">
               <div className="vp__field-label">
-                <Briefcase size={13} strokeWidth={2} />
-                Dream Job
+                <Target size={13} strokeWidth={2} />
+                Goals
               </div>
-              <div className="vp__field-value">{profile.dreamJob}</div>
+              <div className="vp__field-value">{profile.goals}</div>
             </div>
-          )}
 
-          <div className="vp__field">
-            <div className="vp__field-label">
-              <Target size={13} strokeWidth={2} />
-              Goals
-            </div>
-            <div className="vp__field-value">{profile.goals}</div>
+            {profile.aspiration && (
+              <div className="vp__field">
+                <div className="vp__field-label">
+                  <Heart size={13} strokeWidth={2} />
+                  Aspirations
+                </div>
+                <div className="vp__field-value">{profile.aspiration}</div>
+              </div>
+            )}
           </div>
 
-          {profile.aspiration && (
+          {/* Section: Strengths & Development */}
+          <div className="vp__section">
+            <h3 className="vp__section-title">
+              <Award size={16} strokeWidth={2} />
+              Strengths & Development
+            </h3>
+
+            <div className="vp__field">
+              <div className="vp__field-label">
+                <Award size={13} strokeWidth={2} />
+                Strengths
+              </div>
+              <div className="vp__field-value">{profile.strengths}</div>
+            </div>
+
+            <div className="vp__field">
+              <div className="vp__field-label">
+                <Target size={13} strokeWidth={2} />
+                Areas to Improve
+              </div>
+              <div className="vp__field-value">{profile.weaknesses}</div>
+            </div>
+          </div>
+
+          {/* Section: Learning Preferences */}
+          <div className="vp__section">
+            <h3 className="vp__section-title">
+              <BookOpen size={16} strokeWidth={2} />
+              Learning Preferences
+            </h3>
+
+            <div className="vp__field">
+              <div className="vp__field-label">
+                <BookOpen size={13} strokeWidth={2} />
+                Preferred Environment
+              </div>
+              <div className="vp__field-value">
+                {profile.preferred_environment}
+              </div>
+            </div>
+
+            <div className="vp__field">
+              <div className="vp__field-label">
+                <BookOpen size={13} strokeWidth={2} />
+                Subjects I Enjoy
+              </div>
+              <div className="vp__field-value">{profile.enjoyed_subjects}</div>
+            </div>
+
+            <div className="vp__field">
+              <div className="vp__field-label">
+                <ThumbsDown size={13} strokeWidth={2} />
+                Subjects I Dislike
+              </div>
+              <div className="vp__field-value">{profile.disliked_subjects}</div>
+            </div>
+
             <div className="vp__field">
               <div className="vp__field-label">
                 <Heart size={13} strokeWidth={2} />
-                Aspirations
+                Hobbies & Interests
               </div>
-              <div className="vp__field-value">{profile.aspiration}</div>
-            </div>
-          )}
-        </div>
-
-        {/* Section: Strengths & Development */}
-        <div className="vp__section">
-          <h3 className="vp__section-title">
-            <Award size={16} strokeWidth={2} />
-            Strengths & Development
-          </h3>
-
-          <div className="vp__field">
-            <div className="vp__field-label">
-              <Award size={13} strokeWidth={2} />
-              Strengths
-            </div>
-            <div className="vp__field-value">{profile.strengths}</div>
-          </div>
-
-          <div className="vp__field">
-            <div className="vp__field-label">
-              <Target size={13} strokeWidth={2} />
-              Areas to Improve
-            </div>
-            <div className="vp__field-value">{profile.weaknesses}</div>
-          </div>
-        </div>
-
-        {/* Section: Learning Preferences */}
-        <div className="vp__section">
-          <h3 className="vp__section-title">
-            <BookOpen size={16} strokeWidth={2} />
-            Learning Preferences
-          </h3>
-
-          <div className="vp__field">
-            <div className="vp__field-label">
-              <BookOpen size={13} strokeWidth={2} />
-              Preferred Environment
-            </div>
-            <div className="vp__field-value">
-              {profile.preferred_environment}
+              <div className="vp__field-value">{profile.hobbies}</div>
             </div>
           </div>
 
-          <div className="vp__field">
-            <div className="vp__field-label">
-              <BookOpen size={13} strokeWidth={2} />
-              Subjects I Enjoy
-            </div>
-            <div className="vp__field-value">{profile.enjoyed_subjects}</div>
-          </div>
+          {/* Section: Work & Problem-Solving Style */}
+          <div className="vp__section">
+            <h3 className="vp__section-title">
+              <Lightbulb size={16} strokeWidth={2} />
+              Work & Problem-Solving Style
+            </h3>
 
-          <div className="vp__field">
-            <div className="vp__field-label">
-              <ThumbsDown size={13} strokeWidth={2} />
-              Subjects I Dislike
-            </div>
-            <div className="vp__field-value">{profile.disliked_subjects}</div>
-          </div>
-
-          <div className="vp__field">
-            <div className="vp__field-label">
-              <Heart size={13} strokeWidth={2} />
-              Hobbies & Interests
-            </div>
-            <div className="vp__field-value">{profile.hobbies}</div>
-          </div>
-        </div>
-
-        {/* Section: Work & Problem-Solving Style */}
-        <div className="vp__section">
-          <h3 className="vp__section-title">
-            <Lightbulb size={16} strokeWidth={2} />
-            Work & Problem-Solving Style
-          </h3>
-
-          <div className="vp__row">
-            <div className="vp__field">
-              <div className="vp__field-label">
-                <Users size={13} strokeWidth={2} />
-                Work Style
+            <div className="vp__row">
+              <div className="vp__field">
+                <div className="vp__field-label">
+                  <Users size={13} strokeWidth={2} />
+                  Work Style
+                </div>
+                <div className="vp__field-value">{profile.work_style}</div>
               </div>
-              <div className="vp__field-value">{profile.work_style}</div>
-            </div>
 
-            <div className="vp__field">
-              <div className="vp__field-label">
-                <Lightbulb size={13} strokeWidth={2} />
-                Problem-Solving
-              </div>
-              <div className="vp__field-value">
-                {profile.problem_solving_approach}
+              <div className="vp__field">
+                <div className="vp__field-label">
+                  <Lightbulb size={13} strokeWidth={2} />
+                  Problem-Solving
+                </div>
+                <div className="vp__field-value">
+                  {profile.problem_solving_approach}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -213,7 +214,6 @@ function ViewProfileSkeleton() {
       <div className="vp__header">
         <div className="vp__header-left">
           <div className="vp__skel vp__skel--avatar" />
-         
         </div>
       </div>
 
