@@ -103,10 +103,12 @@ export default function CourseComparisons() {
     setCompareError(false);
     setComparison(null);
     try {
+      console.log(selected,"sent to server");
       const { data } = await getOrCreateCourseComparisons({
         qualifications: selected,
         subjects: getSubjects(),
       });
+      console.log(data.comparison.comparisonData,"from server");
       setComparison(data.comparison.comparisonData);
     } catch {
       setCompareError(true);
@@ -288,7 +290,7 @@ export default function CourseComparisons() {
           >
             <X size={14} strokeWidth={2.5} /> Start over
           </button>
-          <ComparisonResult comparison={comparison} selected={selected} />
+          <ComparisonResult comparison={comparison}/>
         </>
       )}
     </div>
