@@ -140,7 +140,7 @@ export default function AdminAddUniversity() {
     <div className=".au_container">
       <form onSubmit={handleSubmit} className="au__card">
         <div className="au__card-header">
-          <Building2 size={18} strokeWidth={2} className="au__card-icon" />
+          <Building2 size={18} strokeWidth={2} className="au__card-iconn" />
           <h2 className="au__card-title">University Details</h2>
         </div>
 

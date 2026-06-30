@@ -88,7 +88,7 @@
 /* ══════════════════════════════════════════════════════════════
    ICON
    ══════════════════════════════════════════════════════════════ */
-.cm__icon {
+.cm__iconn {
   width: 72px;
   height: 72px;
   border-radius: 50%;
@@ -104,13 +104,13 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
-.cm__icon--danger {
+.cm__iconn--danger {
   background: rgba(248, 113, 113, 0.12);
   border: 1.5px solid rgba(248, 113, 113, 0.25);
   color: var(--error);
 }
 
-.cm__icon--primary {
+.cm__iconn--primary {
   background: rgba(37, 99, 235, 0.12);
   border: 1.5px solid rgba(37, 99, 235, 0.25);
   color: var(--medium-blue);

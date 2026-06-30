@@ -62,7 +62,7 @@ export default function ConfirmationModal({
         </button>
 
         {/* Icon */}
-        <div className={`cm__icon cm__icon--${variant}`}>
+        <div className={`cm__iconn cm__iconn--${variant}`}>
           <AlertTriangle size={32} strokeWidth={1.6} />
         </div>
 
