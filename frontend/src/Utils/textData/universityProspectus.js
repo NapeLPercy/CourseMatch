@@ -9,5 +9,9 @@ export const universitiesData = [
     name: "University of Johannesburg",
     year:"2027",
   },
-  
+   {
+    id: "ul",
+    name: "University of Limpopo",
+    year:"2027",
+  },
 ];
