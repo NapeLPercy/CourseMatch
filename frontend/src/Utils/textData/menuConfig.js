@@ -89,7 +89,7 @@ export const NAV_CONFIG = {
           },
           {
             path: "/student/ai-recommended-courses",
-            label: "My Courses",
+            label: "Matched Courses",
           },
 
           {
@@ -99,7 +99,7 @@ export const NAV_CONFIG = {
         ],
       },
       {
-        label: "Explore Courses",
+        label: "Course Categories",
 
         dropdown: [
           {
