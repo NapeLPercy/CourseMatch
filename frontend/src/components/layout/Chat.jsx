@@ -1,4 +1,5 @@
 import ChatBot from "react-chatbotify";
+import { sendChatbotMessage } from "../../services/chatbotService";
 
 export default function ChatWidget() {
   const flow = {
@@ -8,16 +9,11 @@ export default function ChatWidget() {
     },
     main: {
       message: async ({ userInput }) => {
-        const res = await fetch("http://localhost:5000/api/chat/sendMessage", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ message: userInput }),
-        });
+        const response = await sendChatbotMessage("Student user", userInput);
 
-        const data = await res.json();
-        return data[0].text || "Sorry, something went wrong.";
+        const data = response.data;
+
+        return data[0]?.text || "Sorry, something went wrong.";
       },
       path: "main",
     },
