@@ -26,7 +26,7 @@ import RequestReset from "./pages/RequestReset";
 import ResetPassword from "./pages/ResetPassword";
 import VerifyAccount from "./pages/VerifyAccount";
 
-import Chat from "./components/layout/Chat";
+import ChatWidget from "./components/chatbot/ChatWidget";
 import MainLayout from "./components/layout/MainLayout";
 import NavLayout from "./components/layout/NavLayout";
 import AuthLayout from "./components/layout/AuthLayout";
@@ -75,7 +75,7 @@ function App() {
             <ScrollToTop />
             <CookieModal />
             <RouteTracking />
-            <Chat/>
+            <ChatWidget />
 
             <Routes>
               {/* Public pages with nav/footer */}
