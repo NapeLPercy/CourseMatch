@@ -1,14 +1,20 @@
 import React from "react";
+import { formatTimestamp } from "../../Utils/datetime";
+import * as LucideIcons from "lucide-react";
 
 /* ── Custom renderers — add new types here ── */
 function FeaturesList({ features }) {
   return (
     <div className="cb__features">
       {features.map((f, i) => {
-        const Icon = f.icon;
+        const Icon = LucideIcons[f.icon];
         return (
           <div key={i} className="cb__feature-item">
-            <Icon size={14} strokeWidth={2} className="cb__feature-icon" />
+            {Icon ? (
+              <Icon size={14} strokeWidth={2} className="cb__feature-icon" />
+            ) : (
+              <div className="cb__feature-fallback-spacer" />
+            )}
             {f.label}
           </div>
         );
@@ -44,12 +50,14 @@ function renderCustom(custom) {
       );
   }
 }
-
+{
+  /*
 function formatTime(date) {
   return new Date(date).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
+}*/
 }
 
 export default function ChatBubble({ message }) {
@@ -64,7 +72,7 @@ export default function ChatBubble({ message }) {
         {text && <span>{text}</span>}
         {custom && renderCustom(custom)}
       </div>
-      <span className="cb__bubble-time">{formatTime(timestamp)}</span>
+      <span className="cb__bubble-time">{formatTimestamp(timestamp)}</span>
     </div>
   );
 }

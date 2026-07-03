@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import ChatHeader from "./ChatHeader";
 import ChatBubble from "./ChatBubble";
 import ChatInput from "./ChatInput";
-import { Calculator, BookOpen, HelpCircle, } from "lucide-react";
 import { sendChatbotMessage } from "../../services/chatbotService";
 
 const GREETING = {
@@ -17,9 +16,9 @@ const FEATURES_MSG = {
   custom: {
     type: "features_list",
     features: [
-      { icon: Calculator, label: "Ask APS score questions" },
-      { icon: BookOpen, label: "Explore course requirements" },
-      { icon: HelpCircle, label: "Understand admission rules" },
+      { icon: "Calculator", label: "Ask APS score questions" },
+      { icon: "BookOpen", label: "Explore course requirements" },
+      { icon: "HelpCircle", label: "Understand admission rules" },
     ],
   },
   timestamp: new Date(),
@@ -34,8 +33,19 @@ export default function ChatBot({ onClose, logoSrc }) {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
+  useEffect(() => {
+    const chatHistory = sessionStorage.getItem("chatbot-history");
+    if (chatHistory) setMessages(JSON.parse(chatHistory));
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem("chatbot-history", JSON.stringify(messages));
+  }, [messages]);
+
   const handleSend = async (text) => {
     const userMsg = { role: "user", text, timestamp: new Date() };
+    console.log("message", messages);
+    //1 add user msg to session storage
     setMessages((prev) => [...prev, userMsg]);
     setLoading(true);
 
@@ -84,7 +94,7 @@ export default function ChatBot({ onClose, logoSrc }) {
       <ChatHeader onClose={onClose} logoSrc={logoSrc} />
 
       <div className="cb__messages">
-        {messages.map((msg, i) => (
+        {messages?.map((msg, i) => (
           <ChatBubble key={i} message={msg} />
         ))}
         {loading && (
