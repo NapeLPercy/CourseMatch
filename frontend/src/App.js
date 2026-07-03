@@ -75,6 +75,7 @@ function App() {
             <ScrollToTop />
             <CookieModal />
             <RouteTracking />
+            <Chat/>
 
             <Routes>
               {/* Public pages with nav/footer */}
