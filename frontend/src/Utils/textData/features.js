@@ -5,6 +5,7 @@ import {
   Banknote,
   Microscope,
   Scale,
+  Bot,
 } from "lucide-react";
 
 export const FEATURES = [
@@ -41,15 +42,23 @@ export const FEATURES = [
     color: "red",
   },
   {
-  id: 5,
-  icon: Scale,
-  title: "Qualification Comparison",
-  description:
-    "Compare two qualifications side-by-side using AI-powered insights. Discover which course better matches your academic strengths, personality, career goals, salary expectations, work environment preferences, and long-term opportunities.",
-  color: "blue",
-},
+    id: 5,
+    icon: Scale,
+    title: "Qualification Comparison",
+    description:
+      "Compare two qualifications side-by-side using AI-powered insights. Discover which course better matches your academic strengths, personality, career goals, salary expectations, work environment preferences, and long-term opportunities.",
+    color: "blue",
+  },
   {
     id: 6,
+    icon: Bot,
+    title: "Chatbot",
+    description:
+      "Your AI study assistant that helps you explore courses, understand requirements, and make informed study decisions.",
+    color: "green",
+  },
+  {
+    id: 7,
     icon: Banknote,
     title: "NSFAS Eligibility Checker",
     description:
