@@ -5,6 +5,8 @@ import { ChevronDown, Menu, X, LogOut } from "lucide-react";
 import { NAV_CONFIG } from "../../Utils/textData/menuConfig";
 import { FORCE_COLOURED_NAV } from "../../Utils/textData/navbarColorConfig";
 import SmallLoader from "../ui/SmallLoader";
+import ChatWidget from "../chatbot/ChatWidget";
+
 import "../../styles/Nav.css";
 
 /* ── Dropdown item ──────────────────────── */
@@ -223,6 +225,8 @@ export default function Nav() {
             ))}
           </div>
 
+            <ChatWidget />
+            
           {/* Desktop actions */}
           <div className="nav__actions">
             {!isLoggedIn ? (

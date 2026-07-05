@@ -48,7 +48,6 @@ import TermsAndConditions from "./components/data-display/TermsAndConditions";
 import ScrollToTop from "./components/ScrollToTop";
 import WelcomeOnboarding from "./components/data-display/WelcomeOnboarding";
 import GuestCalculateAPS from "./components/forms/GuestCalculateAPS";
-import TutorHome from "./pages/TutorHome";
 import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
 import ManageBlogs from "./components/data-display/ManageBlogs";
@@ -75,7 +74,6 @@ function App() {
             <ScrollToTop />
             <CookieModal />
             <RouteTracking />
-            <ChatWidget />
 
             <Routes>
               {/* Public pages with nav/footer */}
