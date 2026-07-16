@@ -14,7 +14,7 @@ export default function CoursePreview({
 
   const sorted = [...courseList]
     .sort((a, b) => b.minimum_aps - a.minimum_aps)
-    .slice(0, 10);
+    .slice(0, 20);
 
   return (
     <div className="cp">
@@ -61,7 +61,7 @@ export default function CoursePreview({
           </button>
           <button
             className="cp__nudge-btn cp__nudge-btn--filled"
-            onClick={() => navigate("/student/manage-my-profile")}
+            onClick={() => navigate("/student/add/personality")}
           >
             Add profile
             <ArrowRight size={14} strokeWidth={2.5} />
