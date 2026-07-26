@@ -1,4 +1,3 @@
-import React from "react";
 import { useCookieConsent } from "../../context/CookieConsentContext";
 
 export default function CookieSettingsLink() {
@@ -8,7 +7,7 @@ export default function CookieSettingsLink() {
     <a
       onClick={openModal}
       style={{ cursor: "pointer" }}
-      className="footer__link"
+    className="ft__link"
     >
       Cookie Settings
     </a>
