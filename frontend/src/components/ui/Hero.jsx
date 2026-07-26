@@ -44,11 +44,6 @@ export default function Hero({ data }) {
     if (action.onClick) action.onClick();
   }
 
-  const imageSrc =
-    isMobile && right?.image?.mobile
-      ? right.image.mobile
-      : right?.image?.desktop;
-
   return (
     <section ref={sectionRef} className="lh" aria-label="Hero">
       {/* Ambient blobs */}
@@ -143,6 +138,18 @@ export default function Hero({ data }) {
             aria-hidden="true"
           />
 
+          {/* Image */}
+          <div className="img__container">
+
+            <img
+              key="Hero image"
+              src={isMobile ? "/heroPhone.png" : "/heroDesktop.png"}
+              alt={right?.image?.alt || "Hero image"}
+              className="lh__img"
+              loading="eager"
+            />
+          </div>
+
           {/* Steps */}
           {right?.steps?.length > 0 && (
             <div className="lh__steps">
@@ -154,18 +161,6 @@ export default function Hero({ data }) {
               ))}
             </div>
           )}
-
-          {/* Image */}
-          {imageSrc && (
-            <img
-              key={imageSrc}
-              src={imageSrc}
-              alt={right?.image?.alt || "Hero image"}
-              className="lh__img"
-              loading="eager"
-            />
-          )}
-
           {/* Floating chips 
           <div className="lh__chip lh__chip--top">
             <span className="lh__chip-dot" />
@@ -189,5 +184,3 @@ export default function Hero({ data }) {
     </section>
   );
 }
-
-
