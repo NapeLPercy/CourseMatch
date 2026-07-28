@@ -1,4 +1,7 @@
 export const FORCE_COLOURED_NAV = [
+  "/popia",
+  "/privacy-policy",
+  "/cookie-policy",
   "/admin/add/university-prospectus",
   "/university-prospectuses",
   "/admin/manage/university-prospectuses",

@@ -43,8 +43,7 @@ import StudentMatchedCourses from "./components/data-display/StudentMatchedCours
 //cookies
 import CookieModal from "./components/data-display/CookieModal";
 import RouteTracking from "./routes/RouteTracking";
-//terms
-import TermsAndConditions from "./components/data-display/TermsAndConditions";
+
 import ScrollToTop from "./components/ScrollToTop";
 import WelcomeOnboarding from "./components/data-display/WelcomeOnboarding";
 import GuestCalculateAPS from "./components/forms/GuestCalculateAPS";
@@ -65,6 +64,10 @@ import ExtendedProgrammes from "./pages/ExtendedCourses";
 import BachelorCourses from "./pages/BachelorCourses";
 import Prospectus from "./components/data-display/Prospectus";
 import AddProspectus from "./components/forms/AddProspectus";
+import TermsOfService from "./components/data-display/legal/TermsOfService";
+import CookiePolicy from "./components/data-display/legal/CookiePolicy";
+import PrivacyPolicy from "./components/data-display/legal/PrivacyPolicy";
+import Popia from "./components/data-display/legal/POPIA";
 function App() {
   return (
     <UserProvider>
@@ -81,10 +84,11 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/features" element={<Features />} />
                 <Route path="/contact-us" element={<Contact />} />
-                <Route
-                  path="/terms-and-conditions"
-                  element={<TermsAndConditions />}
-                />
+                {/*LEGAL*/}
+                <Route path="/terms-and-conditions"element={<TermsOfService />}/>
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/cookie-policy" element={<CookiePolicy />} />
+                <Route path="/popia" element={<Popia />} />
 
                 <Route path="/blogs" element={<BlogList />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
