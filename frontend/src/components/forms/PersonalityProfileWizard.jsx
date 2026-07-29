@@ -7,6 +7,7 @@ import SubmitError from "../ui/SubmitError";
 import PageHeader from "../ui/PageHeader";
 import "../../styles/AddMyProfile.css";
 import { STEPS } from "../../Utils/textData/personalityQuestions";
+import { useSubjects } from "../../context/SubjectContext";
 
 const TOTAL = STEPS.length;
 
@@ -82,30 +83,37 @@ function SingleSelect({ question, value, onChange }) {
 
 /* ── Subject select list ────────────────── */
 function SubjectSelect({ question, value, onChange }) {
+  const { getSubjects } = useSubjects();
+
+  // value is now a string, not an array
   const selected = Array.isArray(value) ? value : [];
 
   const handleChange = (e) => {
-    const options = Array.from(e.target.selectedOptions).map((o) => o.value);
-    onChange(options);
+    const chosen = e.target.value;
+    // keep it as array so the rest of the logic stays the same
+    onChange(chosen ? [chosen] : []);
   };
 
   return (
     <div className="amp__subject-wrap">
-      <p className="amp__subject-hint">
-        Hold <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> to select multiple
-      </p>
       <select
         className="amp__subject-select"
-        multiple
-        value={selected}
+        value={selected[0] || ""}
         onChange={handleChange}
-        size={8}
+        size={7}
       >
-        {question.options.map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
-          </option>
-        ))}
+        <option value="" disabled hidden />
+        {getSubjects()?.length > 0
+          ? getSubjects().map((subject) => (
+              <option key={subject.id} value={subject.name}>
+                {subject.name + ": " + subject.mark + "%"}
+              </option>
+            ))
+          : question.options.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
       </select>
       <span className="amp__subject-count">{selected.length} selected</span>
     </div>
@@ -177,6 +185,22 @@ export default function PersonalityProfileWizard() {
         }
       }
     }
+    // Cross-validate enjoyed vs disliked subjects
+    if (currentStep.paired) {
+      const enjoyed = Array.isArray(answers.enjoyedSubjects)
+        ? answers.enjoyedSubjects
+        : [];
+      const disliked = Array.isArray(answers.dislikedSubjects)
+        ? answers.dislikedSubjects
+        : [];
+      const overlap = enjoyed.filter((s) => disliked.includes(s));
+
+      if (overlap.length > 0) {
+        newErrors.enjoyedSubjects = `You can't like and dislike the same subject: ${overlap.join(", ")}`;
+        // newErrors.dislikedSubjects = " "; // triggers red border without duplicate message
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

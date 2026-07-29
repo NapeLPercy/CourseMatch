@@ -26,7 +26,6 @@ import RequestReset from "./pages/RequestReset";
 import ResetPassword from "./pages/ResetPassword";
 import VerifyAccount from "./pages/VerifyAccount";
 
-import ChatWidget from "./components/chatbot/ChatWidget";
 import MainLayout from "./components/layout/MainLayout";
 import NavLayout from "./components/layout/NavLayout";
 import AuthLayout from "./components/layout/AuthLayout";
@@ -55,7 +54,7 @@ import AdminManageAccounts from "./components/data-display/AdminManageAccounts";
 import SendEmailPage from "./components/forms/SendEmailPage";
 import NsfasEligibilityChecker from "./components/forms/NsfasEligibilityChecker";
 import CourseComparisons from "./components/data-display/CourseComparisons";
-import PersonalityProfileWizard from "./components/forms/AddMyProfile";
+import PersonalityProfileWizard from "./components/forms/PersonalityProfileWizard";
 import ViewMyProfile from "./components/data-display/ViewMyProfile";
 import DiplomaCourses from "./pages/DiplomaCourses";
 import NoMathsCourses from "./pages/NoMathsCourses";
