@@ -10,28 +10,8 @@ import {
   ArrowRight,
   Star,
 } from "lucide-react";
+import ComparisonStars from "../ui/courseComparisonStars";
 
-/* ── Score ring ─────────────────────────── */
-function ScoreRing({ score, color }) {
-  const r = 28;
-  const circ = 2 * Math.PI * r;
-  const offset = circ - (score / 100) * circ;
-  return (
-    <svg width="72" height="72" className="cc__ring">
-      <circle cx="36" cy="36" r={r} className="cc__ring-bg" />
-      <circle
-        cx="36"
-        cy="36"
-        r={r}
-        className={`cc__ring-fill cc__ring-fill--${color}`}
-        style={{ strokeDasharray: circ, strokeDashoffset: offset }}
-      />
-      <text x="36" y="40" className="cc__ring-text">
-        {score}%
-      </text>
-    </svg>
-  );
-}
 /* ── Comparison result ──────────────────── */
 export default function ComparisonResult({ comparison }) {
   const winner = comparison.winner.qualificationName;
@@ -78,12 +58,18 @@ export default function ComparisonResult({ comparison }) {
           <span className="cc__winner-badge">
             <Trophy size={11} /> Winner
           </span>
-          <ScoreRing score={dataA?.matchScore} color="blue" />
+          <ComparisonStars
+            score={dataA?.comparisonScore ?? dataA?.matchScore}
+            color="blue"
+          />
           <p className="cc__score-name">{dataA?.qualificationName}</p>
         </div>
         <span className="cc__vs">VS</span>
         <div className="cc__score-card">
-          <ScoreRing score={dataB?.matchScore} color="gray" />
+          <ComparisonStars
+            score={dataB?.comparisonScore ?? dataB?.matchScore}
+            color="blue"
+          />
           <p className="cc__score-name">{dataB?.qualificationName}</p>
         </div>
       </div>

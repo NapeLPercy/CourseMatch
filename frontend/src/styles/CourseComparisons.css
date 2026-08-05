@@ -612,7 +612,7 @@
   flex-shrink: 0;
 }
 
-/* Score ring */
+/* Score ring 
 .cc__ring {
   transform: rotate(-90deg);
   overflow: visible;
@@ -648,7 +648,7 @@
   transform: rotate(90deg);
   transform-origin: center;
 }
-
+*/
 .cc__score-name {
   font-size: 0.8rem;
   font-weight: 700;
@@ -656,6 +656,9 @@
   text-align: center;
   margin: 0;
   line-height: 1.35;
+}
+.cc__star{
+  font-size: 1.5em;
 }
 
 /* ── SECTIONS ────────────────────────────── */
