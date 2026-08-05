@@ -12,7 +12,7 @@ export default function ChatHeader({ onClose, logoSrc }) {
         </div>
       )}
       <div className="cb__header-text">
-        <p className="cb__header-name">CourseMatch AI</p>
+        <p className="cb__header-name">CourseMate</p>
         <div className="cb__header-status">
           <span className="cb__status-dot" />
           Online

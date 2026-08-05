@@ -6,7 +6,7 @@ import { sendChatbotMessage } from "../../services/chatbotService";
 
 const GREETING = {
   role: "bot",
-  text: "Hey! 👋 I'm CourseMatch AI. I'm here to help you find the right university courses based on your subjects, APS score, and interests.",
+  text: "Hey! 👋 I'm CourseMate. I'm here to help you find the right university courses based on your subjects, APS score, and interests.",
   timestamp: new Date(),
 };
 
@@ -44,7 +44,6 @@ export default function ChatBot({ onClose, logoSrc }) {
 
   const handleSend = async (text) => {
     const userMsg = { role: "user", text, timestamp: new Date() };
-    console.log("message", messages);
     //1 add user msg to session storage
     setMessages((prev) => [...prev, userMsg]);
     setLoading(true);
