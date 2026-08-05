@@ -3,8 +3,9 @@ dotenv.config();
 const aiRecommendationService = require("../services/aiRecommendationService");
 const { getOrCreateDeepDive } = require("../services/aiCourseDeepDiveService");
 const { getStudentCompleteProfile } = require("../services/studentService");
-const {getOrCreateCourseComparison} = require("../services/aiCourseComparisonService");
-//const { use } = require("react");
+const {
+  getOrCreateCourseComparison,
+} = require("../services/aiCourseComparisonService");
 
 /*fetch or create AI scoring + explanation*/
 exports.getAIRecommendations = async (req, res) => {
@@ -113,9 +114,9 @@ exports.getAIDeepDive = async (req, res) => {
 //fetch or create course comparisons
 exports.getAICourseComparison = async (req, res) => {
   try {
-    const userId  = req.userId;
+    const userId = req.userId;
     const { qualifications, subjects } = req.body;
-    
+
     if (!userId) {
       return res
         .status(401)
@@ -138,7 +139,6 @@ exports.getAICourseComparison = async (req, res) => {
 
     const profile = await getStudentCompleteProfile(userId);
 
-    
     const comparison = await getOrCreateCourseComparison(
       userId,
       qualifications,
