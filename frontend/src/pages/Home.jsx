@@ -4,6 +4,7 @@ import Testimonials from "./Testimonials";
 import AboutUs from "./About";
 import SEO from "../components/ui/SEO";
 import { homeFaqs } from "../Utils/textData/SeoFaqs";
+import WhyChooseUs from "./WhyChooseUs";
 import { CoursematchHero } from "./CorsematchHero";
 // Home Component
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
       />
       <CoursematchHero />
       <AboutUs />
+      <WhyChooseUs/>
       <HowItWorks />
       <Testimonials />
       <FAQ />

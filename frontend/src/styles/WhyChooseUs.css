@@ -1,0 +1,192 @@
+/* WHY CHOOSE US — CourseMatch */
+
+/* ── GRID ────────────────────────────────── */
+.wc__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  width: 100%;
+}
+
+/* ── CARD ────────────────────────────────── */
+.wc__card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  padding: 0 24px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  box-sizing: border-box;
+  box-shadow: 0 2px 12px rgba(30, 58, 138, 0.05);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.28s ease,
+              border-color 0.2s ease;
+  cursor: default;
+}
+
+/*.wc__card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(30, 58, 138, 0.12);
+  border-color: #dbeafe;
+}*/
+
+/* ── ICON HERO ───────────────────────────── */
+.wc__icon-wrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -28px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+/* Outer decorative ring */
+.wc__ring {
+  position: absolute;
+  border-radius: 50%;
+  border-style: solid;
+  pointer-events: none;
+}
+
+.wc__ring--outer {
+  width: 76px;
+  height: 76px;
+  border-width: 1px;
+  opacity: 0.5;
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.wc__ring--inner {
+  width: 60px;
+  height: 60px;
+  border-width: 1.5px;
+  opacity: 0.35;
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.wc__card:hover .wc__ring--outer {
+  opacity: 0.8;
+  transform: scale(1.08);
+}
+
+.wc__card:hover .wc__ring--inner {
+  opacity: 0.6;
+  transform: scale(1.06);
+}
+
+/* Glow */
+.wc__glow {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  filter: blur(18px);
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+  opacity: 0.7;
+}
+
+.wc__card:hover .wc__glow {
+  opacity: 1;
+  filter: blur(22px);
+}
+
+/* Circle */
+.wc__circle {
+  position: relative;
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.28s ease;
+}
+
+.wc__card:hover .wc__circle {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Decorative dots */
+.wc__dot {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.wc__dot--tl {
+  width: 6px; height: 6px;
+  top: 4px; left: 4px;
+}
+
+.wc__dot--br {
+  width: 5px; height: 5px;
+  bottom: 4px; right: 4px;
+}
+
+.wc__dot--tr {
+  width: 4px; height: 4px;
+  top: 8px; right: 8px;
+}
+
+.wc__card:hover .wc__dot {
+  opacity: 1;
+  transform: scale(1.3);
+}
+
+/* ── BODY ────────────────────────────────── */
+.wc__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 4px;
+}
+
+.wc__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.wc__desc {
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.72;
+  color: #475569;
+  margin: 0;
+}
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 900px) {
+  .wc__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 540px) {
+  .wc__grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .wc__card {
+    padding: 0 20px 24px;
+  }
+}
