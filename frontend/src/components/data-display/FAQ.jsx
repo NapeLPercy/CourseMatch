@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, MessageCircle } from "lucide-react";
+import { ChevronDown, MessageCircle, ArrowRight } from "lucide-react";
 import "../../styles/FAQ.css";
 import { FAQS } from "../../Utils/textData/faqs";
 
@@ -88,6 +88,7 @@ export default function FAQ() {
               }}
             >
               Contact Us
+              <ArrowRight size={16} strokeWidth={2.5} />
             </button>
           </div>
         </div>
