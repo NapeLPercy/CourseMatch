@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import {
   Mail,
   User,
@@ -7,235 +7,117 @@ import {
   Send,
   LoaderCircle,
   ChevronDown,
-  X,
-  Search,
+  Facebook,
+  Phone,
+  AtSign,
 } from "lucide-react";
-import "./Contact.css";
+import "../styles/Contact.css";
 import { sendEmail } from "../Utils/emailManager";
-import { universitiesList } from "../Utils/universities";
 import { getCurrentDateTime } from "../Utils/datetime";
 import SubmitError from "../components/ui/SubmitError";
 import SubmitSuccess from "../components/ui/SubmitSuccess";
 import SEO from "../components/ui/SEO";
-/* ─── Validation ────────────────────────────────────────────── */
+
+const SOCIAL = [
+  {
+    icon: Facebook,
+    label: "Facebook",
+    handle: "CourseMatch",
+    href: "https://web.facebook.com/profile.php?id=61572570570851",
+    color: "blue",
+  },
+  {
+    icon: Phone,
+    label: "WhatsApp",
+    handle: "+27 68 274 8821",
+    href: "https://wa.me/27682748821",
+    color: "blue",
+  },
+  {
+    icon: AtSign,
+    label: "Email",
+    handle: "lekoloanepercy007@gmail.com",
+    href: "mailto:lekoloanepercy007@gmail.com",
+    color: "blue",
+  },
+];
+
+const REQUIRED = ["email", "enquiry", "message"];
+
 function validate(fields) {
-  const errors = {};
-  //if (!fields.name.trim()) errors.name = "Please enter your name.";
+  const errs = {};
   if (!fields.email.trim()) {
-    errors.email = "Email is required.";
+    errs.email = "Email is required.";
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) {
-    errors.email = "That doesn't look like a valid email address.";
+    errs.email = "Please enter a valid email address.";
   }
-  if (!fields.enquiry.trim()) errors.enquiry = "Please select an enquiry type.";
-  if (!fields.message.trim()) errors.message = "Please enter a message.";
-  return errors;
+  if (!fields.enquiry) errs.enquiry = "Please select an enquiry type.";
+  if (!fields.message.trim()) errs.message = "Message is required.";
+  if(fields.message.trim().length<=5) errs.message="Message should be more than 5 letters";
+  return errs;
 }
 
-/* ─── Reusable input wrapper ────────────────────────────────── */
-function FieldWrapper({ error, children }) {
-  return (
-    <div className={`cf__field ${error ? "cf__field--error" : ""}`}>
-      {children}
-      {error && (
-        <span className="cf__error" role="alert">
-          <X size={13} strokeWidth={2.5} className="cf__error-icon" />
-          {error}
-        </span>
-      )}
-    </div>
-  );
-}
-
-/* ─── Searchable university dropdown ────────────────────────── */
-function UniversitySelect({ value, onChange, error }) {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const wrapRef = useRef(null);
-  const inputRef = useRef(null);
-
-  // Close on outside click
-  useEffect(() => {
-    const handler = (e) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target))
-        setOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  // Auto-focus search when opened
-  useEffect(() => {
-    if (open && inputRef.current) inputRef.current.focus();
-  }, [open]);
-
-  const filtered = universitiesList.filter((u) =>
-    u.toLowerCase().includes(query.toLowerCase()),
-  );
-
-  return (
-    <div ref={wrapRef} className="cf__select-wrap">
-      {/* Trigger button */}
-      <button
-        type="button"
-        className={`cf__select-trigger ${error ? "cf__select-trigger--error" : ""} ${open ? "cf__select-trigger--open" : ""}`}
-        onClick={() => setOpen((o) => !o)}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-      >
-        <BookOpen size={18} strokeWidth={1.8} className="cf__select-icon" />
-        <span
-          className={`cf__select-value ${!value ? "cf__select-value--placeholder" : ""}`}
-        >
-          {value || "Search for a university…"}
-        </span>
-        <ChevronDown
-          size={16}
-          strokeWidth={2}
-          className={`cf__select-chevron ${open ? "cf__select-chevron--open" : ""}`}
-        />
-      </button>
-
-      {/* Dropdown panel */}
-      {open && (
-        <div className="cf__select-panel" role="listbox">
-          {/* Search input */}
-          <div className="cf__select-search">
-            <Search
-              size={15}
-              strokeWidth={2}
-              className="cf__select-search-icon"
-            />
-            <input
-              ref={inputRef}
-              type="text"
-              className="cf__select-search-input"
-              placeholder="Type to filter…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              autoComplete="off"
-            />
-          </div>
-
-          {/* Options */}
-          <ul className="cf__select-list">
-            {filtered.length > 0 ? (
-              filtered.map((uni) => (
-                <li
-                  key={uni}
-                  className={`cf__select-option ${uni === value ? "cf__select-option--active" : ""}`}
-                  role="option"
-                  aria-selected={uni === value}
-                  onClick={() => {
-                    onChange(uni);
-                    setOpen(false);
-                    setQuery("");
-                  }}
-                >
-                  {uni}
-                </li>
-              ))
-            ) : (
-              <li className="cf__select-empty">No results match "{query}"</li>
-            )}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ─── Main component ────────────────────────────────────────── */
 export default function Contact() {
   const [fields, setFields] = useState({
     name: "",
     email: "",
-    university: "",
     enquiry: "",
     message: "",
   });
-
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
-  const [shakeField, setShakeField] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  const sectionRef = useRef(null);
-  const [mounted, setMounted] = useState(false);
-  const [submitError, setSubmitError] = useState(null);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const updated = { ...fields, [name]: value };
+    setFields(updated);
 
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) setMounted(true);
-      },
-      { threshold: 0.12 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  const change = (key) => (e) => {
-    setFields((prev) => ({ ...prev, [key]: e.target.value }));
-    // Clear error for this field as user types
-    if (errors[key])
-      setErrors((prev) => {
-        const n = { ...prev };
-        delete n[key];
-        return n;
-      });
+    // live validation — clear error as soon as field is valid
+    const errs = validate(updated);
+    setErrors((prev) => ({
+      ...prev,
+      [name]: errs[name] || "",
+    }));
   };
 
-  const triggerShake = (fieldName) => {
-    setShakeField(fieldName);
-    setTimeout(() => setShakeField(null), 500);
-  };
-
-  const handleSubmit = async () => {
-    if (isSubmitting) return;
-    setSubmitError(null);
-    setSubmitted(false);
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const errs = validate(fields);
-    setErrors(errs);
-
     if (Object.keys(errs).length > 0) {
-      // Shake the first errored field
-      const firstErr = Object.keys(errs)[0];
-      triggerShake(firstErr);
+      setErrors(errs);
       return;
     }
 
-    setIsSubmitting(true);
+    setLoading(true);
+    setSubmitError("");
+    setSuccess(false);
+
     try {
-      const response = await sendEmail({
+      await sendEmail({
         from_name: fields.name,
         from_email: fields.email,
-        university: fields.university || "Not specified",
         enquiry: fields.enquiry,
         message: fields.message,
         time: getCurrentDateTime(),
       });
-      setSubmitted(true);
-      setFields({
-        name: "",
-        email: "",
-        university: "",
-        message: "",
-        enquiry: "",
-      });
-    } catch (error) {
+      setSuccess(true);
+      setFields({ name: "", email: "", enquiry: "", message: "" });
+      setErrors({});
+    } catch {
       setSubmitError("Failed to send your message. Please try again.");
     } finally {
-      setIsSubmitting(false);
-      setTimeout(() => {
-        setSubmitted(false);
-      }, 10000);
+      setLoading(false);
     }
   };
 
-  /* ── Form screen ── */
+  const fieldState = (name) => {
+    if (errors[name]) return "ct__field--error";
+    if (REQUIRED.includes(name) && fields[name]) return "ct__field--valid";
+    return "";
+  };
+
   return (
     <>
       <SEO
@@ -251,184 +133,187 @@ export default function Contact() {
           url: "https://coursematchapp.co.za/contact-us",
         }}
       />
-      <section
-        ref={sectionRef}
-        className={`contact ${mounted ? "contact--mounted" : ""}`}
-      >
-        <div className="contact__glow" aria-hidden="true" />
-        <div className="contact__geo contact__geo--1" aria-hidden="true" />
-        <div className="contact__geo contact__geo--2" aria-hidden="true" />
 
-        <div className="contact__inner">
-          {/* Header */}
-          <div className="contact__header">
-            <div className="contact__icon-wrap">
-              <Mail size={24} strokeWidth={1.6} />
+      <main className="ct">
+        <div className="ct__inner">
+          {/* ── LEFT — Form ── */}
+          <div className="ct__left">
+            <div className="ct__heading-wrap">
+              <span className="ct__eyebrow">Contact us</span>
+              <h1 className="ct__heading">We'd love to hear from you.</h1>
+              <p className="ct__subheading">
+                Have a question, found a bug, or want to partner with us? Drop
+                us a message and we'll get back to you as soon as possible.
+              </p>
             </div>
-            <span className="contact__eyebrow">Get in touch</span>
-            <h2 className="contact__title">
-              We'd love to
-              <br />
-              <span className="contact__title-accent">hear from you.</span>
-            </h2>
-            <p className="contact__subtitle">
-              Have a question, suggestion, or just want to say hi? Fill in the
-              form below. Only the university field is required.
-            </p>
-          </div>
-          <div className="contact__form">
-            {/* Name — single field */}
-            <FieldWrapper error={errors.name}>
-              <label className="cf__label" htmlFor="cf-name">
-                <User size={13} strokeWidth={2} className="cf__label-icon" />
-                Full Name <span className="cf__required"></span>
-              </label>
-              <input
-                id="cf-name"
-                type="text"
-                className={`cf__input ${shakeField === "name" ? "cf__input--shake" : ""}`}
-                placeholder="First and last name"
-                value={fields.name}
-                onChange={change("name")}
-                autoComplete="name"
-              />
-            </FieldWrapper>
 
-            {/* Email — now required */}
-            <FieldWrapper error={errors.email}>
-              <label className="cf__label" htmlFor="cf-email">
-                <Mail size={13} strokeWidth={2} className="cf__label-icon" />
-                Email <span className="cf__required">*</span>
-              </label>
-              <input
-                id="cf-email"
-                type="text"
-                className={`cf__input ${shakeField === "email" ? "cf__input--shake" : ""}`}
-                placeholder="you@email.com"
-                value={fields.email}
-                onChange={change("email")}
-                autoComplete="email"
-              />
-            </FieldWrapper>
-
-            {/* Enquiry type — required, plain select */}
-            <FieldWrapper error={errors.enquiry}>
-              <label className="cf__label" htmlFor="cf-enquiry">
-                <MessageSquare
-                  size={13}
-                  strokeWidth={2}
-                  className="cf__label-icon"
-                />
-                Enquiry Type <span className="cf__required">*</span>
-              </label>
-              <select
-                id="cf-enquiry"
-                className={`cf__input cf__input--select ${shakeField === "enquiry" ? "cf__input--shake" : ""}`}
-                value={fields.enquiry}
-                onChange={change("enquiry")}
-              >
-                <option value="">Select an enquiry type…</option>
-                <option value="General Enquiry">General Enquiry</option>
-                <option value="Technical Issue">Technical Issue</option>
-                <option value="Course Data Issue">Course Data Issue</option>
-                <option value="Partnership">Partnership</option>
-                <option value="Feature Request">Feature Request</option>
-                <option value="Other">Other</option>
-              </select>
-            </FieldWrapper>
-
-            {/* University — now optional, no searchable dropdown */}
-            <FieldWrapper error={errors.university}>
-              <label className="cf__label" htmlFor="cf-university">
-                <BookOpen
-                  size={13}
-                  strokeWidth={2}
-                  className="cf__label-icon"
-                />
-                University{" "}
-                <span
-                  style={{
-                    fontSize: "0.7rem",
-                    color: "var(--text-gray)",
-                    fontWeight: 400,
-                  }}
-                >
-                  (optional)
-                </span>
-              </label>
-              <div
-                className={
-                  shakeField === "university"
-                    ? "cf__shake-wrap cf__shake-wrap--shake"
-                    : "cf__shake-wrap"
-                }
-              >
-                <UniversitySelect
-                  value={fields.university}
-                  onChange={(val) => {
-                    setFields((prev) => ({ ...prev, university: val }));
-                    if (errors.university)
-                      setErrors((prev) => {
-                        const n = { ...prev };
-                        delete n.university;
-                        return n;
-                      });
-                  }}
-                  error={!!errors.university}
-                />
+            <form className="ct__form" onSubmit={handleSubmit} noValidate>
+              {/* Name — optional */}
+              <div className={`ct__field ${fieldState("name")}`}>
+                <label className="ct__label" htmlFor="name">
+                  Full name
+                  <span className="ct__optional">optional</span>
+                </label>
+                <div className="ct__input-wrap">
+                  <User size={15} className="ct__input-icon" strokeWidth={2} />
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    className="ct__input"
+                    placeholder="Your name"
+                    value={fields.name}
+                    onChange={handleChange}
+                    autoComplete="name"
+                  />
+                </div>
               </div>
-            </FieldWrapper>
 
-            {/* Message — now required */}
-            <FieldWrapper error={errors.message}>
-              <label className="cf__label" htmlFor="cf-message">
-                <MessageSquare
-                  size={13}
-                  strokeWidth={2}
-                  className="cf__label-icon"
-                />
-                Message <span className="cf__required">*</span>
-              </label>
-              <textarea
-                id="cf-message"
-                className={`cf__input cf__input--textarea ${shakeField === "message" ? "cf__input--shake" : ""}`}
-                placeholder="Tell us what's on your mind…"
-                rows={4}
-                value={fields.message}
-                onChange={change("message")}
-              />
-            </FieldWrapper>
+              {/* Email — required */}
+              <div className={`ct__field ${fieldState("email")}`}>
+                <label className="ct__label" htmlFor="email">
+                  Email address
+                  <span className="ct__req">*</span>
+                </label>
+                <div className="ct__input-wrap">
+                  <Mail size={15} className="ct__input-icon" strokeWidth={2} />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    className="ct__input"
+                    placeholder="you@example.com"
+                    value={fields.email}
+                    onChange={handleChange}
+                    autoComplete="email"
+                  />
+                </div>
+                {errors.email && <p className="ct__error">{errors.email}</p>}
+              </div>
 
-            {/* Submit Error or Success*/}
-            {submitError && <SubmitError error={submitError} />}
-            {submitted && (
-              <SubmitSuccess
-                success="Message sent! 
-            Thanks for reaching out. We'll get back to you shortly."
-              />
-            )}
-            {/* Submit */}
-            <button
-              className="btn btn--primary"
-              type="button"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              aria-busy={isSubmitting}
-            >
-              <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
-              {isSubmitting ? (
-                <LoaderCircle
-                  size={16}
-                  strokeWidth={2.2}
-                  className="cf__spinner"
-                />
-              ) : (
-                <Send size={16} strokeWidth={2.2} />
+              {/* Enquiry — required */}
+              <div className={`ct__field ${fieldState("enquiry")}`}>
+                <label className="ct__label" htmlFor="enquiry">
+                  Enquiry type
+                  <span className="ct__req">*</span>
+                </label>
+                <div className="ct__input-wrap ct__input-wrap--select">
+                  <BookOpen
+                    size={15}
+                    className="ct__input-icon"
+                    strokeWidth={2}
+                  />
+                  <select
+                    id="enquiry"
+                    name="enquiry"
+                    className="ct__input ct__select"
+                    value={fields.enquiry}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select an enquiry type…</option>
+                    <option value="General Enquiry">General Enquiry</option>
+                    <option value="Technical Issue">Technical Issue</option>
+                    <option value="Course Data Issue">Course Data Issue</option>
+                    <option value="Partnership">Partnership</option>
+                    <option value="Feature Request">Feature Request</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <ChevronDown
+                    size={13}
+                    className="ct__select-chevron"
+                    strokeWidth={2.5}
+                  />
+                </div>
+                {errors.enquiry && (
+                  <p className="ct__error">{errors.enquiry}</p>
+                )}
+              </div>
+
+              {/* Message — required */}
+              <div className={`ct__field ${fieldState("message")}`}>
+                <label className="ct__label" htmlFor="message">
+                  Message
+                  <span className="ct__req">*</span>
+                </label>
+                <div className="ct__input-wrap ct__input-wrap--textarea">
+                  <MessageSquare
+                    size={15}
+                    className="ct__input-icon ct__input-icon--top"
+                    strokeWidth={2}
+                  />
+                  <textarea
+                    id="message"
+                    name="message"
+                    className="ct__input ct__textarea"
+                    placeholder="Tell us how we can help…"
+                    rows={5}
+                    value={fields.message}
+                    onChange={handleChange}
+                  />
+                </div>
+                {errors.message && (
+                  <p className="ct__error">{errors.message}</p>
+                )}
+              </div>
+
+              {success && (
+                <SubmitSuccess success="Message sent! We'll be in touch soon." />
               )}
-            </button>
+              {submitError && <SubmitError error={submitError} />}
+
+              <button type="submit" className="ct__submit" disabled={loading}>
+                {loading ? (
+                  <>
+                    <LoaderCircle
+                      size={16}
+                      strokeWidth={2}
+                      className="ct__spin"
+                    />{" "}
+                    Sending…
+                  </>
+                ) : (
+                  <>
+                    <Send size={15} strokeWidth={2.2} /> Send message
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+
+          {/* ── RIGHT — Social cards ── */}
+          <div className="ct__right">
+            <p className="ct__right-label">Other ways to reach us</p>
+            <div className="ct__socials">
+              {SOCIAL.map(({ icon: Icon, label, handle, href, color }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`ct__social ct__social--${color}`}
+                >
+                  <div className={`ct__social-icon ct__social-icon--${color}`}>
+                    <Icon size={20} strokeWidth={1.8} />
+                  </div>
+                  <div className="ct__social-text">
+                    <span className="ct__social-label">{label}</span>
+                    <span className="ct__social-handle">{handle}</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+
+            {/* Info block */}
+            <div className="ct__info">
+              <p className="ct__info-title">Response time</p>
+              <p className="ct__info-desc">
+                We typically respond within <strong>24–48 hours</strong> on
+                weekdays. For urgent queries, reach out via WhatsApp.
+              </p>
+            </div>
           </div>
         </div>
-      </section>
+      </main>
     </>
   );
 }
