@@ -21,7 +21,7 @@
   position: relative;
   min-height: 100vh;
   background:  var(--off-white);/*linear-gradient(180deg, var(--off-white) 0%, var(--white) 100%);*/
-  padding: 60px 24px 80px;
+  padding: 40px 24px 80px;
   overflow: hidden;
 }
 
@@ -254,7 +254,7 @@
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 700px) {
   .faq {
-    padding: 70px 20px 60px;
+    padding: 40px 20px 60px;
   }
 
   .faq__container {
