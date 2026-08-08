@@ -6,6 +6,7 @@ import SEO from "../components/ui/SEO";
 import { homeFaqs } from "../Utils/textData/SeoFaqs";
 import WhyChooseUs from "./WhyChooseUs";
 import { CoursematchHero } from "./CorsematchHero";
+import Hero from "./Hero";
 // Home Component
 export default function Home() {
   return (
@@ -16,7 +17,7 @@ export default function Home() {
         url="https://coursematchapp.co.za/"
         faq={homeFaqs}
       />
-      <CoursematchHero />
+      <Hero />
       <AboutUs />
       <WhyChooseUs/>
       <HowItWorks />
