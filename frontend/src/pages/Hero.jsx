@@ -1,131 +1,25 @@
-import { useEffect, useRef, useState } from "react";
+
+import "../styles/Hero.css";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ArrowRight,
-  BookOpen,
-  Brain,
-  Target,
-  Sparkles,
-  CheckCircle2,
-  GraduationCap,
-  Briefcase,
-  FlaskConical,
-  Code2,
-  Palette,
+  Sparkles, ArrowRight, CheckCircle2,
+  BookOpen, Brain, Target, GraduationCap,
 } from "lucide-react";
-import "../styles/Hero.css";
-// import {
-//   BookOpen,
-//   Brain,
-//   Target,
-//   Sparkles,
-//   Code2,
-//   FlaskConical,
-//   GraduationCap,
-// } from "lucide-react";
-/* ── Product screenshots ── */
-const PRODUCTS = [
-  {
-    src: "/ai_course_recommendation_hero.png",
-    label: "AI Course Recommendations",
-  },
-  { src: "/course_deep_dive_hero.png", label: "Career Deep Dive" },
-  { src: "/course_comparison_hero.png", label: "Course Comparison" },
+
+const AI_IMG         = "/ai_course_recommendation_hero.png";
+const DEEP_DIVE_IMG  = "/course_deep_dive_hero.png";
+const COMPARISON_IMG = "/course_comparison_hero.png";
+
+const SCREENSHOTS = [
+  { src: AI_IMG,         label: "AI Course Recommendations" },
+  { src: DEEP_DIVE_IMG,  label: "Career Deep Dive"          },
+  { src: COMPARISON_IMG, label: "Course Comparison"         },
 ];
 
-const INPUTS = [
-  {
-    icon: BookOpen,
-    label: "Subjects",
-    sub: "Maths · Science · IT",
-    color: "#4ade80",
-    bg: "rgba(74,222,128,0.12)",
-  },
-  {
-    icon: Brain,
-    label: "Personality",
-    sub: "Analytical · Creative",
-    color: "#a78bfa",
-    bg: "rgba(167,139,250,0.12)",
-  },
-  {
-    icon: Target,
-    label: "Goals",
-    sub: "Technology · Innovation",
-    color: "#fbbf24",
-    bg: "rgba(251,191,36,0.12)",
-  },
-];
-
-const OUTPUTS = [
-  { icon: Code2, label: "BSc Computer Science", score: "94%" },
-  { icon: FlaskConical, label: "BEng Software Engineering", score: "91%" },
-  { icon: GraduationCap, label: "BSc Data Science", score: "88%" },
-  { icon: Briefcase, label: "BSc Information Systems", score: "85%" },
-  { icon: Palette, label: "BDes Interaction Design", score: "82%" },
-];
-
-/* ── Product showcase ── */
-function ProductShowcase() {
-  const trackRef = useRef(null);
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const handler = () => {
-      const idx = Math.round(track.scrollLeft / (track.offsetWidth * 0.82));
-      setActive(Math.min(idx, PRODUCTS.length - 1));
-    };
-    track.addEventListener("scroll", handler, { passive: true });
-    return () => track.removeEventListener("scroll", handler);
-  }, []);
-
-  function scrollTo(i) {
-    const track = trackRef.current;
-    if (!track) return;
-    track.scrollTo({ left: i * track.offsetWidth * 0.82, behavior: "smooth" });
-    setActive(i);
-  }
-
+/* ── Matching Visualization ─────────────── */
+function MatchingViz() {
   return (
-    <div className="ps">
-      <div className="ps__track" ref={trackRef}>
-        {PRODUCTS.map((p, i) => (
-          <div key={p.src} className="ps__card">
-            <div className="ps__img-wrap">
-              <img
-                src={p.src}
-                alt={p.label}
-                className="ps__img"
-                loading={i === 0 ? "eager" : "lazy"}
-              />
-            </div>
-            <p className="ps__label">{p.label}</p>
-          </div>
-        ))}
-      </div>
-      <div className="ps__dots" role="tablist">
-        {PRODUCTS.map((_, i) => (
-          <button
-            key={i}
-            role="tab"
-            aria-selected={i === active}
-            className={`ps__dot ${i === active ? "ps__dot--active" : ""}`}
-            onClick={() => scrollTo(i)}
-            type="button"
-            aria-label={`View ${PRODUCTS[i].label}`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ── Desktop diagram ── */
-
-function DiagramDesktop() {
- return (
     <div className="viz" aria-hidden="true">
 
       {/* Input nodes */}
@@ -170,7 +64,7 @@ function DiagramDesktop() {
           preserveAspectRatio="none"
         >
           <path
-            d="M -30 13 C 80 13, 120 40, 200 40"
+            d="M 0 13 C 80 13, 120 40, 200 40"
             fill="none"
             stroke="rgba(147,197,253,0.35)"
             strokeWidth="1.5"
@@ -184,7 +78,7 @@ function DiagramDesktop() {
             strokeDasharray="4 3"
           />
           <path
-            d="M -30 67 C 80 67, 120 40, 200 40"
+            d="M 0 67 C 80 67, 120 40, 200 40"
             fill="none"
             stroke="rgba(147,197,253,0.35)"
             strokeWidth="1.5"
@@ -264,192 +158,94 @@ function DiagramDesktop() {
       </div>
 
     </div>
-  );}
+  );
+}
 
-/* ── Mobile diagram ── */
-function DiagramMobile() {
+/* ── Product Showcase ───────────────────── */
+function ProductShowcase() {
+  const trackRef   = useRef(null);
+  const [active, setActive] = useState(0);
+
+  const handleScroll = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    const idx = Math.round(el.scrollLeft / el.offsetWidth);
+    setActive(Math.min(idx, SCREENSHOTS.length - 1));
+  };
+
   return (
-    <div className="dg dg--mobile" aria-label="How CourseMatch works">
-      {/* Input nodes row */}
-      <div className="dg__m-inputs">
-        {INPUTS.map((inp) => {
-          const Icon = inp.icon;
-          return (
-            <div
-              key={inp.label}
-              className="dg__m-node"
-              style={{ "--c": inp.color, "--bg": inp.bg }}
-            >
-              <div className="dg__m-icon">
-                <Icon size={14} strokeWidth={2} />
-              </div>
-              <span className="dg__m-label">{inp.label}</span>
+    <div className="showcase">
+      <div
+        className="showcase__track"
+        ref={trackRef}
+        onScroll={handleScroll}
+      >
+        {SCREENSHOTS.map((s, i) => (
+          <div key={i} className="showcase__card">
+            <div className="showcase__img-wrap">
+              <img
+                src={s.src}
+                alt={s.label}
+                className="showcase__img"
+                loading="lazy"
+              />
             </div>
-          );
-        })}
+            {/* <div className="showcase__card-footer">
+              <span className="showcase__card-num">0{i + 1}</span>
+              <span className="showcase__card-label">{s.label}</span>
+            </div> */}
+          </div>
+        ))}
       </div>
 
-      {/* Down lines → engine */}
-      <svg
-        className="dg__m-svg"
-        viewBox="0 0 240 56"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M 40 0  C 40 30 120 40 120 56"
-          stroke="rgba(147,197,253,0.4)"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <path
-          d="M 120 0 L 120 56"
-          stroke="rgba(147,197,253,0.55)"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <path
-          d="M 200 0 C 200 30 120 40 120 56"
-          stroke="rgba(147,197,253,0.4)"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        {[
-          { path: "M 40 0 C 40 30 120 40 120 56", delay: "0s" },
-          { path: "M 120 0 L 120 56", delay: "0.3s" },
-          { path: "M 200 0 C 200 30 120 40 120 56", delay: "0.6s" },
-        ].map((p, i) => (
-          <circle key={i} r="3" fill="#93c5fd" opacity="0.85">
-            <animateMotion
-              dur="1.8s"
-              repeatCount="indefinite"
-              begin={p.delay}
-              path={p.path}
-            />
-          </circle>
+      {/* Pagination dots — visible on mobile */}
+      <div className="showcase__dots">
+        {SCREENSHOTS.map((_, i) => (
+          <button
+            key={i}
+            className={`showcase__dot ${active === i ? "showcase__dot--active" : ""}`}
+            onClick={() => {
+              const el = trackRef.current;
+              if (el) el.scrollTo({ left: i * el.offsetWidth, behavior: "smooth" });
+            }}
+            aria-label={`Go to slide ${i + 1}`}
+          />
         ))}
-      </svg>
-
-      {/* Engine */}
-      <div className="dg__m-engine">
-        <div className="dg__engine-glow" aria-hidden="true" />
-        <Sparkles size={16} strokeWidth={1.8} className="dg__engine-sparkle" />
-        <span className="dg__engine-name">CourseMatch</span>
-        {/* <div className="dg__engine-score">
-          <span className="dg__score-num">94%</span>
-          <span className="dg__score-label">match</span>
-        </div> */}
-      </div>
-
-      {/* Down lines → outputs */}
-      <svg
-        className="dg__m-svg dg__m-svg--out"
-        viewBox="0 0 240 56"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M 120 0 C 120 16 40 26 40 56"
-          stroke="rgba(147,197,253,0.35)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeDasharray="4 3"
-        />
-        <path
-          d="M 120 0 C 120 20 80 30 80 56"
-          stroke="rgba(147,197,253,0.4)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeDasharray="4 3"
-        />
-        <path
-          d="M 120 0 L 120 56"
-          stroke="rgba(147,197,253,0.55)"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <path
-          d="M 120 0 C 120 20 160 30 160 56"
-          stroke="rgba(147,197,253,0.4)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeDasharray="4 3"
-        />
-        <path
-          d="M 120 0 C 120 16 200 26 200 56"
-          stroke="rgba(147,197,253,0.35)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeDasharray="4 3"
-        />
-        {[
-          { path: "M 120 0 C 120 16 40 26 40 56", delay: "0s" },
-          { path: "M 120 0 C 120 20 80 30 80 56", delay: "0.2s" },
-          { path: "M 120 0 L 120 56", delay: "0.4s" },
-          { path: "M 120 0 C 120 20 160 30 160 56", delay: "0.6s" },
-          { path: "M 120 0 C 120 16 200 26 200 56", delay: "0.8s" },
-        ].map((p, i) => (
-          <circle key={i} r="2.5" fill="#93c5fd" opacity="0.7">
-            <animateMotion
-              dur="1.8s"
-              repeatCount="indefinite"
-              begin={p.delay}
-              path={p.path}
-            />
-          </circle>
-        ))}
-      </svg>
-
-      {/* Output courses — horizontal scroll */}
-      <div className="dg__m-outputs">
-        {OUTPUTS.map((o) => {
-          const Icon = o.icon;
-          return (
-            <div key={o.label} className="dg__m-output">
-              <span className="dg__output-score">{o.score}</span>
-              <span className="dg__output-name">{o.label}</span>
-            </div>
-          );
-        })}
       </div>
     </div>
   );
 }
 
-/* ── Hero ── */
+/* ── Main Hero ──────────────────────────── */
 export default function Hero() {
-  const sectionRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    requestAnimationFrame(() => el.classList.add("hero--mounted"));
-  }, []);
+  const scrollTo = (id) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <section
-      ref={sectionRef}
-      className="hero"
-      aria-label="CourseMatch introduction"
-    >
-      <div className="hero__blob hero__blob--1" aria-hidden="true" />
-      <div className="hero__blob hero__blob--2" aria-hidden="true" />
-      <div className="hero__mesh" aria-hidden="true" />
+    <section className="hero">
+
+      <div className="hero__light hero__light--a" />
+      <div className="hero__light hero__light--b" />
 
       <div className="hero__inner">
-        {/* ── Top: copy left, diagram right ── */}
+
+        {/* ── TOP — two column ── */}
         <div className="hero__top">
+
           {/* Copy */}
           <div className="hero__copy">
-            {/* <div className="hero__badge">
-              <span className="hero__badge-dot" aria-hidden="true" />
+            <div className="hero__badge">
+              <span className="hero__badge-dot" />
+              <Sparkles size={12} strokeWidth={2} />
               AI-Powered Course Matching
-            </div> */}
+            </div>
 
             <h1 className="hero__title">
-              Find your perfect{" "}
-              <span className="hero__title-accent">course.</span>
+              Find your{" "}
+              <em className="hero__title-em">perfect</em>{" "}
+              course.
             </h1>
 
             <p className="hero__subtitle">
@@ -458,27 +254,9 @@ export default function Hero() {
               what you're good at, what you enjoy, and where you want to go.
             </p>
 
-            <ul className="hero__pills">
-              {[
-                "Personalized matches",
-                "Subjects + personality",
-                "Built for you",
-              ].map((p) => (
-                <li key={p} className="hero__pill">
-                  <CheckCircle2
-                    size={14}
-                    strokeWidth={2.5}
-                    className="hero__pill-icon"
-                  />
-                  {p}
-                </li>
-              ))}
-            </ul>
-
             <div className="hero__actions">
               <button
                 className="hero__btn hero__btn--primary"
-                type="button"
                 onClick={() => navigate("/login")}
               >
                 Get Started
@@ -486,35 +264,32 @@ export default function Hero() {
               </button>
               <button
                 className="hero__btn hero__btn--ghost"
-                type="button"
-                onClick={() =>
-                  document.getElementById("hiw-section")?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  })
-                }
+                onClick={() => scrollTo("hiw-section")}
               >
                 How it works
               </button>
             </div>
+
+            <div className="hero__pills">
+              {["Personalised matches", "Subjects + personality", "Built for you"].map((p) => (
+                <span key={p} className="hero__pill">
+                  <CheckCircle2 size={11} strokeWidth={2.5} />
+                  {p}
+                </span>
+              ))}
+            </div>
           </div>
 
-          {/* Desktop diagram */}
-          <div className="hero__diagram-wrap hero__diagram-wrap--desktop">
-            <DiagramDesktop />
+          {/* Visualization */}
+          <div className="hero__viz-wrap">
+            <MatchingViz />
           </div>
+
         </div>
 
-        {/* Mobile diagram — sits between copy and showcase */}
-        <div className="hero__diagram-wrap hero__diagram-wrap--mobile">
-          <DiagramMobile />
-        </div>
+        {/* ── BOTTOM — product showcase ── */}
+        <ProductShowcase />
 
-        {/* ── Bottom: product showcase ── */}
-        <div className="hero__showcase">
-          <p className="hero__showcase-label">See CourseMatch in action</p>
-          <ProductShowcase />
-        </div>
       </div>
     </section>
   );
