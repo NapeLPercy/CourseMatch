@@ -525,6 +525,16 @@
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.3);
 }
+.dg__engine-sparkle {
+  color: #93c5fd;
+  margin-bottom: 2px;
+}
+.dg__engine-name {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+  }
 /* ═══════════════════════════════════════
    MOBILE DIAGRAM
 ═══════════════════════════════════════ */
