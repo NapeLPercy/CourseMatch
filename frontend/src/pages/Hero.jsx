@@ -174,61 +174,56 @@ function DiagramDesktop() {
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        {/* Input nodes are at x≈0–160, engine center at x=300
-            Inputs are at y≈53, 160, 267 (top, mid, bottom of 320px)
-            Lines go from right edge of input col (x=160) to engine center (x=300, y=160) */}
-
-        {/* incoming — left to engine */}
+        {/* incoming — meet on left face of engine */}
         <path
-          d="M 140 70  C 200 70  260 160 300 160"
+          d="M 0 70  C 140 70  230 160 230 160"
           stroke="rgba(147,197,253,0.5)"
           strokeWidth="1.5"
           fill="none"
         />
         <path
-          d="M 140 160 L 300 160"
+          d="M 0 160 L 230 160"
           stroke="rgba(147,197,253,0.65)"
           strokeWidth="1.5"
           fill="none"
         />
         <path
-          d="M 140 250 C 200 250 260 160 300 160"
+          d="M 0 250 C 140 250 230 160 230 160"
           stroke="rgba(147,197,253,0.5)"
           strokeWidth="1.5"
           fill="none"
         />
 
-        {/* outgoing — engine to right outputs (x=440 to 600)
-            5 outputs at y≈32, 96, 160, 224, 288 */}
+        {/* outgoing */}
         <path
-          d="M 300 160 C 360 160 380 32  440 32"
+          d="M 350 160 C 380 160 410 32  440 32"
           stroke="rgba(147,197,253,0.38)"
           strokeWidth="1.5"
           fill="none"
           strokeDasharray="5 3"
         />
         <path
-          d="M 300 160 C 360 160 380 96  440 96"
+          d="M 350 160 C 380 160 410 96  440 96"
           stroke="rgba(147,197,253,0.42)"
           strokeWidth="1.5"
           fill="none"
           strokeDasharray="5 3"
         />
         <path
-          d="M 300 160 L 440 160"
+          d="M 350 160 L 440 160"
           stroke="rgba(147,197,253,0.55)"
           strokeWidth="1.5"
           fill="none"
         />
         <path
-          d="M 300 160 C 360 160 380 224 440 224"
+          d="M 350 160 C 380 160 410 224 440 224"
           stroke="rgba(147,197,253,0.42)"
           strokeWidth="1.5"
           fill="none"
           strokeDasharray="5 3"
         />
         <path
-          d="M 300 160 C 360 160 380 288 440 288"
+          d="M 350 160 C 380 160 410 288 440 288"
           stroke="rgba(147,197,253,0.38)"
           strokeWidth="1.5"
           fill="none"
@@ -241,7 +236,7 @@ function DiagramDesktop() {
             dur="2s"
             repeatCount="indefinite"
             begin="0s"
-            path="M 140 70 C 200 70 260 160 300 160"
+            path="M 0 70 C 140 70 230 160 230 160"
           />
         </circle>
         <circle r="3" fill="#93c5fd" opacity="0.9">
@@ -249,7 +244,7 @@ function DiagramDesktop() {
             dur="1.7s"
             repeatCount="indefinite"
             begin="0.3s"
-            path="M 140 160 L 300 160"
+            path="M 0 160 L 230 160"
           />
         </circle>
         <circle r="3" fill="#93c5fd" opacity="0.9">
@@ -257,17 +252,16 @@ function DiagramDesktop() {
             dur="2s"
             repeatCount="indefinite"
             begin="0.6s"
-            path="M 140 250 C 200 250 260 160 300 160"
+            path="M 0 250 C 140 250 230 160 230 160"
           />
         </circle>
 
-        {/* animated pulses — outgoing */}
         <circle r="2.5" fill="#93c5fd" opacity="0.7">
           <animateMotion
             dur="2s"
             repeatCount="indefinite"
             begin="0.1s"
-            path="M 300 160 C 360 160 380 32 440 32"
+            path="M 350 160 C 380 160 410 32 440 32"
           />
         </circle>
         <circle r="2.5" fill="#93c5fd" opacity="0.7">
@@ -275,7 +269,7 @@ function DiagramDesktop() {
             dur="2s"
             repeatCount="indefinite"
             begin="0.35s"
-            path="M 300 160 C 360 160 380 96 440 96"
+            path="M 350 160 C 380 160 410 96 440 96"
           />
         </circle>
         <circle r="2.5" fill="#93c5fd" opacity="0.7">
@@ -283,7 +277,7 @@ function DiagramDesktop() {
             dur="1.7s"
             repeatCount="indefinite"
             begin="0.6s"
-            path="M 300 160 L 440 160"
+            path="M 350 160 L 440 160"
           />
         </circle>
         <circle r="2.5" fill="#93c5fd" opacity="0.7">
@@ -291,7 +285,7 @@ function DiagramDesktop() {
             dur="2s"
             repeatCount="indefinite"
             begin="0.85s"
-            path="M 300 160 C 360 160 380 224 440 224"
+            path="M 350 160 C 380 160 410 224 440 224"
           />
         </circle>
         <circle r="2.5" fill="#93c5fd" opacity="0.7">
@@ -299,7 +293,7 @@ function DiagramDesktop() {
             dur="2s"
             repeatCount="indefinite"
             begin="1.1s"
-            path="M 300 160 C 360 160 380 288 440 288"
+            path="M 350 160 C 380 160 410 288 440 288"
           />
         </circle>
       </svg>
