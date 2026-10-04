@@ -14,7 +14,15 @@ import {
   Palette,
 } from "lucide-react";
 import "../styles/Hero.css";
-
+// import {
+//   BookOpen,
+//   Brain,
+//   Target,
+//   Sparkles,
+//   Code2,
+//   FlaskConical,
+//   GraduationCap,
+// } from "lucide-react";
 /* ── Product screenshots ── */
 const PRODUCTS = [
   {
@@ -115,191 +123,148 @@ function ProductShowcase() {
 }
 
 /* ── Desktop diagram ── */
+
 function DiagramDesktop() {
-  return (
-    <div className="dg dg--desktop" aria-label="How CourseMatch works">
-      {/* Left — inputs */}
-      <div className="dg__inputs">
-        {INPUTS.map((inp) => {
-          const Icon = inp.icon;
-          return (
-            <div
-              key={inp.label}
-              className="dg__input-node"
-              style={{ "--c": inp.color, "--bg": inp.bg }}
-            >
-              <div className="dg__input-icon">
-                <Icon size={15} strokeWidth={2} />
-              </div>
-              <div>
-                <p className="dg__input-label">{inp.label}</p>
-                <p className="dg__input-sub">{inp.sub}</p>
-              </div>
-            </div>
-          );
-        })}
+ return (
+    <div className="viz" aria-hidden="true">
+
+      {/* Input nodes */}
+      <div className="viz__inputs">
+        <div className="viz__node viz__node--input">
+          <div className="viz__node-icon">
+            <BookOpen size={14} strokeWidth={2} />
+          </div>
+          <div className="viz__node-text">
+            <span className="viz__node-label">Subjects</span>
+            <span className="viz__node-sub">Maths · IT · English</span>
+          </div>
+        </div>
+
+        <div className="viz__node viz__node--input">
+          <div className="viz__node-icon viz__node-icon--purple">
+            <Brain size={14} strokeWidth={2} />
+          </div>
+          <div className="viz__node-text">
+            <span className="viz__node-label">Personality</span>
+            <span className="viz__node-sub">Creative · Analytical</span>
+          </div>
+        </div>
+
+        <div className="viz__node viz__node--input">
+          <div className="viz__node-icon viz__node-icon--green">
+            <Target size={14} strokeWidth={2} />
+          </div>
+          <div className="viz__node-text">
+            <span className="viz__node-label">Goals</span>
+            <span className="viz__node-sub">Technology · Innovation</span>
+          </div>
+        </div>
       </div>
 
-      {/* Center — engine */}
-      <div className="dg__engine">
-        <div className="dg__engine-glow" aria-hidden="true" />
-        <Sparkles size={18} strokeWidth={1.8} className="dg__engine-sparkle" />
-        <span className="dg__engine-name">CourseMatch Engine</span>
-        {/* <div className="dg__engine-score">
-          <span className="dg__score-num">94%</span>
-          <span className="dg__score-label">match</span>
-        </div> */}
+      {/* Connector lines */}
+      <div className="viz__connectors">
+        <svg
+          className="viz__svg"
+          viewBox="0 0 200 80"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M -30 13 C 80 13, 120 40, 200 40"
+            fill="none"
+            stroke="rgba(147,197,253,0.35)"
+            strokeWidth="1.5"
+            strokeDasharray="4 3"
+          />
+          <path
+            d="M 0 40 C 80 40, 120 40, 200 40"
+            fill="none"
+            stroke="rgba(147,197,253,0.5)"
+            strokeWidth="1.5"
+            strokeDasharray="4 3"
+          />
+          <path
+            d="M -30 67 C 80 67, 120 40, 200 40"
+            fill="none"
+            stroke="rgba(147,197,253,0.35)"
+            strokeWidth="1.5"
+            strokeDasharray="4 3"
+          />
+          <circle cx="200" cy="40" r="3" fill="rgba(147,197,253,0.6)" />
+        </svg>
       </div>
 
-      {/* Right — outputs */}
-      <div className="dg__outputs">
-        {OUTPUTS.map((o) => {
-          const Icon = o.icon;
-          return (
-            <div key={o.label} className="dg__output-node">
-              {/* <div className="dg__output-icon">
-                <Icon size={13} strokeWidth={2} />
-              </div> */}
-              <span className="dg__output-name">{o.label}</span>
-              <span className="dg__output-score">{o.score}</span>
-            </div>
-          );
-        })}
+      {/* Central node */}
+      <div className="viz__center">
+        <div className="viz__center-ring viz__center-ring--outer" />
+        <div className="viz__center-ring viz__center-ring--inner" />
+        <div className="viz__center-core">
+          <Sparkles size={18} strokeWidth={1.8} />
+          <span className="viz__center-label">CourseMatch</span>
+        </div>
       </div>
 
-      {/* Single SVG overlay — covers the whole diagram */}
-      <svg
-        className="dg__overlay-svg"
-        viewBox="0 0 600 320"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        {/* incoming — meet on left face of engine */}
-        <path
-          d="M 0 70  C 140 70  230 160 230 160"
-          stroke="rgba(147,197,253,0.5)"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <path
-          d="M 0 160 L 230 160"
-          stroke="rgba(147,197,253,0.65)"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <path
-          d="M 0 250 C 140 250 230 160 230 160"
-          stroke="rgba(147,197,253,0.5)"
-          strokeWidth="1.5"
-          fill="none"
-        />
+      {/* Output connector */}
+      <div className="viz__output-line">
+        <svg
+          className="viz__svg"
+          viewBox="0 0 200 80"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M 0 40 C 80 40, 120 20, 200 13"
+            fill="none"
+            stroke="rgba(74,222,128,0.4)"
+            strokeWidth="1.5"
+            strokeDasharray="4 3"
+          />
+          <path
+            d="M 0 40 C 80 40, 120 40, 200 40"
+            fill="none"
+            stroke="rgba(74,222,128,0.6)"
+            strokeWidth="1.5"
+            strokeDasharray="4 3"
+          />
+          <path
+            d="M 0 40 C 80 40, 120 60, 200 67"
+            fill="none"
+            stroke="rgba(74,222,128,0.4)"
+            strokeWidth="1.5"
+            strokeDasharray="4 3"
+          />
+        </svg>
+      </div>
 
-        {/* outgoing */}
-        <path
-          d="M 350 160 C 380 160 410 32  440 32"
-          stroke="rgba(147,197,253,0.38)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeDasharray="5 3"
-        />
-        <path
-          d="M 350 160 C 380 160 410 96  440 96"
-          stroke="rgba(147,197,253,0.42)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeDasharray="5 3"
-        />
-        <path
-          d="M 350 160 L 440 160"
-          stroke="rgba(147,197,253,0.55)"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <path
-          d="M 350 160 C 380 160 410 224 440 224"
-          stroke="rgba(147,197,253,0.42)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeDasharray="5 3"
-        />
-        <path
-          d="M 350 160 C 380 160 410 288 440 288"
-          stroke="rgba(147,197,253,0.38)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeDasharray="5 3"
-        />
+      {/* Output courses */}
+      <div className="viz__outputs">
+        <div className="viz__course viz__course--a">
+          <div className="viz__course-score">94%</div>
+          <div className="viz__course-info">
+            <span className="viz__course-name">BSc Computer Science</span>
+            <span className="viz__course-uni">UP</span>
+          </div>
+        </div>
 
-        {/* animated pulses — incoming */}
-        <circle r="3" fill="#93c5fd" opacity="0.9">
-          <animateMotion
-            dur="2s"
-            repeatCount="indefinite"
-            begin="0s"
-            path="M 0 70 C 140 70 230 160 230 160"
-          />
-        </circle>
-        <circle r="3" fill="#93c5fd" opacity="0.9">
-          <animateMotion
-            dur="1.7s"
-            repeatCount="indefinite"
-            begin="0.3s"
-            path="M 0 160 L 230 160"
-          />
-        </circle>
-        <circle r="3" fill="#93c5fd" opacity="0.9">
-          <animateMotion
-            dur="2s"
-            repeatCount="indefinite"
-            begin="0.6s"
-            path="M 0 250 C 140 250 230 160 230 160"
-          />
-        </circle>
+        <div className="viz__course viz__course--b">
+          <div className="viz__course-score viz__course-score--mid">88%</div>
+          <div className="viz__course-info">
+            <span className="viz__course-name">BSc Information Systems</span>
+            <span className="viz__course-uni">UJ</span>
+          </div>
+        </div>
 
-        <circle r="2.5" fill="#93c5fd" opacity="0.7">
-          <animateMotion
-            dur="2s"
-            repeatCount="indefinite"
-            begin="0.1s"
-            path="M 350 160 C 380 160 410 32 440 32"
-          />
-        </circle>
-        <circle r="2.5" fill="#93c5fd" opacity="0.7">
-          <animateMotion
-            dur="2s"
-            repeatCount="indefinite"
-            begin="0.35s"
-            path="M 350 160 C 380 160 410 96 440 96"
-          />
-        </circle>
-        <circle r="2.5" fill="#93c5fd" opacity="0.7">
-          <animateMotion
-            dur="1.7s"
-            repeatCount="indefinite"
-            begin="0.6s"
-            path="M 350 160 L 440 160"
-          />
-        </circle>
-        <circle r="2.5" fill="#93c5fd" opacity="0.7">
-          <animateMotion
-            dur="2s"
-            repeatCount="indefinite"
-            begin="0.85s"
-            path="M 350 160 C 380 160 410 224 440 224"
-          />
-        </circle>
-        <circle r="2.5" fill="#93c5fd" opacity="0.7">
-          <animateMotion
-            dur="2s"
-            repeatCount="indefinite"
-            begin="1.1s"
-            path="M 350 160 C 380 160 410 288 440 288"
-          />
-        </circle>
-      </svg>
+        <div className="viz__course viz__course--c">
+          <div className="viz__course-score viz__course-score--lo">81%</div>
+          <div className="viz__course-info">
+            <span className="viz__course-name">BEng Software Eng</span>
+            <span className="viz__course-uni">TUT</span>
+          </div>
+        </div>
+      </div>
+
     </div>
-  );
-}
+  );}
 
 /* ── Mobile diagram ── */
 function DiagramMobile() {

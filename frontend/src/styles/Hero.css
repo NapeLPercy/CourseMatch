@@ -258,273 +258,273 @@
 /* ═══════════════════════════════════════
    DESKTOP DIAGRAM
 ═══════════════════════════════════════ */
-/* .dg--desktop {
+.hero__viz-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viz {
+  width: 100%;
+  max-width: 480px;
   display: grid;
-  grid-template-columns: 1fr 100px 1fr;
+  grid-template-columns: 1fr 48px 80px 48px 1fr;
   align-items: center;
   gap: 0;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  height: 320px;
-} */
-.dg--desktop {
   position: relative;
-  display: grid;
-  grid-template-columns: 160px 1fr 160px;
-  align-items: center;
-  gap: 40px;
-  height: 320px;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
 }
 
-/* SVG sits over everything, pointer-events none */
-.dg__overlay-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  overflow: visible;
-}
-
-/* push nodes above SVG */
-.dg__inputs,
-.dg__engine,
-.dg__outputs {
-  position: relative;
-  z-index: 1;
-}
-
-.dg__inputs {
+/* ── Input nodes ─────────────────────────── */
+.viz__inputs {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  grid-column: 1;
 }
 
-.dg__engine {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  background: linear-gradient(
-    145deg,
-    rgba(37, 99, 235, 0.55),
-    rgba(59, 130, 246, 0.38)
-  );
-  border: 1px solid rgba(147, 197, 253, 0.38);
-  border-radius: 18px;
-  padding: 18px 20px;
-  backdrop-filter: blur(18px);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.07) inset,
-    0 8px 32px rgba(37, 99, 235, 0.35);
-  justify-self: center;
-  width: 100%;
-  max-width: 140px;
-  text-align: center;
-}
-
-.dg__outputs {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-/* ── Input nodes ── */
-/* .dg__inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  justify-content: center;
-} */
-
-.dg__input-node {
+.viz__node {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  padding: 11px 14px;
-  backdrop-filter: blur(10px);
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease;
-}
-.dg__input-node:hover {
-  background: rgba(255, 255, 255, 0.11);
-  border-color: rgba(255, 255, 255, 0.22);
+  padding: 10px 14px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease;
+  animation: vizNodeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.dg__input-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 9px;
+.viz__node:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.viz__node:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.viz__node:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes vizNodeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.viz__node-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(147, 197, 253, 0.15);
+  color: #93c5fd;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: var(--bg);
-  color: var(--c);
 }
 
-.dg__input-label {
+.viz__node-icon--purple {
+  background: rgba(167, 139, 250, 0.15);
+  color: #a78bfa;
+}
+.viz__node-icon--green {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.viz__node-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.viz__node-label {
+  font-family: "Inter", system-ui, sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  line-height: 1;
-  margin: 0 0 3px;
-}
-.dg__input-sub {
-  font-size: 0.62rem;
-  color: rgba(255, 255, 255, 0.42);
-  line-height: 1;
-  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
 }
 
-/* ── Center — SVGs + engine ── */
-.dg__center {
+.viz__node-sub {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+/* ── SVG connectors ──────────────────────── */
+.viz__connectors {
+  grid-column: 2;
+  height: 140px;
+  display: flex;
+  align-items: center;
+}
+
+.viz__output-line {
+  grid-column: 4;
+  height: 140px;
+  display: flex;
+  align-items: center;
+}
+
+.viz__svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ── Central node ────────────────────────── */
+.viz__center {
+  grid-column: 3;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  height: 100%;
+  height: 80px;
 }
 
-.dg__svg {
+.viz__center-ring {
   position: absolute;
-  top: 0;
-  height: 100%;
-}
-.dg__svg--in {
-  left: -100%;
-  width: 100%;
-}
-.dg__svg--out {
-  right: -100%;
-  width: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(147, 197, 253, 0.15);
+  animation: vizRingPulse 3s ease-in-out infinite;
 }
 
-/* Engine */
-/* .dg__engine {
+.viz__center-ring--outer {
+  width: 76px;
+  height: 76px;
+  animation-delay: 0s;
+}
+
+.viz__center-ring--inner {
+  width: 58px;
+  height: 58px;
+  animation-delay: 0.5s;
+}
+
+@keyframes vizRingPulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(1.04);
+  }
+}
+
+.viz__center-core {
   position: relative;
-  z-index: 2;
+  z-index: 1;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  background: linear-gradient(145deg, rgba(37,99,235,0.55), rgba(59,130,246,0.38));
-  border: 1px solid rgba(147,197,253,0.38);
-  border-radius: 18px;
-  padding: 18px 20px;
-  backdrop-filter: blur(18px);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.07) inset,
-              0 8px 32px rgba(37,99,235,0.35);
-  min-width: 100px;
-} */
-.dg__engine-glow {
-  position: absolute;
-  width: 170px;
-  height: 170px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(59, 130, 246, 0.22) 0%,
-    transparent 70%
-  );
-  animation: eng-pulse 3s ease-in-out infinite;
-  pointer-events: none;
-}
-@keyframes eng-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.15);
-    opacity: 0.55;
-  }
-}
-.dg__engine-sparkle {
-  color: #93c5fd;
-  margin-bottom: 2px;
-}
-.dg__engine-name {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.65);
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-}
-.dg__engine-score {
-  display: flex;
-  align-items: baseline;
-  gap: 3px;
-}
-.dg__score-num {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 1.9rem;
-  font-weight: 700;
+  justify-content: center;
+  gap: 2px;
   color: #ffffff;
-  line-height: 1;
-}
-.dg__score-label {
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-weight: 500;
+  box-shadow:
+    0 4px 20px rgba(37, 99, 235, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-/* ── Output nodes ── */
-/* .dg__outputs {
+.viz__center-label {
+  font-size: 0.45rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1;
+}
+
+/* ── Output courses ──────────────────────── */
+.viz__outputs {
+  grid-column: 5;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  justify-content: center;
-} */
+  animation: vizOutIn 0.6s 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 
-.dg__output-node {
+@keyframes vizOutIn {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.viz__course {
   display: flex;
   align-items: center;
   gap: 8px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
-  padding: 9px 12px;
+  padding: 8px 10px;
   backdrop-filter: blur(8px);
-  transition: background 0.2s ease;
-}
-.dg__output-node:hover {
-  background: rgba(255, 255, 255, 0.09);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-.dg__output-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  background: rgba(147, 197, 253, 0.12);
-  color: #93c5fd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+.viz__course--b {
+  opacity: 0.85;
 }
-.dg__output-name {
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.72);
-  font-weight: 500;
-  flex: 1;
-  line-height: 1.2;
+.viz__course--c {
+  opacity: 0.65;
 }
-.dg__output-score {
-  font-size: 0.72rem;
+
+.viz__course-score {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 0.88rem;
   font-weight: 700;
   color: #4ade80;
   flex-shrink: 0;
+  min-width: 32px;
 }
 
+.viz__course-score--mid {
+  color: #93c5fd;
+}
+.viz__course-score--lo {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.viz__course-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.viz__course-name {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.viz__course-uni {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
 /* ═══════════════════════════════════════
    MOBILE DIAGRAM
 ═══════════════════════════════════════ */
