@@ -1,5 +1,6 @@
 import { Sparkles, ArrowRight } from "lucide-react";
 import "../../styles/RecommendationCard.css";
+import { useNavigate } from "react-router-dom";
 
 function getScoreTier(score) {
   if (score >= 80) return "high";
@@ -7,9 +8,10 @@ function getScoreTier(score) {
   return "low";
 }
 
-export default function renderRecommendationCard(course) {
-  const handleDetails = () => {
-    console.log("Course details clicked:", course);
+export default function RenderRecommendationCard({course}) {
+  const navigate = useNavigate();
+  const handleDeepDive = () => {
+    navigate("/student/course-deep-dive", { state: { course } });
   };
 
   return (
@@ -43,7 +45,7 @@ export default function renderRecommendationCard(course) {
         <button
           className="rec-card__btn"
           type="button"
-          onClick={handleDetails}
+          onClick={handleDeepDive}
         >
           Course details
           <ArrowRight size={14} strokeWidth={2.5} />

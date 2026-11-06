@@ -43,7 +43,7 @@ export default function DeepDive() {
     setLoading(true);
     setError(false);
     try {
-      const { data } = await getOrCreateDeepDive(getSubjects(), course);
+      const { data } = await getOrCreateDeepDive(getSubjects(), course.id);
 
       setDeepDive(data.results);
 
@@ -88,6 +88,12 @@ export default function DeepDive() {
     alternatives = [],
     howToExcel = [],
     createdAt,
+    nqf,
+    fit_score,
+    aps,
+    faculty,
+    qualification_name,
+    university_name
   } = deepDive;
 
   return (
@@ -105,19 +111,19 @@ export default function DeepDive() {
         </div>
         <div className="dd__hero-text">
           <h1 className="dd__hero-title">
-            {course.qualification_name} at {course.university_name}
+            {qualification_name} at {university_name}
           </h1>
           <div className="dd__hero-tags">
             <span className="dd__htag dd__htag--blue">
               <BookOpen size={11} strokeWidth={2.5} />
-              {course.faculty_name}
+              {faculty}
             </span>
             <span className="dd__htag dd__htag--green">
-              APS {course.minimum_aps}
+              APS {aps}
             </span>
-            <span className="dd__htag dd__htag--purple">NQF {course.nqf}</span>
+            <span className="dd__htag dd__htag--purple">NQF {nqf}</span>
             <span className="dd__htag dd__htag--fit">
-              {course.fit_score}% fit
+              {fit_score}% fit
             </span>
           </div>
         </div>

@@ -14,10 +14,10 @@ export async function getOrCreateAIRecommedations(
   return res;
 }
 
-export async function getOrCreateDeepDive(subjects, qualification) {
+export async function getOrCreateDeepDive(subjects, recommendationId) {
   const res = await api.post(`/api/recommendation/deep-dive`, {
     subjects,
-    qualification,
+    recommendationId,
   });
 
   return res;

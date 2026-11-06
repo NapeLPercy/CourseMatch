@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Sparkles, Search, X, ChevronDown } from "lucide-react";
 import { useGetMyRecommendedCourses } from "../../hooks/useStudent";
-import renderRecommendationCard from "../ui/RecommendationCard";
+import RenderRecommendationCard from "../ui/RecommendationCard";
 import PageHeader from "../ui/PageHeader";
 import ErrorState from "../ui/ErrorState";
 import EmptyState from "../ui/EmptyState";
@@ -157,7 +157,12 @@ export default function MyAIRecommendedCourses() {
 
       {!isPending && !error && filtered.length > 0 && (
         <ul className="rec-list">
-          {filtered.map((course) => renderRecommendationCard(course))}
+          {filtered.map((course) => (
+            <RenderRecommendationCard
+              key={course.qualificationCode}
+              course={course}
+            />
+          ))}
         </ul>
       )}
     </div>

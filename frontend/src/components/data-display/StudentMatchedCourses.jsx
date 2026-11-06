@@ -36,7 +36,6 @@ export default function QualifiedCoursesPage() {
     setError(false);
     try {
       const { data } = await getMyMatches();
-      console.log(data, "here is the data");
       setCourses(data.matchedData ?? []);
     } catch (err) {
       console.log("error occurred");

@@ -3,7 +3,7 @@ import "../../styles/Recommendations.css";
 import { useSubjects } from "../../context/SubjectContext";
 import { CourseContext } from "../../context/CourseContext";
 import { generateRecommendationsPdf } from "../../Utils/recommendationsPDF";
-import renderRecommendationCard from "../ui/RecommendationCard";
+import RenderRecommendationCard from "../ui/RecommendationCard";
 import ErrorState from "../ui/ErrorState";
 import CourseFilter from "../../Utils/courseFilters/CourseFilter";
 import UniversityCoursesSkeleton from "../ui/UniversityCoursesSkeleton";
@@ -130,14 +130,28 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
     </div>
   );
 
+  // const renderRecommendations = () => (
+  //   <>
+  //     {renderControls()}
+  //     <ul className="rec-list">
+  //       {sortedCourses.map((course) => RenderRecommendationCard(course))}
+  //     </ul>
+  //   </>
+  // );
   const renderRecommendations = () => (
-    <>
-      {renderControls()}
-      <ul className="rec-list">
-        {sortedCourses.map((course) => renderRecommendationCard(course))}
-      </ul>
-    </>
-  );
+  <>
+    {renderControls()}
+    <ul className="rec-list">
+      {sortedCourses.map((course) => (
+        <RenderRecommendationCard 
+          key={course.qualificationCode} 
+          course={course} 
+        />
+      ))}
+    </ul>
+  </>
+);
+
 
   const renderEmpty = () => {
     if (error) {
