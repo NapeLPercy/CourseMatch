@@ -2,7 +2,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 const aiRecommendationService = require("../services/aiRecommendationService");
 const { getOrCreateDeepDive } = require("../services/aiCourseDeepDiveService");
-const { getStudentCompleteProfile } = require("../services/studentService");
+const {
+  getStudentCompleteProfile,
+  getSingleMatchedCourse,
+} = require("../services/studentService");
 const {
   getOrCreateCourseComparison,
 } = require("../services/aiCourseComparisonService");
@@ -68,7 +71,7 @@ exports.getAIRecommendations = async (req, res) => {
 exports.getAIDeepDive = async (req, res) => {
   try {
     const userId = req.userId;
-    const { subjects, qualification } = req.body;
+    const { subjects, recommendationId } = req.body;
 
     if (!userId) {
       return res
@@ -76,10 +79,10 @@ exports.getAIDeepDive = async (req, res) => {
         .json({ success: false, message: "Not authenticated" });
     }
 
-    if (!qualification) {
+    if (!recommendationId) {
       return res.status(400).json({
         success: false,
-        message: "Qualification data is required.",
+        message: "Recommendation id is required.",
       });
     }
 
@@ -90,15 +93,20 @@ exports.getAIDeepDive = async (req, res) => {
       });
     }
 
+    //get profile
     const profile = await getStudentCompleteProfile(userId);
+    const recommendedCourse = await getSingleMatchedCourse(
+      userId,
+      recommendationId,
+    );
 
     const results = await getOrCreateDeepDive({
       userId,
-      qualification,
+      recommendedCourse,
       studentProfile: profile,
       subjects,
     });
-
+    
     return res.status(200).json({
       success: true,
       results: results,

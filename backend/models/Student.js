@@ -173,4 +173,44 @@ module.exports = {
       });
     });
   },
+    //get coursesmatched to student
+  getMySingleMatchedCourse: async (userId,recommendationId) => {
+    const sql = `
+    SELECT 
+        ar.id,
+        ar.fit_score,
+        ar.reason,
+
+        u.name AS university_name,
+        u.abbreaviation,
+
+        q.code AS course_code,
+        q.name AS qualification_name,
+        q.minimum_aps,
+        q.nqf,
+
+        f.name AS faculty_name
+
+    FROM ai_course_recommendations ar
+
+    JOIN qualification q 
+        ON ar.course_code = q.code
+
+    JOIN faculty f 
+        ON q.faculty_id = f.faculty_id
+
+    JOIN university u 
+        ON f.university_abbreviation = u.abbreaviation
+
+    WHERE ar.user_id = ? AND ar.id=?
+    ORDER BY ar.fit_score DESC
+  `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [userId, recommendationId], (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows[0]); // return ALL matched courses
+      });
+    });
+  },
 };

@@ -169,6 +169,11 @@ async function getMatchedCourses(userId) {
   return await studentModel.getMyMatchedCourses(userId);
 }
 
+//user tries to view a single course they were matched to
+async function getSingleMatchedCourse(userId, recommendationId) {
+  return await studentModel.getMySingleMatchedCourse(userId, recommendationId);
+}
+
 //student dashboard
 
 async function computeStudentDashboard(userId, studentId) {
@@ -212,6 +217,7 @@ module.exports = {
   getStudentCompleteProfile,
   getStudentId,
   getMatchedCourses,
+  getSingleMatchedCourse,
   computeStudentDashboard,
   getMyAICourseRecommendations,
 };

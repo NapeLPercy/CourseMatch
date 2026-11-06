@@ -10,24 +10,23 @@ const {
 
 const getOrCreateDeepDive = async ({
   userId,
-  qualification,
+  recommendedCourse,
   studentProfile,
   subjects,
 }) => {
-  //  Check if exists
-  const existing = await aiCourseDeepDiveModel.getDeepDive({
+  const existingDeepDive = await aiCourseDeepDiveModel.getDeepDive({
     userId,
-    courseId: qualification.course_code,
+    courseId: recommendedCourse.course_code,
   });
 
-  if (existing) {
-    return existing;
+  if (existingDeepDive) {
+    return appendMissingProperties(existingDeepDive, recommendedCourse);
   }
 
   //delete unnecesary data
   const cleanSubjectsData = cleanSubjects(subjects);
   const cleanProfileData = cleanProfile(studentProfile);
-  const cleanQualificationData = cleanQualification(qualification);
+  const cleanQualificationData = cleanQualification(recommendedCourse);
 
   const aiInput = {
     qualification: cleanQualificationData,
@@ -35,21 +34,43 @@ const getOrCreateDeepDive = async ({
     subjects: cleanSubjectsData,
   };
 
-
   // Generate AI data (NO TRANSACTION HERE)
-  const aiData = await generateDeepDive(aiInput);
-  
+  const generatedDeepDive = await generateDeepDive(aiInput);
+  generatedDeepDive = appendMissingProperties(
+    existingDeepDive,
+    recommendedCourse,
+  );
+
   const deepDive = {
     id: uuidv4(),
     userId: userId,
-    courseId: qualification.course_code,
-    ...aiData,
+    courseId: recommendedCourse.course_code,
+    ...generatedDeepDive,
   };
 
-
   await aiCourseDeepDiveModel.createDeepDive(deepDive);
-  deepDive.createdAt= Date.now();
+  deepDive.createdAt = Date.now();
   return deepDive;
 };
+
+function appendMissingProperties(deepDive, course) {
+  const {
+    minimum_nqf: nqf,
+    fit_score,
+    minimum_aps: aps,
+    faculty_name: faculty,
+    qualification_name,
+    university_name,
+  } = course;
+
+  return Object.assign(deepDive, {
+    nqf,
+    fit_score,
+    aps,
+    faculty,
+    qualification_name,
+    university_name,
+  });
+}
 
 module.exports = { getOrCreateDeepDive };

@@ -46,6 +46,7 @@ module.exports = {
   getRecommendations: async (userId, universityAbbrev) => {
     const sql = `
       SELECT 
+        r.id,
         r.course_code AS qualificationCode,
         q.name AS qualificationName,
         r.fit_score AS fitScore,
@@ -70,6 +71,7 @@ module.exports = {
   getAllAiRecommendedCourses: async (userId) => {
     const sql = `
   SELECT 
+    r.id,
     r.course_code AS qualificationCode,
     q.name AS qualificationName,
     r.fit_score AS fitScore,

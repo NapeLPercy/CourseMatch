@@ -82,12 +82,12 @@ async function login(email) {
 async function getEmail(userId) {
   return await accountModel.getEmail(userId);
 }
-//Comapares submitted password vs saved db password
+//Compares submitted password vs saved db password
 async function validatePassword(enteredPassword, savedPassword) {
   return await bcrypt.compare(enteredPassword, savedPassword);
 }
 
-///generate a jwt
+//generate a jwt
 function generateToken(account) {
   if (!account.role) account.role = "GUEST";
   return jwt.sign(
