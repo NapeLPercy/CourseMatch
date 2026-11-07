@@ -34,10 +34,10 @@ const getOrCreateDeepDive = async ({
     subjects: cleanSubjectsData,
   };
 
-  // Generate AI data (NO TRANSACTION HERE)
-  const generatedDeepDive = await generateDeepDive(aiInput);
+  //Generatee AI data (NO TRANSACTION HERE)
+  let generatedDeepDive = await generateDeepDive(aiInput);
   generatedDeepDive = appendMissingProperties(
-    existingDeepDive,
+    generatedDeepDive,
     recommendedCourse,
   );
 
