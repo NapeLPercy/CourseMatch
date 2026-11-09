@@ -22,13 +22,9 @@ export default function UniversityCourses() {
   const [aps, setAps] = useState(null);
   const [unlockedCount, setUnlockedCount] = useState(null);
 
-
   const [activeTab, setActiveTab] = useState(getInitialTab);
 
   const [computingQualified, setComputingQualified] = useState(false);
-  const [computingRecommendations, setComputingRecommendations] = useState(
-    () => activeTab === "recommendations",
-  );
 
   function getInitialTab() {
     try {
@@ -109,9 +105,7 @@ export default function UniversityCourses() {
       return renderCourseList(qualifiedCourses, outputText);
     }
     if (activeTab === "recommendations") {
-      return computingRecommendations ? (
-        <UniversityCoursesSkeleton />
-      ) : (
+      return (
         <div className="uc__recommendations-wrap">
           <Recommendations
             setAps={setAps}
