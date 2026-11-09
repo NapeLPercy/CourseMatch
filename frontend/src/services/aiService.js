@@ -11,7 +11,7 @@ export async function getOrCreateAIRecommedations(
     uniSlug,
   });
 
-  return res;
+  return res.data;
 }
 
 export async function getOrCreateDeepDive(subjects, recommendationId) {

@@ -3,7 +3,7 @@ import { api, handleApiError } from "./api";
 //users fetch courses relative to uni slug
 export async function getUniversityCourses(uniSlug) {
   const res = await api.get(`/api/university/${uniSlug}`);
-  return res;
+  return res.data;
 }
 
 /*ADMIN METHODS */
