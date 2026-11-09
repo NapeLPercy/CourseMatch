@@ -6,7 +6,7 @@ import { useSubjects } from "../../context/SubjectContext";
 import Recommendations from "./Recommendations";
 import renderCourseList from "../ui/CourseList";
 import "../../styles/UniversityCourses.css";
-import { getUniversityCourses } from "../../services/universityService";
+import { useGetUniversityCourses } from "../../hooks/useUniversityCourses";
 import ErrorState from "../ui/ErrorState";
 import PageHeader from "../ui/PageHeader";
 import UniversityCoursesSkeleton from "../ui/UniversityCoursesSkeleton";
@@ -15,17 +15,13 @@ import { BookOpen, GraduationCap, Sparkles, Award } from "lucide-react";
 export default function UniversityCourses() {
   let { courseSlug } = useParams();
   const universitySlug = courseSlug?.toUpperCase();
-
   const { qualifications, updateQualifications } = useContext(CourseContext);
   const { getSubjects } = useSubjects();
 
-  const [courses, setCourses] = useState(qualifications);
   const [qualifiedCourses, setQualifiedCourses] = useState([]);
   const [aps, setAps] = useState(null);
   const [unlockedCount, setUnlockedCount] = useState(null);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const [activeTab, setActiveTab] = useState(getInitialTab);
 
@@ -36,9 +32,9 @@ export default function UniversityCourses() {
 
   function getInitialTab() {
     try {
-      return JSON.parse(sessionStorage.getItem("ai-tab"))
-        ? "recommendations"
-        : "full";
+      if (!sessionStorage.getItem("last_tab"))
+        sessionStorage.setItem("last_tab", "full");
+      return sessionStorage.getItem("last_tab");
     } catch {
       return "full";
     }
@@ -50,27 +46,22 @@ export default function UniversityCourses() {
     visitedUni: JSON.parse(sessionStorage.getItem("visited-uni")),
   });
 
-  useEffect(() => {
-    fetchCourses();
-  }, [universitySlug]);
+  const {
+    data,
+    isPending: loading,
+    isError,
+    error,
+    refetch: refetchCourses,
+  } = useGetUniversityCourses(universitySlug);
 
-  const fetchCourses = async () => {
-    setError(null);
-    setLoading(true);
-    try {
-      const { data } = await getUniversityCourses(universitySlug);
-      if (!data.success) {
-        setError(data.message || "Failed to fetch courses");
-        return;
-      }
-      setCourses(data.courses);
+  // Extract courses
+  const courses = data?.courses ?? [];
+  // Update Context
+  useEffect(() => {
+    if (data?.success) {
       updateQualifications(data.courses);
-    } catch (err) {
-      setError(err.message || "Something went wrong");
-    } finally {
-      setTimeout(() => setLoading(false), 1000);
     }
-  };
+  }, [data, updateQualifications]);
 
   const computeQualifiedCourses = () => {
     setComputingQualified(true);
@@ -165,7 +156,10 @@ export default function UniversityCourses() {
             role="tab"
             aria-selected={activeTab === id}
             className={`uc__tab ${activeTab === id ? "uc__tab--active" : ""}`}
-            onClick={() => setActiveTab(id)}
+            onClick={() => {
+              setActiveTab(id);
+              sessionStorage.setItem("last_tab", id);
+            }}
           >
             <Icon size={15} strokeWidth={2} />
             {label}
@@ -176,8 +170,10 @@ export default function UniversityCourses() {
       {/* CONTENT */}
       <div className="uc__content" role="tabpanel">
         {loading && <UniversityCoursesSkeleton />}
-        {error && <ErrorState message={error} onRetry={fetchCourses} />}
-        {!loading && !error && renderContent()}
+        {isError && (
+          <ErrorState message={error.message} onRetry={refetchCourses} />
+        )}
+        {!loading && !isError && renderContent()}
       </div>
     </div>
   );

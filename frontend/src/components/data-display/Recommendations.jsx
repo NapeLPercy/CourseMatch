@@ -8,20 +8,17 @@ import ErrorState from "../ui/ErrorState";
 import CourseFilter from "../../Utils/courseFilters/CourseFilter";
 import UniversityCoursesSkeleton from "../ui/UniversityCoursesSkeleton";
 import EmptyState from "../ui/EmptyState";
-import { getOrCreateAIRecommedations } from "../../services/aiService";
+import { useGetOrCreateAIRecommendations } from "../../hooks/useAI";
 import { getCachedDashboard } from "../../Utils/studentDashboardCache";
 
 function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
-  const [loading, setLoading] = useState(true);
-  const [recommendedCourses, setRecommendedCourses] = useState([]);
   const [sortOrder, setSortOrder] = useState("desc");
-  const [error, setError] = useState(null);
-  const [noProfile, setNoProfile] = useState(false);
 
   const { qualifications } = useContext(CourseContext);
   const { getSubjects } = useSubjects();
   const subjects = getSubjects();
 
+  // Calculate qualified courses
   const qualifiedCourses = useMemo(() => {
     if (qualifications.length === 0 || subjects.length === 0) return [];
 
@@ -34,16 +31,17 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
       uniSlug,
     );
 
-    const results = courseFilter.getQualifiedCourses();
+    return courseFilter.getQualifiedCourses();
+  }, [qualifications, subjects, uniSlug]);
 
-    // Update parent
+  // Update parent with APS and qualification count
+  useEffect(() => {
     const rawAps = sessionStorage.getItem("aps");
     const parsedAps = rawAps && rawAps !== "null" ? Number(rawAps) : null;
 
     setAps(parsedAps);
-    setUnlockedCount(results.length);
-    return results;
-  }, [qualifications, subjects, uniSlug]);
+    setUnlockedCount(qualifiedCourses.length);
+  }, [qualifiedCourses, setAps, setUnlockedCount]);
 
   // Persist qualified courses
   useEffect(() => {
@@ -53,52 +51,40 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
     );
   }, [qualifiedCourses]);
 
-  // fetch ai recomendations
+  // React Query: fetch AI recommendations
+  const {
+    data,
+    isLoading: loading,
+    isFetching,
+    isError,
+    error,
+    refetch: refetchRecommendations,
+  } = useGetOrCreateAIRecommendations(subjects, qualifiedCourses, uniSlug);
+
+  // Extract recommendations
+  const recommendedCourses = data?.results ?? [];
+
+  // Detect missing profile
+  const noProfile =
+    error?.response?.status === 400 &&
+    error?.response?.data?.message ===
+      "Please complete your student profile first.";
+
+  const errorMessage =
+    error?.response?.data?.message ||
+    error?.message ||
+    "Failed to get AI recommendations";
+
+  // Invalidate dashboard cache when recommendations are generated
   useEffect(() => {
-    fetchAiRecommendations();
-  }, [subjects, qualifiedCourses]);
-
-  const fetchAiRecommendations = async () => {
-    setLoading(true);
-    setError(null);
-    setNoProfile(false);
-
-    try {
-      const { data } = await getOrCreateAIRecommedations(
-        subjects,
-        qualifiedCourses,
-        uniSlug,
-      );
-
-      if (!data.success) {
-        setError(data.message || "Failed to get AI recommendations");
-        return;
-      }
-
-      const results = data.results || [];
-      setRecommendedCourses(results);
-      //recomendations fetched for first time, remove cache
+    if (data?.success) {
       const dashboardData = getCachedDashboard();
+
       if (dashboardData && !dashboardData.data.flags.hasRecommendation) {
         sessionStorage.removeItem("student_dashboard");
       }
-    } catch (err) {
-      const message = err.response?.data?.message;
-
-      // Detect missing profile
-      if (
-        err.response?.status === 400 &&
-        message === "Please complete your student profile first."
-      ) {
-        setNoProfile(true);
-        return;
-      }
-
-      setError(message || "Failed to get AI recommendations");
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [data]);
 
   const sortedCourses = useMemo(() => {
     return [...recommendedCourses].sort((a, b) =>
@@ -138,24 +124,26 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
   //     </ul>
   //   </>
   // );
-  const renderRecommendations = () => (
-  <>
-    {renderControls()}
-    <ul className="rec-list">
-      {sortedCourses.map((course) => (
-        <RenderRecommendationCard 
-          key={course.qualificationCode} 
-          course={course} 
-        />
-      ))}
-    </ul>
-  </>
-);
 
+  const renderRecommendations = () => (
+    <>
+      {renderControls()}
+      <ul className="rec-list">
+        {sortedCourses.map((course) => (
+          <RenderRecommendationCard
+            key={course.qualificationCode}
+            course={course}
+          />
+        ))}
+      </ul>
+    </>
+  );
 
   const renderEmpty = () => {
-    if (error) {
-      return <ErrorState message={error} onRetry={fetchAiRecommendations} />;
+    if (isError && !noProfile) {
+      return (
+        <ErrorState message={errorMessage} onRetry={refetchRecommendations} />
+      );
     }
 
     if (subjects.length === 0) {
@@ -183,7 +171,7 @@ function Recommendations({ uniSlug, setAps, setUnlockedCount }) {
 
   if (loading) return <UniversityCoursesSkeleton />;
 
-  if (recommendedCourses.length === 0) {
+  if (!recommendedCourses.length) {
     return renderEmpty();
   }
 
