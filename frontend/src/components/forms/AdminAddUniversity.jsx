@@ -11,12 +11,14 @@ import {
   Save,
   RotateCcw,
   AlertCircle,
+  University,
 } from "lucide-react";
 import "../../styles/AdminAddUniversity.css";
 import { addUniversity } from "../../services/universityService";
 import SubmitError from "../ui/SubmitError";
 import SubmitSuccess from "../ui/SubmitSuccess";
 import SmallLoader from "../ui/SmallLoader";
+import PageHeader from "../ui/PageHeader";
 
 /* Main component */
 export default function AdminAddUniversity() {
@@ -138,6 +140,11 @@ export default function AdminAddUniversity() {
   /* ── Render ── */
   return (
     <div className=".au_container">
+      <PageHeader
+        icon={University}
+        title="Add University"
+        subtitle="Register a new university and configure its institutional details."
+      />
       <form onSubmit={handleSubmit} className="au__card">
         <div className="au__card-header">
           <Building2 size={18} strokeWidth={2} className="au__card-iconn" />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Search } from "lucide-react";
+import { Search, Building2 } from "lucide-react";
 import "../../styles/AdminViewUniversities.css";
 
 import { getAllUniversities } from "../../services/universityService";
@@ -7,6 +7,7 @@ import Skeleton from "../ui/Skeleton";
 import EmptyState from "../ui/EmptyState";
 import AdminUniversityCard from "../ui/AdminUniversityCard";
 import ErrorState from "../ui/ErrorState";
+import PageHeader from "../ui/PageHeader";
 
 export default function AdminViewUniversities() {
   const [universities, setUniversities] = useState([]);
@@ -71,6 +72,11 @@ export default function AdminViewUniversities() {
 
   return (
     <div className="vu">
+      <PageHeader
+        icon={Building2}
+        title="Manage Universities"
+        subtitle="View, update and manage universities registered on CourseMatch."
+      />
       {/* SEARCH */}
       <div className="vu__search-wrap">
         <Search size={18} strokeWidth={2} className="vu__search-icon" />

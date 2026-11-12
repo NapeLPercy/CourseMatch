@@ -19,6 +19,7 @@ import { addCourse } from "../../services/courseService";
 import SubmitError from "../ui/SubmitError";
 import SubmitSuccess from "../ui/SubmitSuccess";
 import SmallLoader from "../ui/SmallLoader";
+import PageHeader from "../ui/PageHeader";
 
 /*  Helpers  */
 function clampMark(n) {
@@ -257,6 +258,11 @@ export default function AdminAddQualification() {
   /* ── Render ── */
   return (
     <div className="aaq">
+      <PageHeader
+        icon={GraduationCap}
+        title="Add Qualification"
+        subtitle="Create and add new university qualifications to the CourseMatch database."
+      />
       {/* Two-column grid */}
       <div className="aaq__grid">
         {/* LEFT: University + Faculty */}

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Search, CheckCircle2, XCircle, Calendar, Mail } from "lucide-react";
+import { Search, UsersRound, Calendar, Mail } from "lucide-react";
 import "../../styles/AdminViewUsers.css";
 import { getAllAccounts } from "../../services/accountService";
 import { formatTimestamp } from "../../Utils/datetime";
@@ -7,6 +7,7 @@ import ErrorState from "../ui/ErrorState";
 import AdminUserListSkeleton from "../ui/AdminViewUsersSkeleton";
 import { useNavigate } from "react-router-dom";
 import StatusPill from "../ui/StatusPill";
+import PageHeader from "../ui/PageHeader";
 
 function getInitials(email) {
   return email.slice(0, 2).toUpperCase();
@@ -63,6 +64,11 @@ export default function AdminUserList() {
   if (error) return <ErrorState message={error} onRetry={fetchUsers} />;
   return (
     <div className="aul">
+      <PageHeader
+        icon={UsersRound}
+        title="Manage User Accounts"
+        subtitle="View, update and manage registered CourseMatch user accounts."
+      />
       {/* Controls */}
       <div className="aul__controls">
         <div className="aul__search-wrap">
@@ -137,15 +143,11 @@ export default function AdminUserList() {
                     </div>
                   </td>
                   <td>
-                    <span className="aul__id">
-                      {u?.role}
-                    </span>
+                    <span className="aul__id">{u?.role}</span>
                   </td>
 
                   <td>
-                    <span className="aul__id">
-                      {u?.status}
-                    </span>
+                    <span className="aul__id">{u?.status}</span>
                   </td>
                   <td>
                     <span className="aul__id">

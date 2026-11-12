@@ -6,13 +6,14 @@ import {
   ImageIcon,
   AlignLeft,
   Heading,
+  FilePenLine,
 } from "lucide-react";
 import "../../styles/AddBlogPost.css";
 import { createBlog } from "../../services/blogService";
 import SubmitError from "../ui/SubmitError";
 import SubmitSuccess from "../ui/SubmitSuccess";
 import { blogPostTopics } from "../../Utils/textData/blogTopics";
-
+import PageHeader from "../ui/PageHeader";
 
 const EMPTY_FORM = {
   title: "",
@@ -133,178 +134,189 @@ export default function AddBlogPost({ onSubmit }) {
   }
 
   return (
-    <form className="abp" onSubmit={handleSubmit} noValidate>
-      {/* ── Post details card ── */}
-      <div className="abp__card">
-        <p className="abp__card-label">Post Details</p>
+    <>
+      <PageHeader
+        icon={FilePenLine}
+        title="Create Blog Post"
+        subtitle="Write and publish educational articles and updates for students."
+      />
+      <form className="abp" onSubmit={handleSubmit} noValidate>
+        {/* ── Post details card ── */}
+        <div className="abp__card">
+          <p className="abp__card-label">Post Details</p>
 
-        {/* Title */}
-        <div className="abp__field">
-          <label className="abp__label" htmlFor="title">
-            Title
-          </label>
-          <input
-            className={`abp__input ${errors.title ? "abp__input--error" : ""}`}
-            id="title"
-            name="title"
-            type="text"
-            placeholder="e.g. How to Choose the Right Course"
-            value={form.title}
-            onChange={handleField}
-          />
-          {errors.title && <span className="abp__error">{errors.title}</span>}
-        </div>
-
-        {/* Excerpt */}
-        <div className="abp__field">
-          <label className="abp__label" htmlFor="excerpt">
-            Excerpt
-          </label>
-          <textarea
-            className={`abp__textarea abp__textarea--short ${errors.excerpt ? "abp__input--error" : ""}`}
-            id="excerpt"
-            name="excerpt"
-            placeholder="A short summary shown on the blog listing page…"
-            value={form.excerpt}
-            onChange={handleField}
-            rows={2}
-          />
-          {errors.excerpt && (
-            <span className="abp__error">{errors.excerpt}</span>
-          )}
-        </div>
-
-        {/* Topic + Cover row */}
-        <div className="abp__row">
+          {/* Title */}
           <div className="abp__field">
-            <label className="abp__label" htmlFor="topic">
-              Topic
+            <label className="abp__label" htmlFor="title">
+              Title
             </label>
-            <select
-              className={`abp__select ${errors.topic ? "abp__input--error" : ""}`}
-              id="topic"
-              name="topic"
-              value={form.topic}
-              onChange={handleField}
-            >
-              <option value="">Select a category</option>
-              {blogPostTopics.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-            {errors.topic && <span className="abp__error">{errors.topic}</span>}
-          </div>
-
-          <div className="abp__field">
-            <label className="abp__label" htmlFor="coverImage">
-              <ImageIcon size={12} strokeWidth={2} />
-              Cover Image
-            </label>
-
             <input
-              className="abp__input"
-              id="coverImage"
-              name="coverImage"
-              type="file"
-              accept="image/*"
+              className={`abp__input ${errors.title ? "abp__input--error" : ""}`}
+              id="title"
+              name="title"
+              type="text"
+              placeholder="e.g. How to Choose the Right Course"
+              value={form.title}
               onChange={handleField}
             />
+            {errors.title && <span className="abp__error">{errors.title}</span>}
           </div>
-        </div>
-      </div>
 
-      {/* ── Blocks card ── */}
-      <div className="abp__card">
-        <p className="abp__card-label">Content Blocks</p>
+          {/* Excerpt */}
+          <div className="abp__field">
+            <label className="abp__label" htmlFor="excerpt">
+              Excerpt
+            </label>
+            <textarea
+              className={`abp__textarea abp__textarea--short ${errors.excerpt ? "abp__input--error" : ""}`}
+              id="excerpt"
+              name="excerpt"
+              placeholder="A short summary shown on the blog listing page…"
+              value={form.excerpt}
+              onChange={handleField}
+              rows={2}
+            />
+            {errors.excerpt && (
+              <span className="abp__error">{errors.excerpt}</span>
+            )}
+          </div>
 
-        <div className="abp__blocks">
-          {blocks.map((block, i) => (
-            <div key={i} className="abp__block">
-              {/* Block header */}
-              <div className="abp__block-header">
-                <span className="abp__block-pos">{i + 1}</span>
-
-                <select
-                  className="abp__block-type"
-                  value={block.type}
-                  onChange={(e) => handleBlockChange(i, "type", e.target.value)}
-                >
-                  <option value="heading">Heading</option>
-                  <option value="paragraph">Paragraph</option>
-                </select>
-
-                <span className="abp__block-type-icon">
-                  {block.type === "heading" ? (
-                    <Heading size={13} strokeWidth={2.5} />
-                  ) : (
-                    <AlignLeft size={13} strokeWidth={2} />
-                  )}
-                </span>
-
-                <button
-                  type="button"
-                  className="abp__block-remove"
-                  onClick={() => removeBlock(i)}
-                  disabled={blocks.length === 1}
-                  aria-label="Remove block"
-                >
-                  <Trash2 size={13} strokeWidth={2} />
-                </button>
-              </div>
-
-              {/* Block content */}
-              <textarea
-                className={`abp__textarea ${
-                  block.type === "heading" ? "abp__textarea--heading" : ""
-                } ${errors[`block_${i}`] ? "abp__input--error" : ""}`}
-                placeholder={
-                  block.type === "heading"
-                    ? "Enter heading…"
-                    : "Write your paragraph here…"
-                }
-                value={block.content}
-                onChange={(e) =>
-                  handleBlockChange(i, "content", e.target.value)
-                }
-                rows={block.type === "heading" ? 1 : 4}
-              />
-              {errors[`block_${i}`] && (
-                <span className="abp__error">{errors[`block_${i}`]}</span>
+          {/* Topic + Cover row */}
+          <div className="abp__row">
+            <div className="abp__field">
+              <label className="abp__label" htmlFor="topic">
+                Topic
+              </label>
+              <select
+                className={`abp__select ${errors.topic ? "abp__input--error" : ""}`}
+                id="topic"
+                name="topic"
+                value={form.topic}
+                onChange={handleField}
+              >
+                <option value="">Select a category</option>
+                {blogPostTopics.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+              {errors.topic && (
+                <span className="abp__error">{errors.topic}</span>
               )}
             </div>
-          ))}
+
+            <div className="abp__field">
+              <label className="abp__label" htmlFor="coverImage">
+                <ImageIcon size={12} strokeWidth={2} />
+                Cover Image
+              </label>
+
+              <input
+                className="abp__input"
+                id="coverImage"
+                name="coverImage"
+                type="file"
+                accept="image/*"
+                onChange={handleField}
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Add block btn */}
-        <button type="button" className="abp__add-block" onClick={addBlock}>
-          <Plus size={14} strokeWidth={2.5} />
-          Add block
+        {/* ── Blocks card ── */}
+        <div className="abp__card">
+          <p className="abp__card-label">Content Blocks</p>
+
+          <div className="abp__blocks">
+            {blocks.map((block, i) => (
+              <div key={i} className="abp__block">
+                {/* Block header */}
+                <div className="abp__block-header">
+                  <span className="abp__block-pos">{i + 1}</span>
+
+                  <select
+                    className="abp__block-type"
+                    value={block.type}
+                    onChange={(e) =>
+                      handleBlockChange(i, "type", e.target.value)
+                    }
+                  >
+                    <option value="heading">Heading</option>
+                    <option value="paragraph">Paragraph</option>
+                  </select>
+
+                  <span className="abp__block-type-icon">
+                    {block.type === "heading" ? (
+                      <Heading size={13} strokeWidth={2.5} />
+                    ) : (
+                      <AlignLeft size={13} strokeWidth={2} />
+                    )}
+                  </span>
+
+                  <button
+                    type="button"
+                    className="abp__block-remove"
+                    onClick={() => removeBlock(i)}
+                    disabled={blocks.length === 1}
+                    aria-label="Remove block"
+                  >
+                    <Trash2 size={13} strokeWidth={2} />
+                  </button>
+                </div>
+
+                {/* Block content */}
+                <textarea
+                  className={`abp__textarea ${
+                    block.type === "heading" ? "abp__textarea--heading" : ""
+                  } ${errors[`block_${i}`] ? "abp__input--error" : ""}`}
+                  placeholder={
+                    block.type === "heading"
+                      ? "Enter heading…"
+                      : "Write your paragraph here…"
+                  }
+                  value={block.content}
+                  onChange={(e) =>
+                    handleBlockChange(i, "content", e.target.value)
+                  }
+                  rows={block.type === "heading" ? 1 : 4}
+                />
+                {errors[`block_${i}`] && (
+                  <span className="abp__error">{errors[`block_${i}`]}</span>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Add block btn */}
+          <button type="button" className="abp__add-block" onClick={addBlock}>
+            <Plus size={14} strokeWidth={2.5} />
+            Add block
+          </button>
+        </div>
+
+        {/* ── ERROR/SUCCESS ── */}
+        {submitError && <SubmitError error={submitError} />}
+
+        {submitSuccess && <SubmitSuccess success={submitSuccess} />}
+
+        {/* ── Submit ── */}
+        <button
+          className="abp__submit"
+          type="submit"
+          disabled={loading}
+          onClick={handleSubmit}
+        >
+          {loading ? (
+            <>
+              <Loader2 size={16} strokeWidth={2} className="abp__spinner" />
+              Publishing…
+            </>
+          ) : (
+            "Publish Post"
+          )}
         </button>
-      </div>
-
-      {/* ── ERROR/SUCCESS ── */}
-      {submitError && <SubmitError error={submitError} />}
-
-      {submitSuccess && <SubmitSuccess success={submitSuccess} />}
-
-      {/* ── Submit ── */}
-      <button
-        className="abp__submit"
-        type="submit"
-        disabled={loading}
-        onClick={handleSubmit}
-      >
-        {loading ? (
-          <>
-            <Loader2 size={16} strokeWidth={2} className="abp__spinner" />
-            Publishing…
-          </>
-        ) : (
-          "Publish Post"
-        )}
-      </button>
-    </form>
+      </form>
+    </>
   );
 }

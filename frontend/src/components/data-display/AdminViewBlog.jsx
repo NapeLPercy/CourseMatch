@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Trash2, Search, SlidersHorizontal } from "lucide-react";
+import { Trash2, Search, SlidersHorizontal, Newspaper } from "lucide-react";
 import "../../styles/AdminViewBlogs.css";
 import {
   adminGetAllBlogs,
@@ -9,6 +9,7 @@ import {
 import BlogSkeleton from "../ui/BlogsSkeleton";
 import ErrorState from "../ui/ErrorState";
 import AdminBlogCard from "../ui/AdminBlogCard";
+import PageHeader from "../ui/PageHeader";
 
 function ConfirmModal({ post, onConfirm, onCancel }) {
   return (
@@ -56,7 +57,7 @@ export default function AdminViewBlogs() {
     } finally {
       setTimeout(() => {
         setLoading(false);
-      },2000);
+      }, 2000);
     }
   };
 
@@ -119,6 +120,11 @@ export default function AdminViewBlogs() {
 
   return (
     <div className="avb">
+      <PageHeader
+        icon={Newspaper}
+        title="Manage Blog Posts"
+        subtitle="View, edit, publish and manage existing blog articles."
+      />
       {/* Stats */}
       <div className="avb__stats">
         <div className="avb__stat">

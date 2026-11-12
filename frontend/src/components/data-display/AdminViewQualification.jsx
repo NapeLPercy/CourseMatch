@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Search } from "lucide-react";
+import { Search, BookOpenCheck } from "lucide-react";
 import "../../styles/AdminViewQualification.css";
 
 import Skeleton from "../ui/Skeleton";
@@ -7,6 +7,7 @@ import { getAllCourses } from "../../services/courseService";
 import ErrorState from "../ui/ErrorState";
 import EmptyState from "../ui/EmptyState";
 import AdminQualificationCard from "../ui/AdminQualificationCard";
+import PageHeader from "../ui/PageHeader";
 
 export default function AdminViewQualifications() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -73,6 +74,11 @@ export default function AdminViewQualifications() {
 
   return (
     <div className="avq">
+      <PageHeader
+        icon={BookOpenCheck}
+        title="Manage Qualifications"
+        subtitle="View, edit and manage existing university qualifications."
+      />
       {/* SEARCH */}
       <div className="avq__search-wrap">
         <Search size={18} strokeWidth={2} className="avq__search-icon" />

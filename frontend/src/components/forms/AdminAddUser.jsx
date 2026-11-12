@@ -10,6 +10,7 @@ import SubmitSuccess from "../ui/SubmitSuccess";
 import SubmitError from "../ui/SubmitError";
 import "../../styles/AddUser.css";
 import { addUserAccount } from "../../services/accountService";
+import PageHeader from "../ui/PageHeader";
 
 const roles = [
   { value: "ADMIN", label: "Admin" },
@@ -92,6 +93,11 @@ export default function AddUser({ onAdd }) {
 
   return (
     <div className="au">
+      <PageHeader
+        icon={UserPlus}
+        title="Create User Account"
+        subtitle="Register a new user and assign their appropriate account role."
+      />
       {/* Email */}
       <div className={`au__field ${errors.email ? "au__field--error" : ""}`}>
         <label className="au__label" htmlFor="au-email">
