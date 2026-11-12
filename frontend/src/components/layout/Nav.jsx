@@ -135,21 +135,21 @@ export default function Nav() {
   const location = useLocation();
   const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
 
-  const isLoggedIn = !!user;
-  const isAdmin = user?.role === "ADMIN";
-  const isTutor = user?.role === "TUTOR";
-  const isParent = user?.role === "PARENT";
-  const currentRole = !isLoggedIn
-    ? "guest"
-    : isAdmin
-      ? "admin"
-      : isTutor
-        ? "tutor"
-        : isParent
-          ? "parent"
-          : "student";
+  // const isLoggedIn = !!user;
+  // const isAdmin = user?.role === "ADMIN";
+  // const isTutor = user?.role === "TUTOR";
+  // const isParent = user?.role === "PARENT";
+  // const currentRole = !isLoggedIn
+  //   ? "guest"
+  //   : isAdmin
+  //     ? "admin"
+  //     : isTutor
+  //       ? "tutor"
+  //       : isParent
+  //         ? "parent"
+  //         : "student";
 
-  const navItems = NAV_CONFIG[currentRole];
+  const navItems = NAV_CONFIG["guest"];
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -179,14 +179,14 @@ export default function Nav() {
 
   //handle responsiveness
   useEffect(() => {
-  const handleResize = () => {
-    if (window.innerWidth > 1000) {
-      setMobileOpen(false);
-    }
-  };
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
+    const handleResize = () => {
+      if (window.innerWidth > 1000) {
+        setMobileOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   /* Close mobile on route change */
   useEffect(() => {
@@ -225,33 +225,16 @@ export default function Nav() {
             ))}
           </div>
 
-            <ChatWidget />
-            
+          <ChatWidget />
+
           {/* Desktop actions */}
           <div className="nav__actions">
-            {!isLoggedIn ? (
-              <>
-                <Link to="/login" className="nav__btn nav__btn--ghost">
-                  Sign in
-                </Link>
-                <Link to="/register" className="nav__btn nav__btn--primary">
-                  Get started
-                </Link>
-              </>
-            ) : (
-              <button
-                className="nav__btn nav__btn--logout"
-                onClick={handleLogout}
-                disabled={loggingOut}
-              >
-                {loggingOut ? (
-                  <SmallLoader />
-                ) : (
-                  <LogOut size={15} strokeWidth={2} />
-                )}
-                {loggingOut ? "Signing out…" : "Sign out"}
-              </button>
-            )}
+            <Link to="/login" className="nav__btn nav__btn--ghost">
+              Sign in
+            </Link>
+            <Link to="/register" className="nav__btn nav__btn--primary">
+              Get started
+            </Link>
           </div>
 
           {/* Mobile hamburger */}
@@ -285,37 +268,20 @@ export default function Nav() {
           </div>
 
           <div className="nav__drawer-footer">
-            {!isLoggedIn ? (
-              <>
-                <Link
-                  to="/login"
-                  className="nav__drawer-btn nav__drawer-btn--ghost"
-                  onClick={closeMobile}
-                >
-                  Sign in
-                </Link>
-                <Link
-                  to="/register"
-                  className="nav__drawer-btn nav__drawer-btn--primary"
-                  onClick={closeMobile}
-                >
-                  Get started
-                </Link>
-              </>
-            ) : (
-              <button
-                className="nav__drawer-btn nav__drawer-btn--logout"
-                onClick={handleLogout}
-                disabled={loggingOut}
-              >
-                {loggingOut ? (
-                  <SmallLoader />
-                ) : (
-                  <LogOut size={15} strokeWidth={2} />
-                )}
-                {loggingOut ? "Signing out…" : "Sign out"}
-              </button>
-            )}
+            <Link
+              to="/login"
+              className="nav__drawer-btn nav__drawer-btn--ghost"
+              onClick={closeMobile}
+            >
+              Sign in
+            </Link>
+            <Link
+              to="/register"
+              className="nav__drawer-btn nav__drawer-btn--primary"
+              onClick={closeMobile}
+            >
+              Get started
+            </Link>
           </div>
         </div>
       </div>

@@ -67,6 +67,10 @@ import TermsOfService from "./components/data-display/legal/TermsOfService";
 import CookiePolicy from "./components/data-display/legal/CookiePolicy";
 import PrivacyPolicy from "./components/data-display/legal/PrivacyPolicy";
 import Popia from "./components/data-display/legal/POPIA";
+import AppNavigationLayout from "./components/layout/AppNavigationLayout";
+
+//
+
 function App() {
   return (
     <UserProvider>
@@ -78,27 +82,41 @@ function App() {
             <RouteTracking />
 
             <Routes>
-              {/* Public pages with nav/footer */}
+              {/* ================================== */}
+              {/* PUBLIC WEBSITE - NAVBAR + FOOTER   */}
+              {/* ================================== */}
+
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/features" element={<Features />} />
                 <Route path="/contact-us" element={<Contact />} />
-                {/*LEGAL*/}
+
+                {/* LEGAL */}
                 <Route
                   path="/terms-and-conditions"
                   element={<TermsOfService />}
                 />
+
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
+
                 <Route path="/popia" element={<Popia />} />
 
+                {/* BLOGS */}
                 <Route path="/blogs" element={<BlogList />} />
+
                 <Route path="/blog/:slug" element={<BlogPost />} />
               </Route>
 
-              {/* Shows nav only */}
-              <Route element={<NavLayout />}>
-                {/*GUEST */}
+              {/* ================================== */}
+              {/* APPLICATION PAGES                 */}
+              {/* ================================== */}
+
+              <Route element={<AppNavigationLayout />}>
+                {/* -------------------------------- */}
+                {/* PUBLIC TOOLS AND COURSE PAGES    */}
+                {/* -------------------------------- */}
 
                 <Route path="/aps-calculator" element={<GuestCalculateAPS />} />
 
@@ -111,6 +129,8 @@ function App() {
                   path="/university-prospectuses"
                   element={<Prospectus />}
                 />
+
+                {/* COURSE CATEGORIES */}
 
                 <Route path="/diploma-courses" element={<DiplomaCourses />} />
 
@@ -134,37 +154,62 @@ function App() {
                   element={<NoMathsCourses />}
                 />
 
-                {/* Logged-in routes (STUDENT) */}
+                {/* ================================= */}
+                {/* STUDENT ROUTES                   */}
+                {/* ================================= */}
+
                 <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
-                  <Route
-                    path="/student/view/my-recommeded-courses"
-                    element={<MyAIRecommendedCourses />}
-                  />
-                  <Route
-                    path="/student/add/subjects"
-                    element={<AddSubjects />}
-                  />
-                  <Route
-                    path="/student/view/subjects"
-                    element={<ViewSubjectsPage />}
-                  />
                   <Route
                     path="/student/dashboard"
                     element={<StudentDashboard />}
                   />
+
+                  {/* SUBJECTS */}
+
+                  <Route
+                    path="/student/add/subjects"
+                    element={<AddSubjects />}
+                  />
+
+                  <Route
+                    path="/student/view/subjects"
+                    element={<ViewSubjectsPage />}
+                  />
+
+                  {/* COURSES */}
+
                   <Route
                     path="/view-courses"
                     element={<StudentViewUniversities />}
                   />
 
                   <Route
-                    path="/student/ai-recommended-courses"
-                    element={<StudentMatchedCourses />}
-                  />
-                  <Route
                     path="/view-courses/:courseSlug"
                     element={<UniversityCourses />}
                   />
+
+                  <Route
+                    path="/student/view/my-recommeded-courses"
+                    element={<MyAIRecommendedCourses />}
+                  />
+
+                  <Route
+                    path="/student/ai-recommended-courses"
+                    element={<StudentMatchedCourses />}
+                  />
+
+                  <Route
+                    path="/student/course-comparisons"
+                    element={<CourseComparisons />}
+                  />
+
+                  <Route
+                    path="/student/course-deep-dive"
+                    element={<DeepDive />}
+                  />
+
+                  {/* PERSONALITY */}
+
                   <Route
                     path="/student/add/personality"
                     element={<PersonalityProfileWizard />}
@@ -174,19 +219,12 @@ function App() {
                     path="/student/view/personality"
                     element={<ViewMyProfile />}
                   />
-
-                  <Route
-                    path="/student/course-deep-dive"
-                    element={<DeepDive />}
-                  />
-
-                  <Route
-                    path="/student/course-comparisons"
-                    element={<CourseComparisons />}
-                  />
                 </Route>
 
-                {/* Logged-in routes (PARENT) */}
+                {/* ================================= */}
+                {/* PARENT ROUTES                    */}
+                {/* ================================= */}
+
                 <Route element={<RoleRoute allowedRoles={["PARENT"]} />}>
                   <Route
                     path="/parent/dashboard"
@@ -194,14 +232,21 @@ function App() {
                   />
                 </Route>
 
-                {/* Logged-in routes (TUTOR) */}
+                {/* ================================= */}
+                {/* TUTOR ROUTES                     */}
+                {/* ================================= */}
+
                 <Route element={<RoleRoute allowedRoles={["TUTOR"]} />}>
                   <Route path="/tutor/dashboard" element={<TutorDashboard />} />
                 </Route>
 
-                {/* Logged-in routes (ADMIN) */}
+                {/* ================================= */}
+                {/* ADMIN ROUTES                     */}
+                {/* ================================= */}
+
                 <Route element={<RoleRoute allowedRoles={["ADMIN"]} />}>
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
                   <Route
                     path="/admin/manage-qualifications"
                     element={<AdminManageQualifications />}
@@ -226,10 +271,12 @@ function App() {
                     path="/admin/manage-accounts"
                     element={<AdminManageAccounts />}
                   />
+
                   <Route
                     path="/admin/add-qualification"
                     element={<AdminAddQualification />}
                   />
+
                   <Route
                     path="/admin/view-qualifications"
                     element={<AdminViewQualification />}
@@ -241,22 +288,37 @@ function App() {
                 </Route>
               </Route>
 
-              {/* Logged-in routes (ADMIN) */}
+              {/* ================================== */}
+              {/* GUEST ONBOARDING                  */}
+              {/* ================================== */}
+
               <Route element={<RoleRoute allowedRoles={["GUEST"]} />}>
                 <Route path="/welcome" element={<WelcomeOnboarding />} />
               </Route>
 
-              {/* Full screen auth pages */}
+              {/* ================================== */}
+              {/* AUTHENTICATION PAGES              */}
+              {/* ================================== */}
+
               <Route element={<AuthLayout />}>
                 <Route path="/login" element={<Login />} />
+
                 <Route path="/register" element={<Account />} />
+
                 <Route path="/request-reset" element={<RequestReset />} />
+
                 <Route path="/reset-password" element={<ResetPassword />} />
+
                 <Route path="/verify-account" element={<VerifyAccount />} />
               </Route>
 
-              <Route path="*" element={<NotFound />} />
+              {/* ================================== */}
+              {/* FALLBACK ROUTES                   */}
+              {/* ================================== */}
+
               <Route path="/not-authorized" element={<NotAuthorized />} />
+
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Router>
         </SubjectProvider>
