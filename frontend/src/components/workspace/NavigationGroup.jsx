@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useId } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { NavIcon } from "./SidebarNavigation";
@@ -8,29 +8,30 @@ export default function NavigationGroup({
   item,
   pathname,
   iconOnly,
+  open, // new
+  onToggle, // new
+  onOpen, // new
   onNavigate,
   onExpand,
 }) {
   const panelId = useId();
   const childActive = isGroupActive(item, pathname);
-  const [open, setOpen] = useState(childActive);
 
-  // When the route lands inside this group, make sure the group is open.
-  useEffect(() => {
-    if (childActive) setOpen(true);
-  }, [childActive]);
+  // removed: const [open, setOpen] = useState(childActive);
+  // removed: the useEffect that called setOpen(true)
 
   const expanded = open && !iconOnly;
 
   function handleToggle() {
     if (iconOnly) {
-      // Dropdowns can't render inside the icon rail, so widen it first.
       onExpand?.();
-      setOpen(true);
+      onOpen();
       return;
     }
-    setOpen((prev) => !prev);
+    onToggle();
   }
+
+  // ...the JSX below stays exactly as it is
 
   return (
     <div className="ws-group">

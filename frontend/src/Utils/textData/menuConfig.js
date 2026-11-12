@@ -1,3 +1,23 @@
+import {
+  Home,
+  LayoutDashboard,
+  BookOpen,
+  GraduationCap,
+  FolderOpen,
+  UserRound,
+  Wrench,
+  Users,
+  Lightbulb,
+  UserCog,
+  CalendarDays,
+  MessageSquare,
+  University,
+  FileText,
+  UserPlus,
+  Newspaper,
+  BarChart3,
+} from "lucide-react";
+
 export const NAV_CONFIG = {
   guest: {
     main: [
@@ -32,7 +52,6 @@ export const NAV_CONFIG = {
       },
       {
         label: "Tools",
-
         dropdown: [
           {
             path: "/aps-calculator",
@@ -48,26 +67,25 @@ export const NAV_CONFIG = {
           },
         ],
       },
-
       { path: "/features", label: "Features" },
       { path: "/blogs", label: "Blog" },
-
       {
         path: "/contact-us",
         label: "Contact",
       },
     ],
   },
+
   student: {
     main: [
       {
         path: "/student/dashboard",
         label: "Dashboard",
+        icon: LayoutDashboard,
       },
-
       {
         label: "Subjects",
-
+        icon: BookOpen,
         dropdown: [
           {
             path: "/student/add/subjects",
@@ -79,9 +97,9 @@ export const NAV_CONFIG = {
           },
         ],
       },
-
       {
         label: "Courses",
+        icon: GraduationCap,
         dropdown: [
           {
             path: "/view-courses",
@@ -95,7 +113,6 @@ export const NAV_CONFIG = {
             path: "/student/ai-recommended-courses",
             label: "Qualifications Details",
           },
-
           {
             path: "/student/course-comparisons",
             label: "Compare Qualifications",
@@ -104,7 +121,7 @@ export const NAV_CONFIG = {
       },
       {
         label: "Course Categories",
-
+        icon: FolderOpen,
         dropdown: [
           {
             path: "/bachelor-degree-courses",
@@ -128,10 +145,9 @@ export const NAV_CONFIG = {
           },
         ],
       },
-
       {
         label: "Personality",
-
+        icon: UserRound,
         dropdown: [
           {
             path: "/student/add/personality",
@@ -143,9 +159,9 @@ export const NAV_CONFIG = {
           },
         ],
       },
-
       {
         label: "Tools",
+        icon: Wrench,
         dropdown: [
           {
             path: "/aps-calculator",
@@ -165,25 +181,26 @@ export const NAV_CONFIG = {
     showUser: true,
     isAdmin: false,
   },
+
   parent: {
     main: [
       {
         path: "/parent/dashboard",
         label: "Dashboard",
+        icon: LayoutDashboard,
       },
-
       {
         label: "My Child",
-
+        icon: Users,
         dropdown: [
           { path: "/student/view/subjects", label: "Subjects" },
           { path: "/lessons", label: "Lessons" },
           { path: "/student/progress", label: "Progress" },
         ],
       },
-
       {
         label: "Course Insights",
+        icon: Lightbulb,
         dropdown: [
           {
             path: "/matched-courses",
@@ -192,10 +209,10 @@ export const NAV_CONFIG = {
           { path: "/view-courses", label: "All Courses" },
         ],
       },
-
       {
         path: "/student/manage-my-profile",
         label: "Manage Profile",
+        icon: UserCog,
       },
     ],
     showUser: true,
@@ -207,20 +224,20 @@ export const NAV_CONFIG = {
       {
         path: "/tutor/dashboard",
         label: "Dashboard",
+        icon: LayoutDashboard,
       },
-
       {
         label: "My Students",
-
+        icon: Users,
         dropdown: [
           { path: "/students", label: "All Students" },
           { path: "/student/view/subjects", label: "Subjects" },
           { path: "/student/progress", label: "Progress" },
         ],
       },
-
       {
         label: "Lessons",
+        icon: CalendarDays,
         dropdown: [
           { path: "/lessons", label: "Upcoming Lessons" },
           {
@@ -229,14 +246,20 @@ export const NAV_CONFIG = {
           },
         ],
       },
-
-      { path: "/tutor/subjects", label: "Subjects" },
-
-      { path: "/messages", label: "Messages" },
-
+      {
+        path: "/tutor/subjects",
+        label: "Subjects",
+        icon: BookOpen,
+      },
+      {
+        path: "/messages",
+        label: "Messages",
+        icon: MessageSquare,
+      },
       {
         path: "/student/manage-my-profile",
         label: "Manage Profile",
+        icon: UserCog,
       },
     ],
     showUser: true,
@@ -248,10 +271,11 @@ export const NAV_CONFIG = {
       {
         path: "/admin/dashboard",
         label: "Dashboard",
+        icon: LayoutDashboard,
       },
-
       {
         label: "Qualifications",
+        icon: GraduationCap,
         dropdown: [
           {
             path: "/admin/add/qualification",
@@ -265,6 +289,7 @@ export const NAV_CONFIG = {
       },
       {
         label: "Universities",
+        icon: University,
         dropdown: [
           {
             path: "/admin/add/university",
@@ -278,6 +303,7 @@ export const NAV_CONFIG = {
       },
       {
         label: "Prospectus",
+        icon: FileText,
         dropdown: [
           {
             path: "/admin/add/university-prospectus",
@@ -291,6 +317,7 @@ export const NAV_CONFIG = {
       },
       {
         label: "User Accounts",
+        icon: UserPlus,
         dropdown: [
           {
             path: "/admin/add/account",
@@ -302,9 +329,9 @@ export const NAV_CONFIG = {
           },
         ],
       },
-
-       {
+      {
         label: "Blog Posts",
+        icon: Newspaper,
         dropdown: [
           {
             path: "/admin/add/blog-post",
@@ -315,10 +342,11 @@ export const NAV_CONFIG = {
             label: "Manage Blog Posts",
           },
         ],
-      },,
+      },
       {
         path: "/admin/reports",
         label: "Reports",
+        icon: BarChart3,
       },
     ],
     showUser: true,

@@ -1,7 +1,7 @@
-import { isValidElement } from "react";
+import { isValidElement, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import NavigationGroup from "./NavigationGroup";
-import { getSections, isGroup, isPathActive } from "./navUtils";
+import { getSections, isGroup, isGroupActive, isPathActive } from "./navUtils";
 
 /* Icon comes from the config (optional). Falls back to the label's initial. */
 export function NavIcon({ item }) {
@@ -40,6 +40,19 @@ export default function SidebarNavigation({
   const { pathname } = useLocation();
   const sections = getSections(navigation);
 
+  // label of the one group that is open (null = all closed)
+  const activeGroupLabel =
+    sections
+      .flatMap((s) => s.items)
+      .find((item) => isGroupActive(item, pathname))?.label ?? null;
+
+  const [openKey, setOpenKey] = useState(activeGroupLabel);
+
+  // when the route moves into a different group, switch to that group
+  useEffect(() => {
+    if (activeGroupLabel) setOpenKey(activeGroupLabel);
+  }, [activeGroupLabel]);
+
   return (
     <>
       {sections.map((section) => (
@@ -57,6 +70,13 @@ export default function SidebarNavigation({
                       item={item}
                       pathname={pathname}
                       iconOnly={iconOnly}
+                      open={openKey === item.label}
+                      onToggle={() =>
+                        setOpenKey((prev) =>
+                          prev === item.label ? null : item.label,
+                        )
+                      }
+                      onOpen={() => setOpenKey(item.label)}
                       onNavigate={onNavigate}
                       onExpand={onExpand}
                     />
