@@ -35,7 +35,8 @@ export default function MinorCourseMatching() {
     setLoadingId(uni.id);
     setError(false);
     try {
-      const { data } = await getUniversityCourses(uni.id);
+      const {courses} = await getUniversityCourses(uni.id);
+  
       const endorsement =
         JSON.parse(sessionStorage.getItem("endorsement")) ?? null;
 
@@ -47,7 +48,7 @@ export default function MinorCourseMatching() {
 
       const courseFilter = new CourseFilter(
         subjects,
-        data.courses,
+        courses,
         endorsement,
         uni.id.toUpperCase(),
       );
