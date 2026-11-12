@@ -27,15 +27,11 @@ import ResetPassword from "./pages/ResetPassword";
 import VerifyAccount from "./pages/VerifyAccount";
 
 import MainLayout from "./components/layout/MainLayout";
-import NavLayout from "./components/layout/NavLayout";
 import AuthLayout from "./components/layout/AuthLayout";
 import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
 import AdminAddQualification from "./components/forms/AdminAddCourse";
-import AdminManageQualifications from "./components/data-display/AdminManageQualifications";
-import AdminViewQualification from "./components/data-display/AdminViewQualification";
 import AdminDashboard from "./components/data-display/AdminDashboard";
-import AdminManageUniversities from "./components/data-display/AdminManageUniversities";
 import NotAuthorized from "./pages/NotAuthorized";
 import RoleRoute from "./routes/RoleRoute";
 import StudentMatchedCourses from "./components/data-display/StudentMatchedCourses";
@@ -48,9 +44,7 @@ import WelcomeOnboarding from "./components/data-display/WelcomeOnboarding";
 import GuestCalculateAPS from "./components/forms/GuestCalculateAPS";
 import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
-import ManageBlogs from "./components/data-display/ManageBlogs";
 import DeepDive from "./components/data-display/DeepDive";
-import AdminManageAccounts from "./components/data-display/AdminManageAccounts";
 import SendEmailPage from "./components/forms/SendEmailPage";
 import NsfasEligibilityChecker from "./components/forms/NsfasEligibilityChecker";
 import CourseComparisons from "./components/data-display/CourseComparisons";
@@ -68,7 +62,14 @@ import CookiePolicy from "./components/data-display/legal/CookiePolicy";
 import PrivacyPolicy from "./components/data-display/legal/PrivacyPolicy";
 import Popia from "./components/data-display/legal/POPIA";
 import AppNavigationLayout from "./components/layout/AppNavigationLayout";
-
+//import AdminAddQualification from "./components/forms/AdminAddCourse";
+import AdminViewQualifications from "./components/data-display/AdminViewQualification";
+import AdminAddUniversity from "./components/forms/AdminAddUniversity";
+import AdminViewUniversities from "./components/data-display/AdminViewUniversities";
+import AdminViewBlogs from "./components/data-display/AdminViewBlog";
+import AddBlogPost from "./components/forms/AddBlogPost";
+import AdminUserList from "./components/data-display/AdminViewUsers";
+import AddUser from "./components/forms/AdminAddUser";
 //
 
 function App() {
@@ -248,8 +249,12 @@ function App() {
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
                   <Route
-                    path="/admin/manage-qualifications"
-                    element={<AdminManageQualifications />}
+                    path="/admin/add/qualification"
+                    element={<AdminAddQualification />}
+                  />
+                  <Route
+                    path="/admin/manage/qualifications"
+                    element={<AdminViewQualifications />}
                   />
 
                   <Route
@@ -263,26 +268,30 @@ function App() {
                   />
 
                   <Route
-                    path="/admin/manage-universities"
-                    element={<AdminManageUniversities />}
+                    path="/admin/manage/accounts"
+                    element={<AdminUserList />}
+                  />
+
+                  <Route path="/admin/add/account" element={<AddUser />} />
+
+                  <Route
+                    path="/admin/add/university"
+                    element={<AdminAddUniversity />}
                   />
 
                   <Route
-                    path="/admin/manage-accounts"
-                    element={<AdminManageAccounts />}
+                    path="/admin/manage/universities"
+                    element={<AdminViewUniversities />}
                   />
 
                   <Route
-                    path="/admin/add-qualification"
-                    element={<AdminAddQualification />}
+                    path="/admin/manage/blog-posts"
+                    element={<AdminViewBlogs />}
                   />
-
                   <Route
-                    path="/admin/view-qualifications"
-                    element={<AdminViewQualification />}
+                    path="/admin/add/blog-post"
+                    element={<AddBlogPost />}
                   />
-
-                  <Route path="/admin/manage-blogs" element={<ManageBlogs />} />
 
                   <Route path="/admin/send-email" element={<SendEmailPage />} />
                 </Route>

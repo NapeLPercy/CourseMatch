@@ -249,13 +249,32 @@ export const NAV_CONFIG = {
         path: "/admin/dashboard",
         label: "Dashboard",
       },
+
       {
-        path: "/admin/manage-qualifications",
         label: "Qualifications",
+        dropdown: [
+          {
+            path: "/admin/add/qualification",
+            label: "Add Qualification",
+          },
+          {
+            path: "/admin/manage/qualifications",
+            label: "Manage Qualifications",
+          },
+        ],
       },
       {
-        path: "/admin/manage-universities",
         label: "Universities",
+        dropdown: [
+          {
+            path: "/admin/add/university",
+            label: "Add University",
+          },
+          {
+            path: "/admin/manage/universities",
+            label: "Manage Universities",
+          },
+        ],
       },
       {
         label: "Prospectus",
@@ -271,14 +290,32 @@ export const NAV_CONFIG = {
         ],
       },
       {
-        path: "/admin/manage-accounts",
-        label: "Accounts",
+        label: "User Accounts",
+        dropdown: [
+          {
+            path: "/admin/add/account",
+            label: "Add Account",
+          },
+          {
+            path: "/admin/manage/accounts",
+            label: "Manage accounts",
+          },
+        ],
       },
 
-      {
-        path: "/admin/manage-blogs",
-        label: "Blogs",
-      },
+       {
+        label: "Blog Posts",
+        dropdown: [
+          {
+            path: "/admin/add/blog-post",
+            label: "Add Blog Post",
+          },
+          {
+            path: "/admin/manage/blog-posts",
+            label: "Manage Blog Posts",
+          },
+        ],
+      },,
       {
         path: "/admin/reports",
         label: "Reports",
