@@ -6,6 +6,7 @@
   gap: 20px;
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   max-width: 780px;
+  padding: 24px 28px 48px;
 }
 
 /* ── Card ── */
@@ -63,7 +64,10 @@
   font-family: inherit;
   color: #1e293b;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
   width: 100%;
   box-sizing: border-box;
 }
@@ -200,7 +204,9 @@
   display: flex;
   align-items: center;
   border-radius: 6px;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
 }
 
 .abp__block-remove:hover:not(:disabled) {
@@ -229,7 +235,9 @@
   font-family: inherit;
   width: 100%;
   justify-content: center;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .abp__add-block:hover {
@@ -253,7 +261,10 @@
   cursor: pointer;
   font-family: inherit;
   box-shadow: 0 4px 16px rgba(37, 99, 235, 0.28);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
   align-self: flex-end;
 }
 
@@ -280,6 +291,11 @@
 }
 
 /* ── Responsive ── */
+@media (max-width: 900px) {
+  .abp {
+    padding: 16px 16px 40px;
+  }
+}
 @media (max-width: 700px) {
   .abp__card {
     padding: 20px 16px;

@@ -1,19 +1,21 @@
 /* ── AddUser.css ── */
+.au__container {
+  padding: 24px 28px 48px;
 
+}
 .au {
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   display: flex;
   flex-direction: column;
   gap: 16px;
   max-width: 480px;
-  
+  margin-top: 20px;
   background: var(--white);
   border: 1px solid var(--pale-blue);
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 2px 12px rgba(30, 58, 138, 0.06);
+  /* box-shadow: 0 2px 12px rgba(30, 58, 138, 0.06); */
 }
-
 
 /* ── Field ── */
 .au__field {
@@ -46,7 +48,9 @@
   font-family: inherit;
   color: var(--text-dark);
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   width: 100%;
   box-sizing: border-box;
 }
@@ -105,7 +109,11 @@
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .au__btn:disabled {
@@ -141,5 +149,16 @@
 }
 
 @keyframes au-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .au__container {
+    padding: 16px 16px 40px;
+  }
+  .au{
+     margin-top: 15px;
+  }
 }

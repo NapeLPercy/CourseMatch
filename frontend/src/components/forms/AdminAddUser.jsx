@@ -92,83 +92,89 @@ export default function AddUser({ onAdd }) {
   }
 
   return (
-    <div className="au">
+    <div className="au__container">
       <PageHeader
         icon={UserPlus}
         title="Create User Account"
         subtitle="Register a new user and assign their appropriate account role."
       />
-      {/* Email */}
-      <div className={`au__field ${errors.email ? "au__field--error" : ""}`}>
-        <label className="au__label" htmlFor="au-email">
-          <Mail size={13} strokeWidth={2} />
-          Email address <span className="au__required">*</span>
-        </label>
-        <input
-          id="au-email"
-          type="text"
-          className="au__input"
-          placeholder="user@email.com"
-          value={fields.email}
-          onChange={change("email")}
-          autoComplete="off"
-          disabled={loading}
-        />
-        {errors.email && <span className="au__error">{errors.email}</span>}
-      </div>
+      <div className="au">
+        {/* Email */}
+        <div className={`au__field ${errors.email ? "au__field--error" : ""}`}>
+          <label className="au__label" htmlFor="au-email">
+            <Mail size={13} strokeWidth={2} />
+            Email address <span className="au__required">*</span>
+          </label>
+          <input
+            id="au-email"
+            type="text"
+            className="au__input"
+            placeholder="user@email.com"
+            value={fields.email}
+            onChange={change("email")}
+            autoComplete="off"
+            disabled={loading}
+          />
+          {errors.email && <span className="au__error">{errors.email}</span>}
+        </div>
 
-      {/* Role */}
-      <div className={`au__field ${errors.role ? "au__field--error" : ""}`}>
-        <label className="au__label" htmlFor="au-role">
-          <ShieldCheck size={13} strokeWidth={2} />
-          Role <span className="au__required">*</span>
-        </label>
-        <select
-          id="au-role"
-          className="au__input au__select"
-          value={fields.role}
-          onChange={change("role")}
-          disabled={loading}
-        >
-          <option value="">Select a role…</option>
-          {roles.map((r) => (
-            <option key={r.value} value={r.value}>
-              {r.label}
-            </option>
-          ))}
-        </select>
-        {errors.role && <span className="au__error">{errors.role}</span>}
-      </div>
+        {/* Role */}
+        <div className={`au__field ${errors.role ? "au__field--error" : ""}`}>
+          <label className="au__label" htmlFor="au-role">
+            <ShieldCheck size={13} strokeWidth={2} />
+            Role <span className="au__required">*</span>
+          </label>
+          <select
+            id="au-role"
+            className="au__input au__select"
+            value={fields.role}
+            onChange={change("role")}
+            disabled={loading}
+          >
+            <option value="">Select a role…</option>
+            {roles.map((r) => (
+              <option key={r.value} value={r.value}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+          {errors.role && <span className="au__error">{errors.role}</span>}
+        </div>
 
-      {/* Feedback */}
-      {success && <SubmitSuccess success={success} />}
-      {error && <SubmitError error={error} />}
+        {/* Feedback */}
+        {success && <SubmitSuccess success={success} />}
+        {error && <SubmitError error={error} />}
 
-      {/* Actions */}
-      <div className="au__actions">
-        <button
-          className="au__btn au__btn--primary"
-          type="button"
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <LoaderCircle size={15} strokeWidth={2.2} className="au__spinner" />
-          ) : (
-            <UserPlus size={15} strokeWidth={2.2} />
-          )}
-          {loading ? "Adding…" : "Add User"}
-        </button>
+        {/* Actions */}
+        <div className="au__actions">
+          <button
+            className="au__btn au__btn--primary"
+            type="button"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <LoaderCircle
+                size={15}
+                strokeWidth={2.2}
+                className="au__spinner"
+              />
+            ) : (
+              <UserPlus size={15} strokeWidth={2.2} />
+            )}
+            {loading ? "Adding…" : "Add User"}
+          </button>
 
-        <button
-          className="au__btn au__btn--ghost"
-          type="button"
-          onClick={handleReset}
-          disabled={loading}
-        >
-          <RotateCcw size={14} strokeWidth={2.2} />
-          Reset
-        </button>
+          <button
+            className="au__btn au__btn--ghost"
+            type="button"
+            onClick={handleReset}
+            disabled={loading}
+          >
+            <RotateCcw size={14} strokeWidth={2.2} />
+            Reset
+          </button>
+        </div>
       </div>
     </div>
   );

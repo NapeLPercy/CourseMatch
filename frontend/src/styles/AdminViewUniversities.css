@@ -22,6 +22,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 24px 28px 48px;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -51,7 +52,9 @@
   font-size: 0.88rem;
   color: var(--text-dark);
   outline: none;
-  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
 .vu__search-input::placeholder {
@@ -114,12 +117,20 @@
   gap: 16px;
   opacity: 0;
   animation: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  transition:
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 @keyframes cardIn {
-  0%   { opacity: 0; transform: translateY(14px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .vu__card:hover {
@@ -177,7 +188,10 @@
   background: transparent;
   border: 1px solid var(--pale-blue);
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
   color: var(--text-gray);
 }
 
@@ -306,6 +320,9 @@
    RESPONSIVE
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
+  .vu {
+    padding: 16px 16px 40px;
+  }
   .vu__grid {
     grid-template-columns: 1fr;
   }

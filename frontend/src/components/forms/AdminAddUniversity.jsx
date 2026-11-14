@@ -139,7 +139,7 @@ export default function AdminAddUniversity() {
 
   /* ── Render ── */
   return (
-    <div className=".au_container">
+    <div className="au_container">
       <PageHeader
         icon={University}
         title="Add University"

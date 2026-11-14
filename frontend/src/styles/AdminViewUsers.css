@@ -5,6 +5,11 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  padding: 24px 28px 48px;
+}
+.auls{
+  
+  padding: 24px 28px 48px;
 }
 
 /* ── Controls ── */
@@ -40,7 +45,9 @@
   font-family: inherit;
   color: var(--text-dark);
   outline: none;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .aul__search:focus {
@@ -68,7 +75,9 @@
   font-family: inherit;
   color: #64748b;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .aul__tab--active {
@@ -227,7 +236,9 @@
   gap: 10px;
 }
 
-.aul__empty svg { opacity: 0.35; }
+.aul__empty svg {
+  opacity: 0.35;
+}
 
 .aul__empty p {
   font-size: 0.875rem;
@@ -255,8 +266,12 @@
 /* ── AdminUserListSkeleton.css ── */
 
 @keyframes auls-shimmer {
-  0%   { background-position: -700px 0; }
-  100% { background-position:  700px 0; }
+  0% {
+    background-position: -700px 0;
+  }
+  100% {
+    background-position: 700px 0;
+  }
 }
 
 .auls__shine {
@@ -342,8 +357,12 @@
 }
 
 @keyframes auls-fadeIn {
-  0%   { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* User cell */
@@ -386,6 +405,15 @@
 }
 
 /* ── Responsive ── */
+@media (max-width: 900px) {
+  .aul {
+    padding: 16px 16px 40px;
+  }
+
+  .auls{
+    padding: 16px 16px 40px;
+  }
+}
 @media (max-width: 700px) {
   .auls__controls {
     flex-direction: column;

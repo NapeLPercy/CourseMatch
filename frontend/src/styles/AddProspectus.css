@@ -2,9 +2,9 @@
 
 .ap {
   width: 100%;
-  max-width: 980px;
+  /* max-width: 980px; */
   margin: 0 auto;
-  padding: 84px 40px 80px;
+  padding: 24px 28px 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -23,11 +23,12 @@
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 18px;
+  max-width: 680px;
   padding: 28px;
   display: flex;
   flex-direction: column;
   gap: 22px;
-  box-shadow: 0 2px 16px rgba(30, 58, 138, 0.04);
+  /* box-shadow: 0 2px 16px rgba(30, 58, 138, 0.04); */
 }
 
 /* ── FIELD ───────────────────────────────── */
@@ -271,11 +272,12 @@
 @keyframes apSpin { to { transform: rotate(360deg); } }
 
 /* ── RESPONSIVE ──────────────────────────── */
-@media (max-width: 640px) {
-  .ap {
-    padding: 84px 20px 60px;
-    gap: 18px;
+@media (max-width:900px){
+  .ap{
+      padding: 16px 16px 40px;
   }
+}
+@media (max-width: 640px) {
 
   .ap__form {
     padding: 20px;
@@ -289,8 +291,4 @@
   .ap__actions {
     justify-content: stretch;
   }
-}
-
-@media (max-width: 480px) {
-  .ap { padding: 84px 14px 48px; }
 }
