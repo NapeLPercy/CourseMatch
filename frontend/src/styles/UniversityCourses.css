@@ -3,8 +3,7 @@
 .uc {
   width: 100%;
   max-width: 1300px;
-  margin: 60px auto 0;
-  padding: 48px 40px 80px;
+  padding: 24px 28px 48px;
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -268,6 +267,10 @@
 @media (max-width: 900px) {
   .uni-course-list {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .uv {
+    padding: 16px 16px 40px;
   }
 }
 

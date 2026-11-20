@@ -3,8 +3,8 @@
 .vs {
   width: 100%;
   max-width: 1100px;
-  margin: 0 auto;
-  padding: 80px 40px 80px;
+  /* margin: 0 auto; */
+  padding: 24px 28px 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -248,15 +248,15 @@
 /* ── RESPONSIVE ──────────────────────────── */
 @media (max-width: 768px) {
   .vs {
-    padding: 86px 20px 60px;
+     padding: 16px 16px 40px;
     gap: 18px;
   }
 }
 
 @media (max-width: 480px) {
-  .vs {
+  /* .vs {
     padding: 84px 14px 48px;
-  }
+  } */
 
   .vs__grid {
     grid-template-columns: repeat(2, 1fr);

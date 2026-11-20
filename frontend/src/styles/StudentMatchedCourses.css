@@ -19,8 +19,7 @@
   width: 100%;
   animation: qcpFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
   max-width: 1400px;
-  margin: 50px auto 0;
-  padding: 56px 40px 80px;
+  padding: 24px 28px 48px;
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -43,7 +42,6 @@
     transform: translateY(0);
   }
 }
-
 
 /* ── CONTROLS ────────────────────────────── */
 .qcp__controls {
@@ -368,11 +366,13 @@
 
 /* ── RESPONSIVE ──────────────────────────── */
 @media (max-width: 768px) {
-  .qcp {
+  /* .qcp {
     padding: 36px 20px 60px;
     gap: 22px;
+  } */
+  .qcp {
+    padding: 16px 16px 40px;
   }
-
   .qcp__grid {
     grid-template-columns: 1fr;
   }
@@ -397,9 +397,9 @@
 }
 
 @media (max-width: 480px) {
-  .qcp {
+  /* .qcp {
     padding: 24px 14px 48px;
-  }
+  } */
 
   .qcp__card-head {
     padding: 16px 16px 0;
@@ -411,9 +411,9 @@
 }
 
 @media (max-width: 640px) {
-  .qcp {
+  /* .qcp {
     padding: 32px 16px 60px;
-  }
+  } */
 
   .qcp__grid {
     grid-template-columns: 1fr;
@@ -425,9 +425,7 @@
 }
 
 @media (min-width: 641px) and (max-width: 900px) {
-  .qcp {
-    padding: 40px 24px 70px;
-  }
+
 
   .qcp__grid {
     grid-template-columns: repeat(2, 1fr);
@@ -439,9 +437,9 @@
 }
 
 @media (min-width: 901px) and (max-width: 1200px) {
-  .qcp {
-    padding: 48px 32px 80px;
-  }
+  /* .qcp {
+    padding: 16px 16px 40px;
+  } */
 
   .qcp__grid {
     grid-template-columns: repeat(3, 1fr);
@@ -451,4 +449,3 @@
     max-width: 100%;
   }
 }
-

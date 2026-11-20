@@ -4,7 +4,7 @@
   width: 100%;
   max-width: 1300px;
   margin: 0 auto;
-  padding: 74px 40px 80px;
+  padding: 24px 28px 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -676,6 +676,9 @@
 
   .aic__cmp-cols {
     grid-template-columns: 1fr;
+  }
+  .db{
+      padding: 16px 16px 40px
   }
 }
 

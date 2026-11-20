@@ -4,7 +4,7 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 96px 40px 80px;
+  padding: 24px 28px 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -726,13 +726,16 @@
   .cc__salary-cards {
     grid-template-columns: 1fr;
   }
+  .cc{
+    padding: 16px 16px 40px;
+  }
 }
 
 @media (max-width: 768px) {
-  .cc {
+  /* .cc {
     padding: 96px 20px 60px;
     gap: 18px;
-  }
+  } */
 
   .cc__selected-strip {
     flex-direction: column;
@@ -767,9 +770,9 @@
 }
 
 @media (max-width: 480px) {
-  .cc {
+  /* .cc {
     padding: 86px 14px 48px;
-  }
+  } */
   /*.cc__grid { grid-template-columns: 1fr; }*/
   .cc__score-card {
     min-width: unset;

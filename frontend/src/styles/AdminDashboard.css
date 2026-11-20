@@ -38,7 +38,7 @@
 .ad {
   min-height: 100vh;
   background: var(--off-white);
-  padding: 100px 24px 80px;
+ padding: 24px 28px 48px;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -500,8 +500,7 @@
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 700px) {
   .ad {
-    padding-top: 88px;
-    gap: 24px;
+        padding: 16px 16px 40px;
   }
 
   .ad__header {

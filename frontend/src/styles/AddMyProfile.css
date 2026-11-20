@@ -4,7 +4,7 @@
   width: 100%;
   max-width: 1260px;
   margin: 0 auto;
-  padding: 86px 40px 80px;
+  padding: 24px 28px 48px;
   display: flex;
   flex-direction: column;
   gap: 22px;
@@ -61,7 +61,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  box-shadow: 0 2px 16px rgba(30, 58, 138, 0.05);
+  /* box-shadow: 0 2px 16px rgba(30, 58, 138, 0.05); */
   animation: ampCardIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -376,10 +376,9 @@
 
 /* ── RESPONSIVE ──────────────────────────── */
 @media (max-width: 768px) {
-  .amp {
-    padding: 82px 20px 60px;
-    gap: 18px;
-  }
+ .amp{
+  padding: 16px 16px 40px;
+ }
 
   .amp__card {
     padding: 20px;
@@ -395,10 +394,10 @@
 }
 
 @media (max-width: 480px) {
-  .amp {
+  /* .amp {
     padding: 84px 14px 48px;
     gap: 16px;
-  }
+  } */
 
   .amp__card {
     padding: 16px;

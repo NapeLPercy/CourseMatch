@@ -3,8 +3,7 @@
 .nec {
   width: 100%;
   max-width: 1120px;
-  margin: 50px auto 0;
-  padding: 48px 40px 80px;
+  padding: 24px 28px 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -360,12 +359,17 @@
 }
 
 /* ── RESPONSIVE ──────────────────────────── */
-@media (max-width: 640px) {
+@media (max-width: 900px) {
   .nec {
+    padding: 16px 16px 40px;
+  }
+}
+@media (max-width: 640px) {
+  /* .nec {
     margin-top: 60px;
     padding: 32px 20px 60px;
     gap: 18px;
-  }
+  } */
 
   .nec__card {
     padding: 20px;
@@ -373,11 +377,5 @@
 
   .nec__result {
     padding: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .nec {
-    padding: 24px 14px 48px;
   }
 }

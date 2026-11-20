@@ -4,7 +4,7 @@
   width: 100%;
   max-width: 1300px;
   margin: 0 auto;
-  padding: 86px 40px 80px;
+  padding: 24px 28px 48px;
   display: flex;
   flex-direction: column;
   gap: 22px;
@@ -137,7 +137,7 @@
 /* ── RESPONSIVE ──────────────────────────── */
 @media (max-width: 768px) {
   .mrc {
-    padding: 86px 20px 60px;
+    padding: 16px 16px 40px;
     gap: 18px;
   }
 
@@ -155,8 +155,8 @@
   }
 }
 
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .mrc {
     padding: 86px 14px 48px;
   }
-}
+} */
