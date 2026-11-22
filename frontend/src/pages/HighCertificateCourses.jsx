@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { GraduationCap } from "lucide-react";
-import { guestFilterQualifications } from "../services/guestService";
+import { useGuestFilterQualifications } from "../hooks/useGuest";
 import PageHeader from "../components/ui/PageHeader";
 import FilteredCourses from "../components/ui/FilteredCourses";
 import ErrorState from "../components/ui/ErrorState";
@@ -9,9 +9,6 @@ import SEO from "../components/ui/SEO";
 import { higherCertificateFaqs } from "../Utils/textData/SeoFaqs";
 import Warning from "../components/ui/Warning";
 export default function HigherCertificateCourses() {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [showWarning, setShowWarning] = useState(null);
 
   useEffect(() => {
@@ -19,24 +16,14 @@ export default function HigherCertificateCourses() {
     setShowWarning(true);
   }, []);
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  const {
+    data,
+    isPending: loading,
+    error,
+    refetch: fetchCourses,
+  } = useGuestFilterQualifications("higher-certificate-courses");
+  const courses = data?.data || [];
 
-  const fetchCourses = async () => {
-    setLoading(true);
-    setError(false);
-    try {
-      const { data } = await guestFilterQualifications(
-        "higher-certificate-courses",
-      );
-      setCourses(data || []);
-    } catch {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  };
   const handleCloseWarning = () => {
     localStorage.setItem("courses-alert", "dismissed");
     setShowWarning(false);

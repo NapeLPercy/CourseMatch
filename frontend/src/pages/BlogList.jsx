@@ -3,33 +3,16 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import "../styles/BlogList.css";
 import BlogSkeleton from "../components/ui/BlogsSkeleton";
 import ErrorState from "../components/ui/ErrorState";
-import { getAllBlogs } from "../services/blogService";
+import { useGetAllBlogs } from "../hooks/useBlogs";
 import BlogCard from "../components/ui/BlogCard";
 import SEO from "../components/ui/SEO";
 
 export default function BlogList() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
-  const [posts, setPosts] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    userFetchAllBlogs();
-  }, []);
-
-  const userFetchAllBlogs = async () => {
-    setError(null);
-    try {
-      const { data } = await getAllBlogs();
-
-      setPosts(data.blogs);
-    } catch (error) {
-      setError("Failed to fetch blogs, try again!");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data, isPending: loading, error, refetch } = useGetAllBlogs();
+  const posts = data?.data.blogs || [];
 
   const categories = useMemo(
     () => [...new Set(posts.map((p) => p.topic))].sort(),
@@ -50,7 +33,13 @@ export default function BlogList() {
   }, [posts, search, category]);
 
   if (loading) return <BlogSkeleton count={6} />;
-  if (error) return <ErrorState message={error} onRetry={userFetchAllBlogs} />;
+  if (error)
+    return (
+      <ErrorState
+        message={error.message || "Failed to fetch blogs, try again!"}
+        onRetry={refetch}
+      />
+    );
 
   return (
     <>
