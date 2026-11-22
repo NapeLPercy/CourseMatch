@@ -5,13 +5,16 @@
   width: 100%;
   max-width: 1400px;
   /* margin: 50px auto 0; */
-  padding: 24px 28px 48px;
+  padding: 92px 28px 48px;
   display: flex;
   flex-direction: column;
   gap: 22px;
   box-sizing: border-box;
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   animation: asFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.ws__content-inner .as {
+  padding: 24px 28px 48px;
 }
 
 @keyframes asFadeIn {
@@ -533,8 +536,11 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .as{
-      padding: 16px 16px 40px;
+  .as {
+    padding: 88px 16px 40px;
+  }
+  .ws__content-inner .as {
+    padding: 16px 16px 40px;
   }
 }
 

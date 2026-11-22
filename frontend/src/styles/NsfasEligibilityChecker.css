@@ -3,13 +3,17 @@
 .nec {
   width: 100%;
   max-width: 1120px;
-  padding: 24px 28px 48px;
+  padding: 92px 28px 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;
   box-sizing: border-box;
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   animation: necFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ws__content-inner .nec{
+    padding: 16px 16px 40px;
 }
 
 @keyframes necFadeIn {
@@ -361,8 +365,11 @@
 /* ── RESPONSIVE ──────────────────────────── */
 @media (max-width: 900px) {
   .nec {
-    padding: 16px 16px 40px;
+    padding: 92px 16px 40px;
   }
+  .ws__content-inner .fcp{
+    padding: 16px 16px 40px;
+}
 }
 @media (max-width: 640px) {
   /* .nec {
