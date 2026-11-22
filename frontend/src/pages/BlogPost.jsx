@@ -4,7 +4,7 @@ import "../styles/BlogPost.css";
 import { useNavigate } from "react-router-dom";
 import RelatedPosts from "../components/RelatedPosts";
 import ShareMenu from "../components/ui/ShareMenu";
-import { getBlogById } from "../services/blogService";
+import { useGetBlogBySlug } from "../hooks/useBlogs";
 import { useParams } from "react-router-dom";
 import { formatTimestamp } from "../Utils/datetime";
 import BlogPostSkeleton from "../components/ui/BlogPostSkeleton";
@@ -30,48 +30,23 @@ function Block({ block }) {
 }
 
 export default function BlogPost() {
-  const [post, setPost] = useState({});
-  const [relatedPosts, setRelatedPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [error, setError] = useState(null);
 
-  // const sorted = [...post?.blocks].sort((a, b) => a.position - b.position);
   const navigate = useNavigate();
   const { slug } = useParams();
   const url = `https://coursematchapp.co.za/blog/${slug}`;
 
   useEffect(() => {
-    getPostAndRelatedPosts(slug);
-  }, [slug]);
-  useEffect(() => {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  const getPostAndRelatedPosts = async (postSlug) => {
-    //setLoading(true);
-    setError(null);
-    setNotFound(false);
-    try {
-      const { data } = await getBlogById(postSlug);
-      if (!data.success) {
-        //blognot found
-        setNotFound(true);
-        return;
-      }
-      setPost(data.blog);
-      setRelatedPosts(data.blog.related);
-    } catch (error) {
-      setError("Server error, could not fetch blog post");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data, isPending: loading, error, refetch } = useGetBlogBySlug(slug);
+  const post = data?.data?.blog || {};
+  const relatedPosts = data?.data?.blog?.related || [];
 
   if (loading) return <BlogPostSkeleton />;
   if (notFound) return <BlogNotFound />;
-  if (error)
-    return <ErrorState message={error} onRetry={getPostAndRelatedPosts} />;
+  if (error) return <ErrorState message={error} onRetry={refetch} />;
 
   return (
     <>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { GraduationCap } from "lucide-react";
-import { guestFilterQualifications } from "../services/guestService";
+import { useGuestFilterQualifications } from "../hooks/useGuest";
 import PageHeader from "../components/ui/PageHeader";
 import FilteredCourses from "../components/ui/FilteredCourses";
 import UniversityCoursesSkeleton from "../components/ui/UniversityCoursesSkeleton";
@@ -10,9 +10,6 @@ import { bachelorDegreeFaqs } from "../Utils/textData/SeoFaqs";
 import Warning from "../components/ui/Warning";
 
 export default function BachelorCourses() {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [showWarning, setShowWarning] = useState(null);
 
   useEffect(() => {
@@ -20,24 +17,14 @@ export default function BachelorCourses() {
     setShowWarning(true);
   }, []);
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  const {
+    data,
+    isPending: loading,
+    error,
+    refetch: fetchCourses,
+  } = useGuestFilterQualifications("bachelor-degree-courses");
 
-  const fetchCourses = async () => {
-    setLoading(true);
-    setError(false);
-    try {
-      const { data } = await guestFilterQualifications(
-        "bachelor-degree-courses",
-      );
-      setCourses(data || []);
-    } catch {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const courses = data?.data || [];
 
   const handleCloseWarning = () => {
     localStorage.setItem("courses-alert", "dismissed");

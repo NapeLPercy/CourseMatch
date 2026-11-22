@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { GraduationCap } from "lucide-react";
-import { guestFilterQualifications } from "../services/guestService";
+import { useGuestFilterQualifications } from "../hooks/useGuest";
 import PageHeader from "../components/ui/PageHeader";
 import FilteredCourses from "../components/ui/FilteredCourses";
 import ErrorState from "../components/ui/ErrorState";
@@ -10,9 +10,6 @@ import { diplomaFaqs } from "../Utils/textData/SeoFaqs";
 import Warning from "../components/ui/Warning";
 
 export default function DiplomaCourses() {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   const [showWarning, setShowWarning] = useState(null);
 
@@ -21,23 +18,15 @@ export default function DiplomaCourses() {
     setShowWarning(true);
   }, []);
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  const {
+    data,
+    isPending: loading,
+    error,
+    refetch:fetchCourses
+  } = useGuestFilterQualifications("diploma-courses");
 
-  const fetchCourses = async () => {
-    setLoading(true);
-    setError(false);
-    try {
-      const { data } = await guestFilterQualifications("diploma-courses");
+  const courses = data?.data || [];
 
-      setCourses(data || []);
-    } catch {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  };
   const handleCloseWarning = () => {
     localStorage.setItem("courses-alert", "dismissed");
     setShowWarning(false);

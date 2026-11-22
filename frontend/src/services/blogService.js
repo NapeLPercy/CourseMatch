@@ -4,7 +4,7 @@ export async function createBlog(blog) {
   return await api.post(`/api/blogs`,blog);
 }
 
-export async function getBlogById(slug) {
+export async function getBlogBySlug(slug) {
   return await api.get(`/api/blogs/${slug}`);
 }
 
