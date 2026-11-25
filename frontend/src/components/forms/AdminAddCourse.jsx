@@ -13,7 +13,7 @@ import {
   BookOpen,
 } from "lucide-react";
 
-import { adminSubjectsData } from "../../Utils/subjects";
+import { adminSubjectsData } from "../../Utils/textData/subjects";
 import { getAllUniversities } from "../../services/universityService";
 import { addCourse } from "../../services/courseService";
 import SubmitError from "../ui/SubmitError";

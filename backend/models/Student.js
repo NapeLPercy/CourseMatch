@@ -63,7 +63,31 @@ module.exports = {
     });
   },
 
-  //get student id
+  //get career goals
+  getCareerGoalsByUserId: async (userId) => {
+    const sql = `SELECT id, dream_job AS dreamJob, aspiration, goals, preferred_environment AS preferredEnvironment, work_style AS workStyle
+     FROM student_profile WHERE user_id = ? LIMIT 1`;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [userId], (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows[0] || null);
+      });
+    });
+  },
+
+  //get personality profile
+  getPersonalityProfileByUserId: async (userId) => {
+    const sql = `SELECT id, strengths, weaknesses, hobbies, enjoyed_subjects AS enjoyedSubjects, disliked_subjects AS dislikedSubjects,problem_solving_approach AS problemSolvingApproach 
+     FROM student_profile WHERE user_id = ? LIMIT 1`;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [userId], (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows[0] || null);
+      });
+    });
+  },
   getStudentId: async (userId) => {
     const sql = `SELECT id FROM student_profile WHERE user_id = ?`;
 
@@ -92,36 +116,97 @@ module.exports = {
   },
 
   // Patch student's complete profile info
-  updateStudentProfile: async (userId, profile) => {
+  // updateStudentProfile: async (userId, profile) => {
+  //   const sql = `
+  //   UPDATE student_profile
+  //   SET
+  //     dream_job = ?,
+  //     aspiration = ?,
+  //     goals = ?,
+  //     strengths = ?,
+  //     weaknesses = ?,
+  //     hobbies = ?,
+  //     enjoyed_subjects = ?,
+  //     disliked_subjects = ?,
+  //     work_style = ?,
+  //     problem_solving_approach = ?,
+  //     preferred_environment = ?
+  //   WHERE user_id = ?
+  // `;
+
+  //   const params = [
+  //     profile.dreamJob ?? null,
+  //     profile.aspiration ?? null,
+  //     profile.goals ?? null,
+  //     profile.strengths ?? null,
+  //     profile.weaknesses ?? null,
+  //     profile.hobbies ?? null,
+  //     profile.enjoyedSubjects ?? null,
+  //     profile.dislikedSubjects ?? null,
+  //     profile.workStyle ?? null,
+  //     profile.problemSolvingApproach ?? null,
+  //     profile.preferredEnvironment ?? null,
+  //     userId,
+  //   ];
+
+  //   return new Promise((resolve, reject) => {
+  //     db.query(sql, params, (err, result) => {
+  //       if (err) return reject(err);
+  //       resolve(result);
+  //     });
+  //   });
+  // },
+  // Patch student's complete profile info
+  updatePersonalityProfile: async (userId, personalityProfile) => {
+    const sql = `
+    UPDATE student_profile
+    SET
+      strengths = ?,
+      weaknesses = ?,
+      hobbies = ?,
+      enjoyed_subjects = ?,
+      disliked_subjects = ?,
+      problem_solving_approach = ?
+    WHERE user_id = ?
+  `;
+
+    const params = [
+      personalityProfile.strengths ?? null,
+      personalityProfile.weaknesses ?? null,
+      personalityProfile.hobbies ?? null,
+      personalityProfile.enjoyedSubjects ?? null,
+      personalityProfile.dislikedSubjects ?? null,
+      personalityProfile.problemSolvingApproach ?? null,
+      userId,
+    ];
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, params, (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
+
+  // Patch student's career goals
+  updateCareerGoals: async (userId, careerGoals) => {
     const sql = `
     UPDATE student_profile
     SET
       dream_job = ?,
       aspiration = ?,
       goals = ?,
-      strengths = ?,
-      weaknesses = ?,
-      hobbies = ?,
-      enjoyed_subjects = ?,
-      disliked_subjects = ?,
       work_style = ?,
-      problem_solving_approach = ?,
       preferred_environment = ?
     WHERE user_id = ?
   `;
 
     const params = [
-      profile.dreamJob ?? null,
-      profile.aspiration ?? null,
-      profile.goals ?? null,
-      profile.strengths ?? null,
-      profile.weaknesses ?? null,
-      profile.hobbies ?? null,
-      profile.enjoyedSubjects ?? null,
-      profile.dislikedSubjects ?? null,
-      profile.workStyle ?? null,
-      profile.problemSolvingApproach ?? null,
-      profile.preferredEnvironment ?? null,
+      careerGoals.dreamJob ?? null,
+      careerGoals.aspiration ?? null,
+      careerGoals.goals ?? null,
+      careerGoals.workStyle ?? null,
+      careerGoals.preferredEnvironment ?? null,
       userId,
     ];
 
@@ -173,8 +258,8 @@ module.exports = {
       });
     });
   },
-    //get coursesmatched to student
-  getMySingleMatchedCourse: async (userId,recommendationId) => {
+  //get coursesmatched to student
+  getMySingleMatchedCourse: async (userId, recommendationId) => {
     const sql = `
     SELECT 
         ar.id,

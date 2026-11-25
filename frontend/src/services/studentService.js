@@ -5,13 +5,25 @@ export async function getStudentDashboard() {
   return res;
 }
 
-export async function getCompleteStudentInfo() {
-  const res = await api.get(`/api/student/profile`);
+export async function getPersonalityProfile() {
+  const res = await api.get(`/api/student/personality`);
   return res;
 }
 
-export async function addCompleteStudentInfo(profileData) {
-  const res = await api.patch(`/api/student/profile`, { profileData });
+export async function getCareerGoals() {
+  const res = await api.get(`/api/student/goals`);
+  return res;
+}
+
+export async function addPersonalityProfile(personalityProfile) {
+  const res = await api.patch(`/api/student/personality`, {
+    personalityProfile,
+  });
+  return res;
+}
+
+export async function addCareerGoals(careerGoals) {
+  const res = await api.patch(`/api/student/goals`, { careerGoals });
   return res;
 }
 

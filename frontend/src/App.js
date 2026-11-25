@@ -48,8 +48,6 @@ import DeepDive from "./components/data-display/DeepDive";
 import SendEmailPage from "./components/forms/SendEmailPage";
 import NsfasEligibilityChecker from "./components/forms/NsfasEligibilityChecker";
 import CourseComparisons from "./components/data-display/CourseComparisons";
-import PersonalityProfileWizard from "./components/forms/PersonalityProfileWizard";
-import ViewMyProfile from "./components/data-display/ViewMyProfile";
 import DiplomaCourses from "./pages/DiplomaCourses";
 import NoMathsCourses from "./pages/NoMathsCourses";
 import HigherCertificateCourses from "./pages/HighCertificateCourses";
@@ -70,8 +68,10 @@ import AdminViewBlogs from "./components/data-display/AdminViewBlog";
 import AddBlogPost from "./components/forms/AddBlogPost";
 import AdminUserList from "./components/data-display/AdminViewUsers";
 import AddUser from "./components/forms/AdminAddUser";
-//
-
+import { CareerGoals } from "./components/forms/PersonalityFiles/CareerGoals";
+import { PersonalityProfile } from "./components/forms/PersonalityFiles/PersonalityProfile";
+import MyCareerGoals from "./components/data-display/CareerGoals";
+import MyPersonalityProfile from "./components/data-display/PersonalityProfile";
 function App() {
   return (
     <UserProvider>
@@ -209,16 +209,25 @@ function App() {
                     element={<DeepDive />}
                   />
 
-                  {/* PERSONALITY */}
+                  {/* PERSONALITY  and CAREER GOALS*/}
+
+                  <Route
+                    path="/student/add/career-goals"
+                    element={<CareerGoals />}
+                  />
 
                   <Route
                     path="/student/add/personality"
-                    element={<PersonalityProfileWizard />}
+                    element={<PersonalityProfile />}
                   />
 
                   <Route
                     path="/student/view/personality"
-                    element={<ViewMyProfile />}
+                    element={<MyPersonalityProfile />}
+                  />
+                  <Route
+                    path="/student/view/career-goals"
+                    element={<MyCareerGoals />}
                   />
                 </Route>
 
