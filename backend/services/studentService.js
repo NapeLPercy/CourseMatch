@@ -135,17 +135,32 @@ function extractStudentSpecifData({ grade, age, role }) {
 }
 
 //insert complete student data
-async function addStudentCompleteProfile(userId, profile) {
+async function addPersonalityProfile(userId, profile) {
   const results = await studentModel.personalityProfileExist(userId);
-  if (results.dreamJob) return { personalityProfileExist: true };
-  await studentModel.updateStudentProfile(userId, profile);
+  if (results.strengths) return { personalityProfileExist: true };
+  await studentModel.updatePersonalityProfile(userId, profile);
 }
 
-//get complete student profile
+//patch career goals
+async function addCareerGoals(userId, profile) {
+  const results = await studentModel.personalityProfileExist(userId);
+  if (results.dreamJob) return { careerGoalsExist: true };
+  await studentModel.updateCareerGoals(userId, profile);
+}
+
+//get personality profile
+async function getPersonalityProfile(userId) {
+  return await studentModel.getPersonalityProfileByUserId(userId);
+}
+
+//get career goals
+async function getCareerGoals(userId) {
+  return await studentModel.getCareerGoalsByUserId(userId);
+}
+//complete student_profile
 async function getStudentProfile(userId) {
   return await studentModel.getStudentProfileByUserId(userId);
 }
-
 //get basic student profile
 async function getStudentBasicProfile(userId) {
   return await studentModel.getStudentBasicProfileByUserId(userId);
@@ -210,7 +225,10 @@ const getMyAICourseRecommendations = async (userId) => {
 
 module.exports = {
   addStudentProfile,
-  addStudentCompleteProfile,
+  addPersonalityProfile,
+  addCareerGoals,
+  getCareerGoals,
+  getPersonalityProfile,
   getStudentProfile,
   insertStudentEndorsement,
   getStudentBasicProfile,

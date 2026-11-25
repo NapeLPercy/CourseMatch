@@ -3,16 +3,18 @@ dotenv.config();
 //add initial profile
 const {
   addStudentProfile,
-  getStudentProfile,
+  getCareerGoals,
+  getPersonalityProfile,
   getStudentBasicProfile,
-  addStudentCompleteProfile,
+  addCareerGoals,
+  addPersonalityProfile,
   getMatchedCourses,
 } = require("../services/studentService");
 const { generateToken } = require("../services/accountService");
 
 const { getMyAICourseRecommendations } = require("../services/studentService");
 //get complete personal profile
-exports.getProfile = async (req, res) => {
+exports.getPersonalityProfile = async (req, res) => {
   try {
     const userId = req.userId;
 
@@ -22,11 +24,11 @@ exports.getProfile = async (req, res) => {
         .json({ success: false, message: "Not authenticated" });
     }
 
-    const profile = await getStudentProfile(userId);
+    const personality = await getPersonalityProfile(userId);
 
     return res.status(200).json({
       success: true,
-      profile,
+      personality,
     });
   } catch (error) {
     console.error("Get profile error:", error);
@@ -36,6 +38,29 @@ exports.getProfile = async (req, res) => {
   }
 };
 
+exports.getCareerGoals = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Not authenticated" });
+    }
+
+    const goals = await getCareerGoals(userId);
+
+    return res.status(200).json({
+      success: true,
+      goals,
+    });
+  } catch (error) {
+    console.error("Get profile error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error fetching profile" });
+  }
+};
 //get  personal basic profile
 exports.getBasicProfile = async (req, res) => {
   try {
@@ -62,12 +87,12 @@ exports.getBasicProfile = async (req, res) => {
 };
 
 /*Add the remaining profile(missing data), info vital for personalized matching*/
-exports.completeProfile = async (req, res) => {
+exports.addPersonalityProfile = async (req, res) => {
   try {
     const userId = req.userId;
-    const profile = req.body.profileData;
+    const personalityProfile = req.body.personalityProfile;
 
-    if (!profile) {
+    if (!personalityProfile) {
       return res
         .status(400)
         .json({ sucess: false, message: "Profile data is required" });
@@ -79,7 +104,7 @@ exports.completeProfile = async (req, res) => {
         .json({ success: false, message: "Not authenticated" });
     }
 
-    const results = await addStudentCompleteProfile(userId, profile);
+    const results = await addPersonalityProfile(userId, personalityProfile);
 
     if (results?.personalityProfileExist) {
       return res.status(409).json({
@@ -99,13 +124,49 @@ exports.completeProfile = async (req, res) => {
   }
 };
 
+exports.addCareerGoals = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const careerGoals = req.body.careerGoals;
+
+    if (!careerGoals) {
+      return res
+        .status(400)
+        .json({ sucess: false, message: "Career goals data is required" });
+    }
+
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Not authenticated" });
+    }
+
+    const results = await addCareerGoals(userId, careerGoals);
+
+    if (results?.careerGoalsExist) {
+      return res.status(409).json({
+        success: true,
+        message: "You already added your career goals.",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Career goals saved successfully",
+    });
+  } catch (error) {
+    console.error("Save career goals error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error saving career goals" });
+  }
+};
+
 // Student add basic profile info
 exports.createBasicProfile = async (req, res) => {
   try {
     const userId = req.userId;
     const { studentData } = req.body;
 
-    
     if (!studentData) {
       return res
         .status(400)
@@ -173,7 +234,7 @@ exports.getMyMatchedQualifications = async (req, res) => {
 exports.getMyAICourseRecommendations = async (req, res) => {
   try {
     const userId = req.userId;
-console.log("we are here 1");
+    console.log("we are here 1");
     if (!userId) {
       return res
         .status(401)

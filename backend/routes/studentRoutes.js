@@ -20,17 +20,31 @@ router.get(
 );
 
 router.patch(
-  "/profile",
+  "/personality",
   authenticate,
   authorize("STUDENT"),
-  studentController.completeProfile,
+  studentController.addPersonalityProfile,
+);
+
+router.patch(
+  "/goals",
+  authenticate,
+  authorize("STUDENT"),
+  studentController.addCareerGoals,
 );
 
 router.get(
-  "/profile",
+  "/personality",
   authenticate,
   authorize("STUDENT"),
-  studentController.getProfile,
+  studentController.getPersonalityProfile,
+);
+
+router.get(
+  "/goals",
+  authenticate,
+  authorize("STUDENT"),
+  studentController.getCareerGoals,
 );
 
 router.get(
