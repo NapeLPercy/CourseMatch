@@ -1,5 +1,4 @@
 import {
-  Home,
   LayoutDashboard,
   BookOpen,
   GraduationCap,
@@ -16,6 +15,7 @@ import {
   UserPlus,
   Newspaper,
   BarChart3,
+  Goal,
 } from "lucide-react";
 
 export const NAV_CONFIG = {
@@ -142,6 +142,21 @@ export const NAV_CONFIG = {
           {
             path: "/courses-without-maths",
             label: "Courses Without Maths",
+          },
+        ],
+      },
+
+      {
+        label: "Career Goals",
+        icon: Goal,
+        dropdown: [
+          {
+            path: "/student/add/career-goals",
+            label: "Add Career Goals",
+          },
+          {
+            path: "/student/view/career-goals",
+            label: "View Career Goals",
           },
         ],
       },

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Search, ChevronDown, BookOpen } from "lucide-react";
 
-import { studentSubjectsData } from "../../Utils/subjects";
+import { studentSubjectsData } from "../../Utils/textData/subjects";
 
 export default function SubjectSelect({ value, onChange, takenNames }) {
   const [open, setOpen] = useState(false);

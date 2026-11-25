@@ -1,0 +1,237 @@
+/* ── ProfileData.css ──
+   Shared by CareerGoals, PersonalityProfile and ProfileSkeleton.
+   Uses the app's :root brand variables. */
+
+.pd {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  padding: 24px 28px 48px;
+}
+
+/* ── Grid ── */
+.pd__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* ── Card ── */
+.pd__card {
+  --accent: var(--medium-blue, #2563eb);
+  --accent-bg: rgba(37, 99, 235, 0.08);
+  --accent-border: rgba(37, 99, 235, 0.2);
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px;
+  background: var(--white, #ffffff);
+  border: 1px solid var(--pale-blue, #dbeafe);
+  border-radius: 16px;
+  /* box-shadow: 0 2px 12px rgba(30, 58, 138, 0.05); */
+  animation: pd-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.06s);
+}
+
+@keyframes pd-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pd__card--wide {
+  grid-column: span 2;
+}
+
+/* Tones — each card sets its own accent variables */
+.pd__card--blue {
+  --accent: var(--medium-blue, #2563eb);
+  --accent-bg: rgba(37, 99, 235, 0.08);
+  --accent-border: rgba(37, 99, 235, 0.2);
+}
+
+.pd__card--green {
+  --accent: var(--green, #16a34a);
+  --accent-bg: rgba(22, 163, 74, 0.08);
+  --accent-border: rgba(22, 163, 74, 0.22);
+}
+
+.pd__card--orange {
+  --accent: var(--orange, #ea580c);
+  --accent-bg: rgba(234, 88, 12, 0.08);
+  --accent-border: rgba(234, 88, 12, 0.22);
+}
+
+.pd__card--purple {
+  --accent: var(--purple, #9333ea);
+  --accent-bg: rgba(147, 51, 234, 0.08);
+  --accent-border: rgba(147, 51, 234, 0.22);
+}
+
+.pd__card--red {
+  --accent: var(--red, #dc2626);
+  --accent-bg: rgba(220, 38, 38, 0.07);
+  --accent-border: rgba(220, 38, 38, 0.2);
+}
+
+.pd__card--teal {
+  --accent: #0891b2;
+  --accent-bg: rgba(8, 145, 178, 0.08);
+  --accent-border: rgba(8, 145, 178, 0.22);
+}
+
+/* ── Card head ── */
+.pd__card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pd__card-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.pd__card-label {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-gray, #475569);
+}
+
+/* ── Text values ── */
+.pd__value {
+  margin: 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--primary-blue, #1e3a8a);
+}
+
+.pd__value--md {
+  font-size: 1.15rem;
+}
+
+.pd__value--lg {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.pd__muted {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* ── Chips ── */
+.pd__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pd__chip {
+  padding: 6px 13px;
+  border: 1px solid var(--accent-border);
+  border-radius: 20px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.pd__chip--lg {
+  padding: 8px 18px;
+  font-size: 0.95rem;
+}
+
+/* ── Skeleton ── */
+@keyframes pd-shimmer {
+  0% {
+    background-position: -600px 0;
+  }
+  100% {
+    background-position: 600px 0;
+  }
+}
+
+.pd__skel {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 600px 100%;
+  animation: pd-shimmer 1.4s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+.pd__skel--icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+}
+
+.pd__skel--label {
+  width: 110px;
+  height: 12px;
+}
+
+.pd__skel-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pd__skel--chip {
+  width: 84px;
+  height: 28px;
+  border-radius: 20px;
+}
+
+.pd__skel--chip-lg {
+  width: 120px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .pd {
+    gap: 18px;
+    padding: 16px 16px 40px;
+  }
+
+  .pd__grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .pd__card {
+    padding: 18px;
+  }
+
+  /* span 2 would create an implicit column on a single-column grid */
+  .pd__card--wide {
+    grid-column: span 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pd__card,
+  .pd__skel {
+    animation: none;
+  }
+}

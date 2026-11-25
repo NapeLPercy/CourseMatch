@@ -4,170 +4,45 @@ import {
   ChevronLeft,
   ChevronRight,
   Send,
-  Check,
   GraduationCap,
 } from "lucide-react";
-import { personalityQuestions } from "../../Utils/textData/personalityQuestions";
 import { addCompleteStudentInfo } from "../../services/studentService";
 import SubmitSuccess from "../ui/SubmitSuccess";
 import SubmitError from "../ui/SubmitError";
 import PageHeader from "../ui/PageHeader";
 import "../../styles/AddMyProfile.css";
-import { STEPS } from "../../Utils/textData/personalityQuestions";
-import { useSubjects } from "../../context/SubjectContext";
 import ActionPrompt from "../data-display/ActionPrompt";
-
-const TOTAL = STEPS.length;
-
-const initialAnswers = personalityQuestions.reduce((acc, q) => {
-  acc[q.name] = q.type === "single" ? "" : [];
-  return acc;
-}, {});
-
-/* ── Multi-select chip grid ─────────────── */
-function MultiSelect({ question, value, onChange }) {
-  const selected = Array.isArray(value) ? value : [];
-
-  const toggle = (opt) => {
-    if (selected.includes(opt)) {
-      onChange(selected.filter((s) => s !== opt));
-    } else {
-      if (selected.length < question.maxAnswers) {
-        onChange([...selected, opt]);
-      }
-    }
-  };
-
-  return (
-    <div className="amp__chips">
-      {question.options.map((opt) => {
-        const isSelected = selected.includes(opt);
-        const isDisabled =
-          !isSelected && selected.length >= question.maxAnswers;
-        return (
-          <button
-            key={opt}
-            type="button"
-            className={`amp__chip ${isSelected ? "amp__chip--active" : ""} ${isDisabled ? "amp__chip--disabled" : ""}`}
-            onClick={() => toggle(opt)}
-            disabled={isDisabled}
-          >
-            {isSelected && <Check size={12} strokeWidth={2.5} />}
-            {opt}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ── Single select card grid ────────────── */
-function SingleSelect({ question, value, onChange }) {
-  return (
-    <div className="amp__singles">
-      {question.options.map((opt) => {
-        const val = typeof opt === "object" ? opt.value : opt;
-        const label = typeof opt === "object" ? opt.label : opt;
-        const isSelected = value === val;
-        return (
-          <button
-            key={val}
-            type="button"
-            className={`amp__single ${isSelected ? "amp__single--active" : ""}`}
-            onClick={() => onChange(val)}
-          >
-            {isSelected && (
-              <span className="amp__single-check">
-                <Check size={11} strokeWidth={2.5} />
-              </span>
-            )}
-            {label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ── Subject select list ────────────────── */
-function SubjectSelect({ question, value, onChange }) {
-  const { getSubjects } = useSubjects();
-
-  // value is now a string, not an array
-  const selected = Array.isArray(value) ? value : [];
-
-  const handleChange = (e) => {
-    const chosen = e.target.value;
-    // keep it as array so the rest of the logic stays the same
-    onChange(chosen ? [chosen] : []);
-  };
-
-  return (
-    <div className="amp__subject-wrap">
-      <select
-        className="amp__subject-select"
-        value={selected[0] || ""}
-        onChange={handleChange}
-        size={7}
-      >
-        <option value="" disabled hidden />
-        {getSubjects()?.length > 0
-          ? getSubjects().map((subject) => (
-              <option key={subject.id} value={subject.name}>
-                {subject.name + ": " + subject.mark + "%"}
-              </option>
-            ))
-          : question.options.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-      </select>
-      <span className="amp__subject-count">{selected.length} selected</span>
-    </div>
-  );
-}
-
-/* ── Paired subjects step ───────────────── */
-function PairedSubjects({ questions, answers, onChange }) {
-  const [enjoyed, disliked] = questions;
-  return (
-    <div className="amp__paired">
-      <div className="amp__paired-col">
-        <p className="amp__paired-label">{enjoyed.label}</p>
-        <p className="amp__paired-helper">{enjoyed.helperText}</p>
-        <SubjectSelect
-          question={enjoyed}
-          value={answers[enjoyed.name]}
-          onChange={(val) => onChange(enjoyed.name, val)}
-        />
-      </div>
-      <div className="amp__paired-col">
-        <p className="amp__paired-label">{disliked.label}</p>
-        <p className="amp__paired-helper">{disliked.helperText}</p>
-        <SubjectSelect
-          question={disliked}
-          value={answers[disliked.name]}
-          onChange={(val) => onChange(disliked.name, val)}
-        />
-      </div>
-    </div>
-  );
-}
+import { MultiSelect } from "./PersonalityFiles/MultiSelect";
+import { PairedSubjects } from "./PersonalityFiles/PairedSubjects";
+import { SubjectSelect } from "./PersonalityFiles/SubjectSelect";
+import { SingleSelect } from "./PersonalityFiles/SingleSelect";
 
 /* ── Main component ─────────────────────── */
-export default function PersonalityProfileWizard() {
+export default function PersonalityProfileWizard({
+  steps,
+  questions,
+  icon,
+  title,
+  subtitle,
+  mutation,
+}) {
+  const initialAnswers = questions.reduce((acc, q) => {
+    acc[q.name] = q.type === "single" ? "" : [];
+    return acc;
+  }, {});
+
   const [step, setStep] = useState(0);
+  const currentStep = steps[step]; //tracks the curent step
+  const total = steps.length;
+  const isLast = step === total - 1;
+  const progress = (step / total) * 100;
+
   const [answers, setAnswers] = useState(initialAnswers);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [aiFeaturesPrompt, setAiFeaturesPrompt] = useState(false);
-
-  const currentStep = STEPS[step];
-  const isLast = step === TOTAL - 1;
-  const progress = (step / TOTAL) * 100;
 
   const handleChange = (name, val) => {
     setAnswers((prev) => ({ ...prev, [name]: val }));
@@ -236,36 +111,38 @@ export default function PersonalityProfileWizard() {
       ]),
     );
 
-    try {
-      await addCompleteStudentInfo(payload);
-      setSuccess(true);
-      sessionStorage.removeItem("student_dashboard");
-      setTimeout(() => {
-        setSuccess(false);
-        setAnswers(initialAnswers);
-        setStep(0);
-      }, 3000);
-    } catch (err) {
-      if (err?.response?.status === 409) {
-        setAiFeaturesPrompt(true);
-        // setSubmitError("You already submitted your personality profile.");
-        return;
-      }
-      setSubmitError("Submission failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    mutation.mutate(payload, {
+      onSuccess: () => {
+        setSuccess(true);
+        sessionStorage.removeItem("student_dashboard");
+        setTimeout(() => {
+          setSuccess(false);
+          setAnswers(initialAnswers);
+          setStep(0);
+        }, 3000);
+      },
+      onError: (err) => {
+        if (err?.response?.status === 409) {
+          setSubmitError("You already submitted your data.");
+          setTimeout(() => {
+            setAiFeaturesPrompt(true);
+          }, 2000);
+          return;
+        } else {
+          setSubmitError("Submission failed. Please try again.");
+        }
+      },
+      onSettled: () => {
+        setLoading(false);
+      },
+    });
   };
 
   const q = currentStep.questions[0];
 
   return (
     <div className="amp">
-      <PageHeader
-        icon={BrainCog}
-        title="My personality profile"
-        subtitle="Your personal insights help our AI recommend courses that truly fit who you are."
-      />
+      <PageHeader icon={icon} title={title} subtitle={subtitle} />
       {aiFeaturesPrompt ? (
         <ActionPrompt
           icon={GraduationCap}
@@ -285,7 +162,7 @@ export default function PersonalityProfileWizard() {
               />
             </div>
             <span className="amp__progress-label">
-              {step + 1} <span className="amp__progress-sep">/</span> {TOTAL}
+              {step + 1} <span className="amp__progress-sep">/</span> {total}
             </span>
           </div>
 
@@ -294,7 +171,7 @@ export default function PersonalityProfileWizard() {
             {!currentStep.paired && (
               <>
                 <span className="amp__step-badge">
-                  Question {step + 1} of {TOTAL}
+                  Question {step + 1} of {total}
                 </span>
                 <h2 className="amp__question">{q.label}</h2>
                 {q.helperText && <p className="amp__helper">{q.helperText}</p>}
@@ -341,7 +218,7 @@ export default function PersonalityProfileWizard() {
             {currentStep.paired && (
               <>
                 <span className="amp__step-badge">
-                  Question {step + 1} of {TOTAL}
+                  Question {step + 1} of {total}
                 </span>
                 <h2 className="amp__question">Your subject preferences</h2>
                 <PairedSubjects
