@@ -174,6 +174,22 @@ WHERE a.role = 'STUDENT' OR a.role IS NULL`;
     });
   },
 
+  checkSubjectsExistByStudentId: async (studentId) => {
+    const sql = `
+      SELECT 1
+      FROM student_subject
+      WHERE student_id = ?
+      LIMIT 1
+    `;
+
+    return new Promise((resolve, reject) => {
+      db.query(sql, [studentId], (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows.length > 0);
+      });
+    });
+  },
+
   getStudentProfileByUserId: async (userId) => {
     const sql = `
     SELECT id, dream_job
@@ -186,21 +202,6 @@ WHERE a.role = 'STUDENT' OR a.role IS NULL`;
       db.query(sql, [userId], (err, rows) => {
         if (err) return reject(err);
         resolve(rows[0] || null);
-      });
-    });
-  },
-  checkSubjectsExistByStudentId: async (studentId) => {
-    const sql = `
-    SELECT 1
-    FROM subject
-    WHERE student_id = ?
-    LIMIT 1
-  `;
-
-    return new Promise((resolve, reject) => {
-      db.query(sql, [studentId], (err, rows) => {
-        if (err) return reject(err);
-        resolve(rows.length > 0);
       });
     });
   },

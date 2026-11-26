@@ -16,73 +16,82 @@ module.exports = {
       prerequisites = [],
     } = payload;
 
-    return new Promise((resolve, reject) => {
-      db.getConnection((err, connection) => {
+    const connection = await new Promise((resolve, reject) => {
+      db.getConnection((err, conn) => {
         if (err) return reject(err);
-
-        const conn = connection.promise();
-
-        connection.beginTransaction(async (err) => {
-          if (err) {
-            connection.release();
-            return reject(err);
-          }
-
-          try {
-            const qualificationSql = `
-              INSERT INTO qualification
-                (code, name, minimum_aps,nqf,mode_of_study, minimum_endorsement, minimum_duration, faculty_id)
-              VALUES (?, ?, ?,?,?, ?, ?, ?)
-            `;
-
-            await conn.query(qualificationSql, [
-              code,
-              name,
-              minaps,
-              nqf,
-              mode_of_study,
-              min_endorsement,
-              min_duration,
-              fac_id,
-            ]);
-
-            if (prerequisites.length > 0) {
-              const prereqSql = `
-                INSERT INTO prerequisite_subject
-                  (subject_id, subject_name, minimum_mark, qualification_code)
-                VALUES ?
-              `;
-
-              const prereqValues = prerequisites.map((p) => [
-                uuidv4(),
-                p.name,
-                p.min_mark,
-                code,
-              ]);
-
-              await conn.query(prereqSql, [prereqValues]);
-            }
-
-            connection.commit((err) => {
-              if (err) {
-                return connection.rollback(() => {
-                  connection.release();
-                  reject(err);
-                });
-              }
-
-              connection.release();
-              resolve({ success: true });
-            });
-          } catch (e) {
-            connection.rollback(() => {
-              connection.release();
-              reject(e);
-            });
-          }
-        });
+        resolve(conn);
       });
     });
+
+    const conn = connection.promise();
+
+    try {
+      await conn.beginTransaction();
+
+      const qualificationSql = `
+      INSERT INTO qualification
+        (code, name, minimum_aps, nqf, mode_of_study,
+         minimum_endorsement, minimum_duration, faculty_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+      await conn.query(qualificationSql, [
+        code,
+        name,
+        minaps,
+        nqf,
+        mode_of_study,
+        min_endorsement,
+        min_duration,
+        fac_id,
+      ]);
+
+      if (prerequisites.length > 0) {
+        // Look up subject IDs from the master catalogue
+        const subjectNames = prerequisites.map((p) => p.name.trim());
+
+        const [subjects] = await conn.query(
+          `SELECT subject_id, name FROM subject WHERE name IN (?)`,
+          [subjectNames],
+        );
+
+        const subjectMap = new Map(subjects.map((s) => [s.name, s.subject_id]));
+
+        // Ensure every prerequisite exists in the catalogue
+        const missingSubjects = subjectNames.filter(
+          (name) => !subjectMap.has(name),
+        );
+
+        if (missingSubjects.length > 0) {
+          throw new Error(
+            `Subjects not found in master catalogue: ${missingSubjects.join(", ")}`,
+          );
+        }
+
+        const prereqValues = prerequisites.map((p) => [
+          code,
+          subjectMap.get(p.name.trim()),
+          p.min_mark,
+        ]);
+
+        const prereqSql = `
+        INSERT INTO qualification_subject
+          (qualification_code, subject_id, minimum_mark)
+        VALUES ?
+      `;
+
+        await conn.query(prereqSql, [prereqValues]);
+      }
+
+      await conn.commit();
+
+      return { success: true };
+    } catch (error) {
+      await conn.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
   },
 
   //get all courses & prereq
@@ -102,10 +111,10 @@ module.exports = {
 
         u.name                         AS university_name,
         u.url                          AS university_url,
-
-        ps.subject_id                  AS subject_id,
-        ps.subject_name                AS subject_name,
-        ps.minimum_mark                AS minimum_mark
+        
+        s.subject_id AS subject_id,
+        s.name AS subject_name,
+        qs.minimum_mark AS minimum_mark
 
       FROM qualification q
       JOIN faculty f
@@ -113,9 +122,11 @@ module.exports = {
       JOIN university u
         ON u.abbreaviation = f.University_Abbreviation
 
-      LEFT JOIN prerequisite_subject ps
-        ON ps.qualification_code = q.code
-      ORDER BY u.abbreaviation, f.faculty_id, q.code, ps.subject_name;
+      LEFT JOIN qualification_subject qs
+      ON qs.qualification_code = q.code
+      LEFT JOIN subject s
+    ON s.subject_id = qs.subject_id
+      ORDER BY u.abbreaviation, f.faculty_id, q.code, s.name;
     `;
 
     return new Promise((resolve, reject) => {
@@ -166,9 +177,9 @@ module.exports = {
       });
     });
   },
-  
+
   getQualificationsByFilter: async (whereClause) => {
-  const sql = `
+    const sql = `
     SELECT
       q.code                         AS qualification_code,
       q.name                         AS qualification_name,
@@ -184,17 +195,20 @@ module.exports = {
       u.name                         AS university_name,
       u.url                          AS university_url,
 
-      ps.subject_id                  AS subject_id,
-      ps.subject_name                AS subject_name,
-      ps.minimum_mark                AS minimum_mark
+      s.subject_id AS subject_id,
+      s.name AS subject_name,
+      qs.minimum_mark AS minimum_mark
 
     FROM qualification q
     JOIN faculty f
       ON f.faculty_id = q.faculty_id
     JOIN university u
       ON u.abbreaviation = f.University_Abbreviation
-    LEFT JOIN prerequisite_subject ps
-      ON ps.qualification_code = q.code
+   
+    LEFT JOIN qualification_subject qs
+    ON qs.qualification_code = q.code
+    LEFT JOIN subject s
+    ON s.subject_id = qs.subject_id
 
     WHERE ${whereClause}
 
@@ -202,50 +216,49 @@ module.exports = {
       u.abbreaviation,
       f.faculty_id,
       q.code,
-      ps.subject_name;
+      s.name;
   `;
 
-  return new Promise((resolve, reject) => {
-    db.query(sql, (err, rows) => {
-      if (err) return reject(err);
+    return new Promise((resolve, reject) => {
+      db.query(sql, (err, rows) => {
+        if (err) return reject(err);
 
-      const qualificationsMap = {};
+        const qualificationsMap = {};
 
-      rows.forEach((row) => {
-        if (!qualificationsMap[row.qualification_code]) {
-          qualificationsMap[row.qualification_code] = {
-            qualification_code: row.qualification_code,
-            qualification_name: row.qualification_name,
-            minimum_aps: row.minimum_aps,
-            qualification_nqf: row.qualification_nqf,
-            minimum_endorsement: row.minimum_endorsement,
-            minimum_duration: row.minimum_duration,
+        rows.forEach((row) => {
+          if (!qualificationsMap[row.qualification_code]) {
+            qualificationsMap[row.qualification_code] = {
+              qualification_code: row.qualification_code,
+              qualification_name: row.qualification_name,
+              minimum_aps: row.minimum_aps,
+              qualification_nqf: row.qualification_nqf,
+              minimum_endorsement: row.minimum_endorsement,
+              minimum_duration: row.minimum_duration,
 
-            faculty_id: row.faculty_id,
-            faculty_name: row.faculty_name,
-            university_abbreviation: row.university_abbreviation,
+              faculty_id: row.faculty_id,
+              faculty_name: row.faculty_name,
+              university_abbreviation: row.university_abbreviation,
 
-            university_name: row.university_name,
-            university_url: row.university_url,
+              university_name: row.university_name,
+              university_url: row.university_url,
 
-            prereqs: []
-          };
-        }
+              prereqs: [],
+            };
+          }
 
-        if (row.subject_id) {
-          qualificationsMap[row.qualification_code]
-            .prereqs.push({
+          if (row.subject_id) {
+            qualificationsMap[row.qualification_code].prereqs.push({
               subject_id: row.subject_id,
               subject_name: row.subject_name,
-              min_mark: row.minimum_mark
+              min_mark: row.minimum_mark,
             });
-        }
-      });
+          }
+        });
 
-      resolve(Object.values(qualificationsMap));
+        resolve(Object.values(qualificationsMap));
+      });
     });
-  });
-},
+  },
   //Delete a qualification
   deleteQualification: async (qualificationCode) => {
     const sql = `DELETE FROM qualification WHERE code = ?`;

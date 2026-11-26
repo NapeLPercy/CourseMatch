@@ -60,13 +60,14 @@ async function getQualificationsByFilter(keyword) {
 
     case "courses-without-maths":
       whereClause = `
-        q.code NOT IN (
-          SELECT DISTINCT qualification_code
-          FROM prerequisite_subject
-          WHERE LOWER(subject_name) LIKE '%math%'
-             OR LOWER(subject_name) LIKE '%mathematics%'
-       )
-      `;
+    q.code NOT IN (
+      SELECT DISTINCT qs.qualification_code
+      FROM qualification_subject qs
+      JOIN subject s
+        ON s.subject_id = qs.subject_id
+      WHERE LOWER(s.name) LIKE '%math%'
+    )
+  `;
       break;
     default:
       throw new Error("Invalid filter");

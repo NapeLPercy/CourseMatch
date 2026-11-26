@@ -1,10 +1,15 @@
 const db = require("../config/db");
 
 module.exports = {
-  //Insert student's subjects
+  // Insert student's subjects
   insertSubjects: async (subjectValues) => {
     const sql = `
-      INSERT INTO subject (subject_id, name, mark,endorsement_subject, student_id)
+      INSERT INTO student_subject (
+        student_id,
+        subject_id,
+        mark,
+        endorsement_subject
+      )
       VALUES ?
     `;
 
@@ -16,11 +21,11 @@ module.exports = {
     });
   },
 
-  // Check if recommendations exist
+  // Check if student has submitted subjects
   subjectsExist: async (studentId) => {
     const sql = `
-      SELECT 1 
-      FROM subject
+      SELECT 1
+      FROM student_subject
       WHERE student_id = ?
       LIMIT 1
     `;
@@ -33,10 +38,19 @@ module.exports = {
     });
   },
 
-  //Get student's subjects
+  // Get student's subjects
   getSubjectsByStudentIdForUser: async (studentId) => {
-    const sql = `SELECT subject_id AS id, name, mark FROM subject WHERE student_id = ?
-  `;
+    const sql = `
+      SELECT
+        ss.subject_id AS id,
+        s.name,
+        ss.mark
+      FROM student_subject ss
+      JOIN subject s
+        ON ss.subject_id = s.subject_id
+      WHERE ss.student_id = ?
+    `;
+
     return new Promise((resolve, reject) => {
       db.query(sql, [studentId], (err, result) => {
         if (err) return reject(err);
@@ -45,12 +59,16 @@ module.exports = {
     });
   },
 
-  //Update single mark value
-  updateMark: async (subjectId, subjectMark) => {
-    const sql = "UPDATE subject SET mark=? WHERE subject_id=?";
+  // Update single mark value
+  updateMark: async (studentSubjectId, subjectMark) => {
+    const sql = `
+      UPDATE student_subject
+      SET mark = ?
+      WHERE id = ?
+    `;
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [subjectMark, subjectId], (err, result) => {
+      db.query(sql, [subjectMark, studentSubjectId], (err, result) => {
         if (err) return reject(err);
         resolve(result);
       });

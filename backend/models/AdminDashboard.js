@@ -1,3 +1,4 @@
+
 const db = require("../config/db");
 
 const q = (sql, params = []) =>
@@ -8,7 +9,7 @@ const q = (sql, params = []) =>
     });
   });
 
-  //Admin dashboard data
+// Admin dashboard data
 module.exports = {
   getDashboardData: async () => {
     const [
@@ -18,6 +19,7 @@ module.exports = {
       qualificationsRows,
       prereqsRows,
       subjectRecordsRows,
+      subjectCatalogueRows,
       aiUsageRows,
 
       qualsMissingPrereqsRows,
@@ -28,54 +30,59 @@ module.exports = {
 
       recentQualificationsRows,
       recentAiUsageRows,
-
     ] = await Promise.all([
       q(`SELECT COUNT(*) AS count FROM student_profile`),
       q(`SELECT COUNT(*) AS count FROM university`),
       q(`SELECT COUNT(*) AS count FROM faculty`),
       q(`SELECT COUNT(*) AS count FROM qualification`),
-      q(`SELECT COUNT(*) AS count FROM prerequisite_subject`),
+      q(`SELECT COUNT(*) AS count FROM qualification_subject`),
+      q(`SELECT COUNT(*) AS count FROM student_subject`),
       q(`SELECT COUNT(*) AS count FROM subject`),
       q(`SELECT COALESCE(SUM(explanations_generated), 0) AS total FROM ai_usage`),
 
       // Health checks
-      //qualsMissingPrereqsRows
+
+      // Qualifications missing prerequisites
       q(`
         SELECT COUNT(*) AS count
         FROM qualification q
-        LEFT JOIN prerequisite_subject ps ON ps.qualification_code = q.code
-        WHERE ps.qualification_code IS NULL
+        LEFT JOIN qualification_subject qs
+          ON qs.qualification_code = q.code
+        WHERE qs.qualification_code IS NULL
       `),
 
-       //facultiesMissingQualsRows
+      // Faculties missing qualifications
       q(`
         SELECT COUNT(*) AS count
         FROM faculty f
-        LEFT JOIN qualification q ON q.faculty_id = f.faculty_id
+        LEFT JOIN qualification q
+          ON q.faculty_id = f.faculty_id
         WHERE q.code IS NULL
       `),
 
-      // unisMissingFacultiesRows
+      // Universities missing faculties
       q(`
         SELECT COUNT(*) AS count
         FROM university u
-        LEFT JOIN faculty f ON f.University_Abbreviation = u.abbreaviation
+        LEFT JOIN faculty f
+          ON f.University_Abbreviation = u.abbreaviation
         WHERE f.faculty_id IS NULL
       `),
 
-      //  studentsWithoutCompleteProfilesRows
+      // Students without complete profiles
       q(`
         SELECT COUNT(*) AS count
         FROM student_profile sp
         WHERE sp.aspiration IS NULL
       `),
 
-      //studentsWithoutSubjectsRows
+      // Students without subjects
       q(`
         SELECT COUNT(*) AS count
         FROM student_profile sp
-        LEFT JOIN subject s ON s.student_id = sp.id
-        WHERE s.subject_id IS NULL
+        LEFT JOIN student_subject ss
+          ON ss.student_id = sp.id
+        WHERE ss.student_subject_id IS NULL
       `),
 
       // Recent activity
@@ -87,7 +94,8 @@ module.exports = {
       `).catch(() => []),
 
       q(`
-        SELECT id, user_id, university_abbrev, explanations_generated, courses_scored, created_at
+        SELECT id, user_id, university_abbrev,
+               explanations_generated, courses_scored, created_at
         FROM ai_usage
         ORDER BY created_at DESC
         LIMIT 4
@@ -102,6 +110,7 @@ module.exports = {
         qualifications: qualificationsRows[0]?.count ?? 0,
         prereq_rows: prereqsRows[0]?.count ?? 0,
         subject_records: subjectRecordsRows[0]?.count ?? 0,
+        subject_catalogue: subjectCatalogueRows[0]?.count ?? 0,
         ai_explanations_generated: aiUsageRows[0]?.total ?? 0,
       },
 
