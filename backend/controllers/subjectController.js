@@ -5,6 +5,7 @@ const {
   getSubjects,
   addSubjects,
   updateMark,
+  getSystemSubjects,
 } = require("../services/subjectService");
 
 /*Add subjects*/
@@ -78,6 +79,34 @@ exports.getSubjects = async (req, res) => {
     console.error("Get subjects error:", error);
     return res.status(500).json({
       message: "Error fetching subjects",
+      success: false,
+    });
+  }
+};
+
+//get all saved subjects in the system
+exports.getSystemSubjects = async (req, res) => {
+  try {
+    const { userId } = req;
+
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: "You are not authorized" });
+    }
+
+    //delegate to subject model
+    const subjects = await getSystemSubjects();
+
+    return res.status(200).json({
+     subjects,
+      success: true,
+      message: "System Subjects successfuly fetched!",
+    });
+  } catch (error) {
+    console.error("Get System subjects error:", error);
+    return res.status(500).json({
+      message: "Error fetching System subjects",
       success: false,
     });
   }

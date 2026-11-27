@@ -23,11 +23,10 @@ async function addSubjects(subjects, studentId, userId) {
     await conn.promise().beginTransaction();
 
     const subjectValues = subjects.map((s) => [
-      uuidv4(),
-      s.name,
+      studentId,
+      s.id,
       s.mark,
       s.endorsementSubject,
-      studentId,
     ]);
 
     //check if subjectsexists
@@ -66,6 +65,10 @@ async function getSubjects(studentId) {
   return await subjectModel.getSubjectsByStudentIdForUser(studentId);
 }
 
+//get all available subjects
+async function getSystemSubjects() {
+  return await subjectModel.getAllSubjects();
+}
 // Update a mark value
 async function updateMark(userId, studentId, subjectId, newSubjectMark) {
   const conn = await new Promise((resolve, reject) => {
@@ -121,5 +124,6 @@ module.exports = {
   getSubjects,
   updateMark,
   addSubjects,
+  getSystemSubjects,
   computeEndorsementAndAPSSubjects,
 };

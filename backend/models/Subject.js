@@ -3,6 +3,7 @@ const db = require("../config/db");
 module.exports = {
   // Insert student's subjects
   insertSubjects: async (subjectValues) => {
+    console.log("In the model");
     const sql = `
       INSERT INTO student_subject (
         student_id,
@@ -71,6 +72,21 @@ module.exports = {
       db.query(sql, [subjectMark, studentSubjectId], (err, result) => {
         if (err) return reject(err);
         resolve(result);
+      });
+    });
+  },
+  // Get all subjects except generic English
+  getAllSubjects: async () => {
+    const sql = `
+    SELECT subject_id, name
+    FROM subject
+    WHERE name <> 'English'
+    ORDER BY name;
+  `;
+    return new Promise((resolve, reject) => {
+      db.query(sql, (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows);
       });
     });
   },

@@ -20,11 +20,18 @@ router.get(
   subjectController.getSubjects,
 );
 
+router.get(
+  "/all",
+  authenticate,
+  authorize("STUDENT"),
+  subjectController.getSystemSubjects,
+);
+
 router.patch(
   "/:subjectId",
   authenticate,
   authorize("STUDENT"),
-   attachProfileId,
+  attachProfileId,
   subjectController.updateMark,
 );
 
