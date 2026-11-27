@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { Search, ChevronDown, BookOpen } from "lucide-react";
 
-import { studentSubjectsData } from "../../Utils/textData/subjects";
+//import { studentSubjectsData } from "../../Utils/textData/subjects";
 
-export default function SubjectSelect({ value, onChange, takenNames }) {
+export default function SubjectSelect({ value, onChange, takenNames, subjects=[] }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const wrap = useRef(null);
@@ -33,10 +33,10 @@ export default function SubjectSelect({ value, onChange, takenNames }) {
   }, [open]);*/
 
   // Filter: match query AND exclude already-taken names (allow current value through)
-  const filtered = studentSubjectsData.filter(
+  const filtered = subjects.filter(
     (s) =>
-      s.toLowerCase().includes(query.toLowerCase().trim()) &&
-      (!takenNames.has(s) || s === value),
+      s.name.toLowerCase().includes(query.toLowerCase().trim()) &&
+      (!takenNames.has(s.name) || s.name === value),
   );
 
   const handleSelect = (subject) => {
@@ -98,13 +98,13 @@ export default function SubjectSelect({ value, onChange, takenNames }) {
             {filtered.length > 0 ? (
               filtered.map((s) => (
                 <li
-                  key={s}
+                  key={s.subject_id}
                   className={`as__select-option ${
-                    s === value ? "as__select-option--active" : ""
+                    s.name === value ? "as__select-option--active" : ""
                   }`}
                   onMouseDown={(e) => {
                     e.preventDefault();
-                    handleSelect(s);
+                    handleSelect(s.name);
                   }}
                   onTouchStart={() => {
                     isScrolling.current = false;
@@ -121,10 +121,10 @@ export default function SubjectSelect({ value, onChange, takenNames }) {
                     }
 
                     // Otherwise it was a tap
-                    handleSelect(s);
+                    handleSelect(s.name);
                   }}
                 >
-                  {s}
+                  {s.name}
                 </li>
               ))
             ) : (

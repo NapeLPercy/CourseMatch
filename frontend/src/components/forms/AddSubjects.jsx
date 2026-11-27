@@ -11,6 +11,7 @@ import {
 import "../../styles/AddSubjects.css";
 import { useSubjects } from "../../context/SubjectContext";
 import { addStudentSubjects } from "../../services/subjectService";
+import { useGetAllSystemSubjects } from "../../hooks/useSubjects";
 import SubmitSuccess from "../ui/SubmitSuccess";
 import ProgressBar from "../ui/ProgressBar";
 import PageHeader from "../ui/PageHeader";
@@ -53,6 +54,8 @@ export default function AddSubjects() {
     const subjectsData = getSubjects();
     if (subjectsData && subjectsData.length > 0) setSubjects(subjectsData);
   }, []);
+
+  const { data: allSystemSubjects } = useGetAllSystemSubjects();
 
   const handleSubmit = async () => {
     const errs = validate(subjects);
@@ -180,6 +183,7 @@ export default function AddSubjects() {
               value={s.name}
               onChange={(val) => change(i, "name", val)}
               takenNames={takenNames}
+              subjects={allSystemSubjects}
             />
 
             <div className="as__mark-wrap">
