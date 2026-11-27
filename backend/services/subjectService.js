@@ -83,7 +83,7 @@ async function updateMark(userId, studentId, subjectId, newSubjectMark) {
 
     // Find the subject to update
     const subjectToUpdate = studentSubjects.find(
-      (subject) => subject.id === subjectId,
+      (subject) => subject.id === Number(subjectId),
     );
 
     if (!subjectToUpdate) {

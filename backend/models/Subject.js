@@ -64,7 +64,7 @@ module.exports = {
     const sql = `
       UPDATE student_subject
       SET mark = ?
-      WHERE id = ?
+      WHERE student_subject_id = ?
     `;
 
     return new Promise((resolve, reject) => {
