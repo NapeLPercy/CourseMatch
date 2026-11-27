@@ -62,22 +62,27 @@ module.exports = {
     });
   },
   //get courses for a specific university
+
   getUniversityCourses: async (universityName) => {
     const sql = `
-      SELECT 
-        c.*,
-        ps.subject_name AS prereq_subject,
-        ps.minimum_mark AS prereq_min_mark
-      FROM university u
-      INNER JOIN faculty f 
-        ON f.university_abbreviation = u.abbreaviation
-      INNER JOIN qualification c 
-        ON c.faculty_id = f.faculty_id
-      LEFT JOIN prerequisite_subject ps
-        ON ps.qualification_code = c.code
-      WHERE u.abbreaviation = ?
-      ORDER BY c.code;
-    `;
+    SELECT 
+      c.*,
+      s.name AS prereq_subject,
+      qs.minimum_mark AS prereq_min_mark
+
+    FROM university u
+    INNER JOIN faculty f 
+      ON f.university_abbreviation = u.abbreaviation
+    INNER JOIN qualification c 
+      ON c.faculty_id = f.faculty_id
+    LEFT JOIN qualification_subject qs
+      ON qs.qualification_code = c.code
+    LEFT JOIN subject s
+      ON s.subject_id = qs.subject_id
+
+    WHERE u.abbreaviation = ?
+    ORDER BY c.code, s.name;
+  `;
 
     return new Promise((resolve, reject) => {
       db.query(sql, [universityName], (err, result) => {
