@@ -61,15 +61,15 @@ module.exports = {
   },
 
   // Update single mark value
-  updateMark: async (studentSubjectId, subjectMark) => {
+  updateMark: async (subjectId, studentId, subjectMark) => {
     const sql = `
       UPDATE student_subject
       SET mark = ?
-      WHERE student_subject_id = ?
+      WHERE subject_id = ? AND student_id = ?
     `;
 
     return new Promise((resolve, reject) => {
-      db.query(sql, [subjectMark, studentSubjectId], (err, result) => {
+      db.query(sql, [subjectMark, subjectId, studentId], (err, result) => {
         if (err) return reject(err);
         resolve(result);
       });

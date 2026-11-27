@@ -94,8 +94,12 @@ async function updateMark(userId, studentId, subjectId, newSubjectMark) {
     }
 
     // Update mark in the database
-    const result = await subjectModel.updateMark(subjectId, newSubjectMark);
+    console.log("subject id",subjectId);
+    console.log("new mark",newSubjectMark);
+    
+    const result = await subjectModel.updateMark(subjectId,studentId, newSubjectMark);
 
+    console.log("after update",result);
     if (result.affectedRows !== 1) {
       throw new Error("Failed to update subject mark.");
     }
